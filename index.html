@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js" defer></script>
+    <script src="script2.js" defer></script>
     <script src="https://kit.fontawesome.com/32255cd4c3.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
@@ -31,17 +31,37 @@
                     </div>
                 </div>
 
+                <div class="note-box">
+                    <p>Fill Form Now!</p>
+                    <ul class="custom-bullets">
+                        <li>A Global Movement: A Cultural initiative by LVJST connecting people worldwide.</li>
+                        <li>Contribute: Share your skills, Ideas and You will also get a Certificate.</li>
+                        <li>Get Connected: Join us for Immersive activities, collaborations, and inspiring events.</li>
+                    </ul>
+                </div>
+
+                <div class="temples-counter-section">
+                    <h3>LVJST Initiatives</h3>
+                    <div class="counter-container">
+                        <span id="templesCount" class="counter">0</span>
+                        <span class="counter-suffix">+</span>
+                    </div>
+                    <h4 class="counter-title">TEMPLES SURVEYED</h4>
+                    <p class="counter-target">Target: 15,000 temples in 5 years</p>
+                    <p class="counter-subtitle">(Guided by Pujya Bhagyayash Suriji Maharaj)</p>
+                </div>
+
                 <form id="volunteer-form">
-                    <label for="full_name">1. Full Name<span class="required-asterisk">*</span></label>
+                    <label for="full_name">Full Name<span class="required-asterisk">*</span></label>
                     <input type="text" id="full_name" name="full_name" required>
 
-                    <label for="email">2. Email<span class="required-asterisk">*</span></label>
+                    <label for="email">Email<span class="required-asterisk">*</span></label>
                     <input type="email" id="email" name="email" required>
 
-                    <label for="mobile_no">3. Mobile Number<span class="required-asterisk">*</span></label>
+                    <label for="mobile_no">Mobile Number<span class="required-asterisk">*</span></label>
                     <input type="tel" id="mobile_no" name="mobile_no" required>
 
-                    <label>4. Gender<span class="required-asterisk">*</span></label>
+                    <label>Gender<span class="required-asterisk">*</span></label>
                     <div class="toggle-group">
                         <input type="radio" id="gender_male" name="gender" value="Male" required>
                         <label for="gender_male">Male</label>
@@ -49,46 +69,61 @@
                         <label for="gender_female">Female</label>
                     </div>
 
-                    <label for="dob">5. Date of Birth<span class="required-asterisk">*</span></label>
+                    <label for="dob">Date of Birth<span class="required-asterisk">*</span></label>
                     <input type="date" id="dob" name="dob" required>
 
-                    <label for="address">6. Full Address<span class="required-asterisk">*</span></label>
-                    <textarea id="address" name="address" rows="3" required></textarea>
-
-                    <label for="photo">7. Passport Size Photo<span class="required-asterisk">*</span></label>
-                    <input type="file" id="photo" name="photo" accept="image/*" required>
-
-                    <label for="education">8. Education Qualification<span class="required-asterisk">*</span></label>
+                    <label for="education">Education Qualification<span class="required-asterisk">*</span></label>
                     <input type="text" id="education" name="education" required>
 
-                    <label>9. Skills/Interest<span class="required-asterisk">*</span><br>
+                    <label for="city">City<span class="required-asterisk">*</span></label>
+                    <input type="text" id="city" name="city" required>
+
+                    <label for="address">Full Address<span class="required-asterisk">*</span></label>
+                    <textarea id="address" name="address" rows="3" required></textarea>
+
+                    <label for="skills">Skills/Interest<span class="required-asterisk">*</span><br>
                         <small>(Select all that apply)</small></label>
-                    <div class="checkbox-group" required>
+                    <div class="checkbox-group" id="skills-checkbox-group" required>
                         <label><input type="checkbox" name="skills" value="History"> History</label>
+                        <div id="history-experience-container"></div>
                         <label><input type="checkbox" name="skills" value="Exploration"> Exploration (Offline / Onsite)
                         </label>
+                        <div id="exploration-experience-container"></div>
                         <label><input type="checkbox" name="skills" value="Paper_Work"> Paper Work</label>
+                        <div id="paper_work-experience-container"></div>
                         <label><input type="checkbox" name="skills" value="Social_Media"> Social Media</label>
+                        <div id="social_media-experience-container"></div>
                         <label><input type="checkbox" name="skills" value="Web_Interest"> Web Interest</label>
+                        <div id="web_interest-experience-container"></div>
                         <label><input type="checkbox" name="skills" value="Content_Writing"> Content Writing</label>
+                        <div id="content_writing-experience-container"></div>
                         <label><input type="checkbox" name="skills" value="PPT"> PPT</label>
+                        <div id="ppt-experience-container"></div>
                         <label><input type="checkbox" name="skills" value="Public_Speaking"> Public Speaking</label>
+                        <div id="public_speaking-experience-container"></div>
                         <label><input type="checkbox" name="skills" value="Literature"> Literature</label>
-                        <label><input type="checkbox" name="skills" value="Illustration"> Illustration / Graphic Design /
+                        <div id="literature-experience-container"></div>
+                        <label><input type="checkbox" name="skills" value="Illustration"> Illustration / Graphic Design
+                            /
                             Editing</label>
+                        <div id="illustration-experience-container"></div>
                         <label><input type="checkbox" name="skills" value="Photography"> Photography</label>
+                        <div id="photography-experience-container"></div>
                         <label><input type="checkbox" name="skills" value="Excel"> Excel</label>
+                        <div id="excel-experience-container"></div>
                         <label><input type="checkbox" name="skills" value="Other"> Other</label>
+                        <div id="other-experience-container"></div>
                     </div>
 
-                    <!-- Conditional fields containers -->
                     <div id="skill-excel-container" class="conditional-inputs"></div>
                     <div id="skill-other-container" class="conditional-inputs"></div>
 
-                    <label for="contribution">10. How will you contribute towards Jinshashan?<span class="required-asterisk">*</span></label>
+                    <label for="contribution">How will you contribute towards Jinshashan?<span
+                                class="required-asterisk">*</span></label>
                     <textarea id="contribution" name="contribution" rows="5" required></textarea>
 
-                    <label for="reference">11. Your reference or connection with us<span class="required-asterisk">*</span><br>
+                    <label for="reference">Your reference or connection with us<span
+                                class="required-asterisk">*</span><br>
                         <small>(e.g., Shankheswar Samrajya, Friend, Cousin, Sadhu Maharasaheb)</small></label>
                     <input type="text" id="reference" name="reference" required>
 
@@ -126,7 +161,7 @@
     </main>
     <footer>
         <p>Created By Vishwa Alpesh Shah <span class="whatsapp-icon-inline"><a href="https://wa.me/9594503214"
-                    target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i></a></span></p>
+                        target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i></a></span></p>
         <p>&copy; 2025 All rights reserved.</p>
     </footer>
 </body>
