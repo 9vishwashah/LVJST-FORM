@@ -1,0 +1,572 @@
+:root {
+    --primary-color: crimson;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.survey-section {
+    padding: 60px 20px;
+    background-color: #f4f5f7;
+}
+
+.form-container {
+    max-width: 700px;
+    margin: auto;
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+    text-align: center;
+    font-size: 4rem;
+    color: #111;
+    margin-bottom: 10px;
+
+}
+
+.form-subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+#volunteer-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    margin-top: 20px;
+}
+
+#volunteer-form input[type="text"],
+#volunteer-form input[type="tel"],
+#volunteer-form input[type="email"],
+#volunteer-form input[type="number"],
+#volunteer-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+#volunteer-form ::placeholder {
+    text-transform: none;
+}
+
+#volunteer-form textarea {
+    resize: vertical;
+}
+
+.toggle-group {
+    display: flex;
+    gap: 10px;
+}
+
+.toggle-group input[type="radio"] {
+    display: none;
+}
+
+.toggle-group label {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 0;
+}
+
+.toggle-group input[type="radio"]:checked+label {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* New style for checkbox group */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-weight: normal;
+    margin-top: 0;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: auto;
+
+}
+
+.checkbox-group input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    vertical-align: middle;
+    width: 20px;
+    height: 17px;
+    border: 2px solid #ccc;
+    /* Default border color for unchecked state */
+    border-radius: 4px;
+    /* Rounded corners */
+    position: relative;
+    cursor: pointer;
+    background-color: #fff;
+    /* Default background color for unchecked state */
+    transition: all 0.2s ease-in-out;
+}
+
+/* Style when the checkbox is checked */
+.checkbox-group input[type="checkbox"]:checked {
+    background-color: crimson;
+    /* Crimson background when checked */
+    border-color: crimson;
+    /* Crimson border to match */
+}
+
+/* Create the white tick mark with a pseudo-element */
+.checkbox-group input[type="checkbox"]::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0) rotate(45deg);
+    /* Initial state: scaled to 0 and rotated */
+    width: 4px;
+    height: 9px;
+    border-style: solid;
+    border-color: #fff;
+    /* White tick mark color */
+    border-width: 0 3px 3px 0;
+    /* Creates the L-shape of the tick */
+    opacity: 0;
+    transition: transform 0.2s cubic-bezier(0.6, 0.4, 0.4, 1.6), opacity 0.2s ease;
+}
+
+/* Animate the tick into view when the box is checked */
+.checkbox-group input[type="checkbox"]:checked::after {
+    transform: translate(-50%, -50%) scale(1) rotate(45deg);
+    /* Final state: scaled to 1 and visible */
+    opacity: 1;
+}
+
+
+.conditional-inputs {
+    margin-top: 15px;
+}
+
+#submit-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #1D3956;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 30px;
+}
+
+#submit-btn:disabled {
+    background-color: #aaa;
+}
+
+#form-status {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+/* --- Success Modal Styling --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.success-popup h2 {
+    font-size: 1.8rem;
+    margin: 15px 0 10px 0;
+    color: #333;
+}
+
+.success-popup p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.modal-actions button {
+    flex: 1;
+}
+
+.secondary-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.secondary-btn .fa-whatsapp {
+    font-size: 1.2rem;
+    color: white;
+}
+
+#save-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-color, crimson);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+}
+
+.checkmark-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+    stroke: #4bb71b;
+    fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes scale {
+
+    0%,
+    100% {
+        transform: none;
+    }
+
+    50% {
+        transform: scale3d(1.1, 1.1, 1);
+    }
+}
+
+
+.checkmark-check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    stroke-width: 3;
+    stroke: #4bb71b;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    margin: -40px -40px 30px -40px;
+    background: linear-gradient(to right, #f8f9fa, #ffffff);
+    border-radius: 12px 12px 0 0;
+    border-bottom: 1px solid #eee;
+}
+
+.header-left {
+    flex-shrink: 0;
+}
+
+.form-logo {
+    width: 60px;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.header-title {
+    flex-grow: 1;
+}
+
+.form-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1D3956;
+    margin: 0;
+    line-height: 1.2;
+    white-space: nowrap;
+    background: linear-gradient(45deg, #1D3956, #2c5282);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Mobile-first styles */
+.form-container {
+    max-width: 100%;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.survey-section {
+    padding: 20px 10px;
+    background-color: #f4f5f7;
+}
+
+#volunteer-form input[type="text"],
+#volunteer-form input[type="tel"],
+#volunteer-form input[type="email"],
+#volunteer-form input[type="date"],
+#volunteer-form textarea {
+    padding: 15px;
+    font-size: 16px; /* Better for mobile touch */
+    margin-bottom: 15px;
+    border: 1.5px solid #ddd;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.toggle-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.toggle-group label {
+    padding: 12px;
+    font-size: 16px;
+}
+
+.checkbox-group label {
+    padding: 12px 8px;
+    font-size: 16px;
+}
+
+#submit-btn {
+    padding: 16px;
+    font-size: 18px;
+    margin-top: 25px;
+    border-radius: 12px;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+    .form-container {
+        max-width: 700px;
+        margin: auto;
+        padding: 40px;
+    }
+
+    .form-title {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .form-header {
+        padding: 15px;
+        margin: -20px -20px 20px -20px;
+        gap: 15px;
+    }
+
+    .form-logo {
+        width: 50px;
+    }
+
+    .form-title {
+        font-size: 1.5rem;
+    }
+
+    #volunteer-form label {
+        font-size: 16px;
+        margin-top: 15px;
+        margin-bottom: 8px;
+    }
+
+    .conditional-inputs {
+        margin-left: 10px;
+        padding-left: 10px;
+    }
+
+    .modal-content {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal-actions button {
+        width: 100%;
+    }
+}
+
+/* Touch-friendly improvements */
+input, select, textarea, button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+input[type="checkbox"], 
+input[type="radio"] {
+    min-width: 20px;
+    min-height: 20px;
+}
+
+.checkbox-group input[type="checkbox"]::after {
+    width: 5px;
+    height: 10px;
+}
+
+/* Add this new CSS section to your style.css file */
+
+/* Styles for the conditional input fields */
+.conditional-fields {
+    border-left: 3px solid crimson;
+    padding-left: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.conditional-fields label {
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    display: block;
+}
+
+.conditional-fields input[type="text"],
+.conditional-fields input[type="tel"] {
+    width: 80%;
+    /* Make the input box smaller */
+    max-width: 300px;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .conditional-fields {
+        padding-left: 15px;
+    }
+
+    .conditional-fields input[type="text"],
+    .conditional-fields input[type="tel"] {
+        width: 100%;
+        /* Go back to full width on mobile */
+    }
+}
+
+.required-asterisk {
+    color: red;
+    font-size: 0.9em;
+    margin-left: 5px;
+}
+
+/* Add this to your style.css file */
+.custom-bullets {
+    list-style: none;
+    /* Removes default bullet points */
+    padding-left: 0;
+}
+
+.custom-bullets li {
+    position: relative;
+    padding-left: 20px;
+    /* Space for the custom bullet */
+    margin-bottom: 8px;
+    /* Space between list items */
+}
+
+.custom-bullets li:before {
+    content: '❯';
+    /* The custom character */
+    position: absolute;
+    left: 0;
+    color: var(--primary-color, crimson);
+    /* Matches your theme color */
+    font-weight: bold;
+}
+
+.whatsapp-group-btn {
+    text-decoration: none;
+    display: block;
+    margin-top: 10px;
+}
+
+.whatsapp-group-btn button {
+    width: 100%;
+    padding: 10px;
+    background-color: #25D366;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 16px;
+}
+
+.whatsapp-group-btn button:hover {
+    background-color: #128C7E;
+}

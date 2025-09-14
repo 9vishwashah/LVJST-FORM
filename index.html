@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LVJST Members</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="/asset/lvjst-logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <meta property="og:image" content="https://rushabhayan.netlify.app/asset/lvjst-logo.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js" defer></script>
+    <script src="https://kit.fontawesome.com/32255cd4c3.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+
+<body>
+    <main class="container">
+        <section class="survey-section" id="survey">
+            <div class="form-container">
+                <div class="form-header">
+                    <div class="header-left">
+                        <a href="#"><img src="/asset/lvjst-logo.png" class="form-logo" alt="LVJST Logo"></a>
+                    </div>
+                    <div class="header-title">
+                        <h2 class="form-title">LVJST Members</h2>
+                        <h3 class="form-subtitle">Registration</h3>
+                    </div>
+                </div>
+
+                <form id="volunteer-form">
+                    <label for="full_name">1. Full Name<span class="required-asterisk">*</span></label>
+                    <input type="text" id="full_name" name="full_name" required>
+
+                    <label for="email">2. Email<span class="required-asterisk">*</span></label>
+                    <input type="email" id="email" name="email" required>
+
+                    <label for="mobile_no">3. Mobile Number<span class="required-asterisk">*</span></label>
+                    <input type="tel" id="mobile_no" name="mobile_no" required>
+
+                    <label>4. Gender<span class="required-asterisk">*</span></label>
+                    <div class="toggle-group">
+                        <input type="radio" id="gender_male" name="gender" value="Male" required>
+                        <label for="gender_male">Male</label>
+                        <input type="radio" id="gender_female" name="gender" value="Female">
+                        <label for="gender_female">Female</label>
+                    </div>
+
+                    <label for="dob">5. Date of Birth<span class="required-asterisk">*</span></label>
+                    <input type="date" id="dob" name="dob" required>
+
+                    <label for="address">6. Full Address<span class="required-asterisk">*</span></label>
+                    <textarea id="address" name="address" rows="3" required></textarea>
+
+                    <label for="photo">7. Passport Size Photo<span class="required-asterisk">*</span></label>
+                    <input type="file" id="photo" name="photo" accept="image/*" required>
+
+                    <label for="education">8. Education Qualification<span class="required-asterisk">*</span></label>
+                    <input type="text" id="education" name="education" required>
+
+                    <label>9. Skills/Interest<span class="required-asterisk">*</span><br>
+                        <small>(Select all that apply)</small></label>
+                    <div class="checkbox-group" required>
+                        <label><input type="checkbox" name="skills" value="History"> History</label>
+                        <label><input type="checkbox" name="skills" value="Exploration"> Exploration (Offline / Onsite)
+                        </label>
+                        <label><input type="checkbox" name="skills" value="Paper_Work"> Paper Work</label>
+                        <label><input type="checkbox" name="skills" value="Social_Media"> Social Media</label>
+                        <label><input type="checkbox" name="skills" value="Web_Interest"> Web Interest</label>
+                        <label><input type="checkbox" name="skills" value="Content_Writing"> Content Writing</label>
+                        <label><input type="checkbox" name="skills" value="PPT"> PPT</label>
+                        <label><input type="checkbox" name="skills" value="Public_Speaking"> Public Speaking</label>
+                        <label><input type="checkbox" name="skills" value="Literature"> Literature</label>
+                        <label><input type="checkbox" name="skills" value="Illustration"> Illustration / Graphic Design /
+                            Editing</label>
+                        <label><input type="checkbox" name="skills" value="Photography"> Photography</label>
+                        <label><input type="checkbox" name="skills" value="Excel"> Excel</label>
+                        <label><input type="checkbox" name="skills" value="Other"> Other</label>
+                    </div>
+
+                    <!-- Conditional fields containers -->
+                    <div id="skill-excel-container" class="conditional-inputs"></div>
+                    <div id="skill-other-container" class="conditional-inputs"></div>
+
+                    <label for="contribution">10. How will you contribute towards Jinshashan?<span class="required-asterisk">*</span></label>
+                    <textarea id="contribution" name="contribution" rows="5" required></textarea>
+
+                    <label for="reference">11. Your reference or connection with us<span class="required-asterisk">*</span><br>
+                        <small>(e.g., Shankheswar Samrajya, Friend, Cousin, Sadhu Maharasaheb)</small></label>
+                    <input type="text" id="reference" name="reference" required>
+
+                    <button type="submit" id="submit-btn">Submit</button>
+                    <p id="form-status"></p>
+                </form>
+            </div>
+            <div id="success-modal" class="modal-overlay">
+                <div class="modal-content success-popup">
+                    <div class="success-icon">
+                        <svg viewBox="0 0 52 52">
+                            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                            <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                        </svg>
+                    </div>
+                    <h2>Thank You, <br><span id="user-name-placeholder"></span>!</h2>
+                    <div class="note-box">
+                        Click on Share to Forward the Message.
+                    </div>
+
+                    <div class="modal-actions">
+                        <button id="share-btn" class="secondary-btn"><i class="fa-brands fa-whatsapp"
+                                style="color: #ffff;"></i> Share</button>
+                        <button id="save-btn"><i class="fa-solid fa-download"></i>Save</button>
+                        <a href="https://chat.whatsapp.com/YOUR_GROUP_LINK" class="whatsapp-group-btn" target="_blank">
+                            <button type="button">
+                                <i class="fa-brands fa-whatsapp"></i> Join WhatsApp Group
+                            </button>
+                        </a>
+                    </div>
+                    <p class="creator-credit">Your Response has been Recorded!</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>Created By Vishwa Alpesh Shah <span class="whatsapp-icon-inline"><a href="https://wa.me/9594503214"
+                    target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i></a></span></p>
+        <p>&copy; 2025 All rights reserved.</p>
+    </footer>
+</body>
+
+</html>
