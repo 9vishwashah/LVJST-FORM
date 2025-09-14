@@ -131,9 +131,10 @@ volunteerForm.addEventListener('submit', async (e) => {
 
     // Handle WhatsApp redirect
     setTimeout(() => {
-        const volunteerNumber = "919594503214";
-        const messageText = `📌 LVJST Members Registration\n\nA response has been submitted by ${volunteerData.full_name}.\n`;
-        const whatsappUrl = `https://wa.me/${volunteerNumber}?text=${encodeURIComponent(messageText)}`;
+        // const volunteerNumber = "";
+        const whatsappGroupLink = "https://chat.whatsapp.com/DNoAL21fZ6Y5eiWZOxWJIs?mode=ems_wa_c"; // <-- Replace with your actual WhatsApp Group link
+        const messageText = `Hello! I've just successfully registered as a LVJST member.`;
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(messageText)}&link=${whatsappGroupLink}`;
         window.open(whatsappUrl, "_blank");
     }, 2000);
 });
