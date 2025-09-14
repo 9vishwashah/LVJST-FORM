@@ -218,3 +218,9 @@ document.addEventListener('DOMContentLoaded', () => {
         countElement.textContent = Math.floor(currentCount);
     }, stepDuration);
 });
+
+successModal.addEventListener('click', (e) => {
+    if (e.target === successModal) {
+        successModal.classList.remove('active');
+    }
+});

@@ -331,6 +331,7 @@ body {
 .form-logo {
     width: 100px;
     /* Increased from 60px */
+    margin-left: -20px;
     height: auto;
     transition: transform 0.3s ease;
 }
@@ -363,25 +364,36 @@ body {
         padding: 20px;
         margin: -20px -20px 20px -20px;
         gap: 15px;
-        flex-direction: column;
-        text-align: center;
+        flex-direction: row;
+        /* Changed to row for a single-line layout */
+        text-align: left;
+        /* Aligns content to the left */
+        justify-content: flex-start;
+        /* Aligns items to the beginning of the container */
     }
 
     .form-logo {
         width: 85px;
-        /* Increased from 50px */
-        margin-bottom: 10px;
+        margin-left: 0px;
+        /* Removes negative margin */
+        margin-bottom: 0px;
+        /* Removes bottom margin */
     }
 
     .form-title {
         font-size: 2.2rem;
-        /* Increased from smaller size */
         white-space: normal;
         line-height: 1.1;
+        background: none;
+        /* Removed gradient on small screens */
+        -webkit-background-clip: unset;
+        -webkit-text-fill-color: #1D3956;
     }
 
     .form-subtitle {
         font-size: 1.2rem;
+        margin-top: 0;
+        /* Ensures the subtitle is right below the title */
     }
 }
 
