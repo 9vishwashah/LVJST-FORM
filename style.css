@@ -359,41 +359,39 @@ body {
 }
 
 /* Mobile responsive adjustments */
+/* Mobile responsive adjustments */
 @media (max-width: 767px) {
     .form-header {
         padding: 20px;
         margin: -20px -20px 20px -20px;
         gap: 15px;
+        /* Change from flex-direction: column to row */
         flex-direction: row;
-        /* Changed to row for a single-line layout */
         text-align: left;
-        /* Aligns content to the left */
         justify-content: flex-start;
-        /* Aligns items to the beginning of the container */
     }
 
     .form-logo {
         width: 85px;
         margin-left: 0px;
-        /* Removes negative margin */
         margin-bottom: 0px;
-        /* Removes bottom margin */
     }
 
     .form-title {
         font-size: 2.2rem;
-        white-space: normal;
+        /* Re-apply the gradient for a consistent theme */
+        background: linear-gradient(45deg, #1D3956, crimson);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        white-space: nowrap;
+        /* Keep it on a single line */
         line-height: 1.1;
-        background: none;
-        /* Removed gradient on small screens */
-        -webkit-background-clip: unset;
-        -webkit-text-fill-color: #1D3956;
     }
 
     .form-subtitle {
         font-size: 1.2rem;
-        margin-top: 0;
-        /* Ensures the subtitle is right below the title */
+        margin-top: 5px;
+        /* Add a small margin to space it from the title */
     }
 }
 

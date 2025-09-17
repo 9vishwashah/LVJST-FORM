@@ -12,24 +12,6 @@ const closeSuccessModalBtn = document.getElementById('save-btn');
 const shareBtn = document.getElementById('share-btn');
 
 const skillsCheckboxes = document.querySelectorAll('input[name="skills"]');
-const otherSkillInputContainer = document.getElementById('other-skill-input');
-const connectionsCheckboxes = document.querySelectorAll('input[name="connections"]');
-const otherConnectionInputContainer = document.getElementById('other-connection-input');
-
-// Map of connection values to container IDs
-const connectionFieldsConfig = {
-    'Politician': 'politician-input-container',
-    'Business Person / Entrepreneur': 'business-person-input-container',
-    'Celebrity / Cricketer': 'celebrity-input-container',
-    'Influencer': 'influencer-input-container',
-    'Podcast Host / Platform': 'podcast-input-container',
-    'Jain Classical Performer': 'performer-input-container',
-    'Hostel / College / University': 'college-input-container',
-    'Exhibition Stall Partner / Sponsor': 'sponsor-input-container',
-    'Media / Press / Journalist': 'media-input-container',
-    'Jain Pathshala': 'pathshala-input-container',
-    'Jain Sangh': 'sangh-input-container'
-};
 
 // Map skill values to experience container IDs
 const skillFieldsConfig = {
@@ -48,61 +30,15 @@ const skillFieldsConfig = {
     'Other': 'other-experience-container'
 };
 
-// A helper function to sanitize values for database column names
-function sanitizeValue(value) {
-    return value.replace(/\s*\/\s*/g, '_')
-        .replace(/\s+/g, '_')
-        .replace(/[^a-zA-Z0-9_]/g, '')
-        .toLowerCase();
-}
-
 // --- 2. Conditional Logic ---
-skillsCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-        const otherChecked = document.querySelector('input[name="skills"][value="Other"]').checked;
-        otherSkillInputContainer.innerHTML = otherChecked
-            ? `<input type="text" name="other_skill_text" placeholder="Please specify your skill" required>`
-            : '';
-    });
-});
-
-connectionsCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', (e) => {
-        const value = e.target.value;
-        const containerId = connectionFieldsConfig[value];
-        const isOther = value === 'Other';
-        const isSelected = e.target.checked;
-
-        if (isOther) {
-            otherConnectionInputContainer.innerHTML = isSelected
-                ? `<label for="other_connection_text">Please specify your connection <small>(required)</small></label>
-                   <input type="text" id="other_connection_text" name="other_connection_text" required>`
-                : '';
-        } else if (containerId && isSelected) {
-            const sanitizedValue = sanitizeValue(value);
-            const container = document.getElementById(containerId);
-            container.innerHTML = `
-                <div class="conditional-fields">
-                    <label for="${sanitizedValue}_name">Name <small>(optional)</small></label>
-                    <input type="text" id="${sanitizedValue}_name" name="${sanitizedValue}_name">
-                    <label for="${sanitizedValue}_contact">Contact No <small>(optional)</small></label>
-                    <input type="tel" id="${sanitizedValue}_contact" name="${sanitizedValue}_contact">
-                </div>
-            `;
-        } else if (containerId && !isSelected) {
-            const container = document.getElementById(containerId);
-            if (container) container.innerHTML = '';
-        }
-    });
-});
-
-// Conditional logic for skills: show experience field if checked
 skillsCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', (e) => {
         const value = e.target.value;
         const containerId = skillFieldsConfig[value];
         const isChecked = e.target.checked;
         const container = document.getElementById(containerId);
+
+        // Conditional logic for skills: show experience field if checked
         if (isChecked) {
             container.innerHTML = `
                 <div class="conditional-fields">
@@ -117,7 +53,6 @@ skillsCheckboxes.forEach(checkbox => {
 });
 
 // --- 3. Form Submission ---
-
 volunteerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(volunteerForm);
@@ -140,33 +75,18 @@ volunteerForm.addEventListener('submit', async (e) => {
             return skillName;
         });
 
+    // Form validation checks for skills only
     if (selectedSkills.length === 0) {
         alert('Please select at least one skill or interest to proceed.');
         submitBtn.disabled = false;
         formStatus.textContent = '';
         return;
     }
-
-    // Handle file upload
-    let photoUrl = '';
-    const photoFile = formData.get('photo');
-    if (photoFile) {
-        const fileExt = photoFile.name.split('.').pop();
-        const fileName = `${Date.now()}.${fileExt}`;
-
-        const { data: uploadData, error: uploadError } = await supabaseClient
-            .storage
-            .from('volunteer-photos')
-            .upload(fileName, photoFile);
-
-        if (uploadError) {
-            console.error('Error uploading photo:', uploadError);
-            formStatus.textContent = 'Error uploading photo';
-            submitBtn.disabled = false;
-            return;
-        }
-
-        photoUrl = fileName;
+    if (selectedSkills.includes('Other') && !formData.get('other_experience')?.trim()) {
+        alert('Please specify your "Other" skill experience.');
+        submitBtn.disabled = false;
+        formStatus.textContent = '';
+        return;
     }
 
     // Create volunteer data object
@@ -176,12 +96,12 @@ volunteerForm.addEventListener('submit', async (e) => {
         mobile_number: formData.get('mobile_no'),
         gender: formData.get('gender'),
         date_of_birth: formData.get('dob'),
-        address: formData.get('address'),
-        photo_url: photoUrl,
         education: formData.get('education'),
-        skills: skills, // Store the skills object as JSONB
+        city: formData.get('city'),
+        address: formData.get('address'),
+        skills: skills,
         contribution_text: formData.get('contribution'),
-        reference: formData.get('reference')
+        reference: formData.get('reference'),
     };
 
     // Insert data into Supabase
@@ -200,41 +120,44 @@ volunteerForm.addEventListener('submit', async (e) => {
     // Show success message
     formStatus.textContent = '';
     volunteerForm.reset();
-    skillExcelContainer.innerHTML = '';
-    skillOtherContainer.innerHTML = '';
+
+    // Reset conditional fields
+    const allSkillContainers = Object.values(skillFieldsConfig).map(id => document.getElementById(id)).filter(el => el);
+    allSkillContainers.forEach(container => container.innerHTML = '');
+
     submitBtn.disabled = false;
     successModal.classList.add('active');
     document.getElementById('user-name-placeholder').textContent = volunteerData.full_name;
 
     // Handle WhatsApp redirect
     setTimeout(() => {
-        const volunteerNumber = "919594503214";
-        const messageText = `📌 LVJST Members Registration\n\nA response has been submitted by ${volunteerData.full_name}.\n`;
-        const whatsappUrl = `https://wa.me/${volunteerNumber}?text=${encodeURIComponent(messageText)}`;
+        // const volunteerNumber = "";
+        const whatsappGroupLink = "https://chat.whatsapp.com/DNoAL21fZ6Y5eiWZOxWJIs?mode=ems_wa_c"; // <-- Replace with your actual WhatsApp Group link
+        const messageText = `Hello! I've just successfully registered as a LVJST member.`;
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(messageText)}&link=${whatsappGroupLink}`;
         window.open(whatsappUrl, "_blank");
     }, 2000);
 });
 
-// --- 4. Share & Modal --- (TEXT ONLY, no image)
+// --- 4. Share & Modal ---
 shareBtn.addEventListener('click', async () => {
     const originalText = 'Share';
     shareBtn.innerHTML = 'Success';
     shareBtn.disabled = true;
 
     try {
-        // Long custom message
         const shareMessage =
             `RUSHABHAYAN 2.0, A cultural event that celebrates our Indian knowledge systems and the explore Teachings of Raja Rushabh. 
 
-Join the Team not just for work, but also learn and grow knowledge. You won't just be working but learn valuable Facts and hands-on Team experience.  
+Join the Team not just for work, but also learn and grow knowledge. You won't just be working but learn valuable Facts and hands-on Team experience.  
 
-✨ Deeply connect with our roots of Jainism and understand the Importance of Jain Knowledge Base in Indian Civilization  
-✨ Connect with Kalyanmitras and share your Ideas & Perspectives  
-✨ Gain real experience in teamwork, event planning, and creative work  
+✨ Deeply connect with our roots of Jainism and understand the Importance of Jain Knowledge Base in Indian Civilization  
+✨ Connect with Kalyanmitras and share your Ideas & Perspectives  
+✨ Gain real experience in teamwork, event planning, and creative work  
 
-Various teams:  
-📢 Social Media & Promotions – posters, designs, marketing  
-🔎 Research Team – collect scripts and letter drafting  
+Various teams:  
+📢 Social Media & Promotions – posters, designs, marketing  
+🔎 Research Team – collect scripts and letter drafting  
 🤝 Connections & Outreach – Meet with scholars and Communities
 
 Fill Form : https://rushabhayan.netlify.app/
@@ -246,7 +169,6 @@ Fill Form : https://rushabhayan.netlify.app/
                 text: shareMessage
             });
         } else {
-            // Fallback: open WhatsApp with prefilled text
             const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
             window.open(whatsappUrl, "_blank");
         }
@@ -260,7 +182,7 @@ Fill Form : https://rushabhayan.netlify.app/
 });
 
 // --- 5. Save Button (Download Card Image) ---
-const saveBtn = document.getElementById('save-btn'); // <- replace old close button id with this
+const saveBtn = document.getElementById('save-btn');
 
 saveBtn.addEventListener('click', async () => {
     try {
@@ -280,9 +202,9 @@ saveBtn.addEventListener('click', async () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     const countElement = document.getElementById('templesCount');
-    const targetCount = 650; // Update this number as needed
-    const duration = 2000; // Animation duration in milliseconds
-    const steps = 50; // Number of steps in the animation
+    const targetCount = 650;
+    const duration = 2000;
+    const steps = 50;
 
     let currentCount = 0;
     const increment = targetCount / steps;
@@ -296,4 +218,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         countElement.textContent = Math.floor(currentCount);
     }, stepDuration);
+});
+
+successModal.addEventListener('click', (e) => {
+    if (e.target === successModal) {
+        successModal.classList.remove('active');
+    }
 });
