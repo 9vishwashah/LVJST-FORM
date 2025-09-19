@@ -120,7 +120,20 @@ volunteerForm.addEventListener('submit', async (e) => {
     // Show success message
     formStatus.textContent = '';
     volunteerForm.reset();
-
+    if (!error) {
+        // Trigger confirmation email
+        try {
+            await fetch("/.netlify/functions/send_email", {
+                method: "POST",
+                body: JSON.stringify({
+                    email: volunteerData.email,
+                    name: volunteerData.full_name
+                })
+            });
+        } catch (err) {
+            console.error("Email send failed:", err);
+        }
+    }
     // Reset conditional fields
     const allSkillContainers = Object.values(skillFieldsConfig).map(id => document.getElementById(id)).filter(el => el);
     allSkillContainers.forEach(container => container.innerHTML = '');
