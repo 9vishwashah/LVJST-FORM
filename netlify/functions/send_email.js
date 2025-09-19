@@ -13,12 +13,14 @@ export async function handler(event, context) {
       };
     }
 
-    // Transporter (using Gmail SMTP)
+    // Gmail SMTP setup
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
-        user: process.env.EMAIL_USER, // set in Netlify environment
-        pass: process.env.EMAIL_PASS, // use Gmail App Password
+        user: process.env.EMAIL_USER, // your Gmail address
+        pass: process.env.EMAIL_PASS, // 16-digit App Password
       },
     });
 
@@ -42,6 +44,7 @@ export async function handler(event, context) {
       body: JSON.stringify({ message: "Confirmation email sent successfully!" }),
     };
   } catch (err) {
+    console.error("Email send error:", err); // log full error to Netlify logs
     return {
       statusCode: 500,
       body: JSON.stringify({ error: err.message }),
