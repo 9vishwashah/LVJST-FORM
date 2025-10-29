@@ -329,9 +329,9 @@ body {
 }
 
 .form-logo {
-    width: 100px;
+    width: 120px;
     /* Increased from 60px */
-    margin-left: -20px;
+    /* margin-left: -7px; */
     height: auto;
     transition: transform 0.3s ease;
 }
@@ -372,7 +372,7 @@ body {
     }
 
     .form-logo {
-        width: 85px;
+        width: 100px;
         margin-left: 0px;
         margin-bottom: 0px;
     }
@@ -489,7 +489,7 @@ body {
     }
 
     .form-logo {
-        width: 85px;
+        width: 100px;
     }
 
     .form-title {
@@ -869,3 +869,4 @@ footer .fa-whatsapp:hover {
         margin-bottom: 10px;
     }
 }
+
