@@ -89,13 +89,22 @@ volunteerForm.addEventListener('submit', async (e) => {
         return;
     }
 
-    // Create volunteer data object
+    // Validate age (replaces DOB)
+    const ageValue = parseInt(formData.get('age'), 10);
+    if (Number.isNaN(ageValue) || ageValue < 1 || ageValue > 120) {
+        alert('Please enter a valid age between 1 and 120.');
+        submitBtn.disabled = false;
+        formStatus.textContent = '';
+        return;
+    }
+
+    // Create volunteer data object (use age instead of date_of_birth)
     const volunteerData = {
         full_name: formData.get('full_name'),
         email: formData.get('email'),
         mobile_number: formData.get('mobile_no'),
         gender: formData.get('gender'),
-        date_of_birth: formData.get('dob'),
+        age: ageValue,
         education: formData.get('education'),
         city: formData.get('city'),
         address: formData.get('address'),
@@ -145,7 +154,7 @@ volunteerForm.addEventListener('submit', async (e) => {
     // Handle WhatsApp redirect
     setTimeout(() => {
         // const volunteerNumber = "";
-        const whatsappGroupLink = "https://chat.whatsapp.com/DNoAL21fZ6Y5eiWZOxWJIs?mode=ems_wa_c"; // <-- Replace with your actual WhatsApp Group link
+        const whatsappGroupLink = "https://chat.whatsapp.com/9594503214"; // <-- Replace with your actual WhatsApp Group link
         const messageText = `Hello! I've just successfully registered as a LVJST member.`;
         const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(messageText)}&link=${whatsappGroupLink}`;
         window.open(whatsappUrl, "_blank");
