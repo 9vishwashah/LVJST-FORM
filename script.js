@@ -224,7 +224,7 @@ saveBtn.addEventListener('click', async () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     const countElement = document.getElementById('templesCount');
-    const targetCount = 650;
+    const targetCount = 999;
     const duration = 4000;
     const steps = 40;
 
