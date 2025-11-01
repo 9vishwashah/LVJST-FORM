@@ -1,53 +1,38 @@
-import nodemailer from "nodemailer";
+// netlify/functions/send_email.js
+import { Resend } from 'resend';
 
-export async function handler(event, context) {
+export const handler = async (event) => {
   try {
-    const body = JSON.parse(event.body);
-    const userEmail = body.email;
-    const userName = body.name || "Friend";
+    const { email, name } = JSON.parse(event.body);
 
-    if (!userEmail) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: "Email is required" }),
-      };
-    }
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
-    // Gmail SMTP setup
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.EMAIL_USER, // your Gmail address
-        pass: process.env.EMAIL_PASS, // 16-digit App Password
-      },
-    });
-
-    const mailOptions = {
-      from: `"LVJST" <${process.env.EMAIL_USER}>`,
-      to: userEmail,
-      subject: "Welcome to LVJST ✨",
+    await resend.emails.send({
+      from: 'LVJST Team <noreply@lvjst.org>',
+      to: email,
+      subject: 'Thank you for joining LVJST!',
       html: `
-        <h2>Hi ${userName},</h2>
-        <p>Thank you for registering for <b>Rushabhayan 2.0</b>!</p>
-        <p>We are excited to have you onboard 🚀</p>
-        <br/>
-        <p>Warm regards,<br/>LVJST Team</p>
+        <div style="font-family:Arial,sans-serif;padding:20px;">
+          <h2>🙏 Namaste ${name},</h2>
+          <p>We’ve successfully received your registration for <b>LVJST Membership</b>.</p>
+          <p>Our team will review your details and contact you soon with further information.</p>
+          <br>
+          <p>Warm regards,</p>
+          <strong>LVJST Team</strong><br>
+          <a href="https://lvjst.org">lvjst.org</a>
+        </div>
       `,
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Confirmation email sent successfully!" }),
+      body: JSON.stringify({ message: 'Email sent successfully' }),
     };
-  } catch (err) {
-    console.error("Email send error:", err); // log full error to Netlify logs
+  } catch (error) {
+    console.error('Email sending failed:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: err.message }),
+      body: JSON.stringify({ error: 'Failed to send email' }),
     };
   }
-}
+};

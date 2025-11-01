@@ -134,16 +134,21 @@ volunteerForm.addEventListener('submit', async (e) => {
     if (!error) {
         // Trigger confirmation email
         try {
-            await fetch("/.netlify/functions/send_email", {
-                method: "POST",
-                body: JSON.stringify({
-                    email: volunteerData.email,
-                    name: volunteerData.full_name
-                })
-            });
-        } catch (err) {
-            console.error("Email send failed:", err);
-        }
+    const response = await fetch("/.netlify/functions/send_email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            email: volunteerData.email,
+            name: volunteerData.full_name
+        })
+    });
+
+    if (!response.ok) throw new Error("Email sending failed");
+    console.log("✅ Confirmation email sent to", volunteerData.email);
+} catch (err) {
+    console.error("❌ Email send failed:", err);
+}
+
     }
     // Reset conditional fields
     const allSkillContainers = Object.values(skillFieldsConfig).map(id => document.getElementById(id)).filter(el => el);
