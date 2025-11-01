@@ -109,7 +109,7 @@ volunteerForm.addEventListener('submit', async (e) => {
         city: formData.get('city'),
         address: formData.get('address'),
         skills: skills,
-        contribution_text: formData.get('contribution'),
+        // contribution_text: formData.get('contribution'),
         reference: formData.get('reference'),
     };
 
@@ -126,6 +126,8 @@ volunteerForm.addEventListener('submit', async (e) => {
         return;
     }
 
+    const userName = formData.get('full_name');
+    document.getElementById('user-name-placeholder').textContent = userName;
     // Show success message
     formStatus.textContent = '';
     volunteerForm.reset();
@@ -152,13 +154,19 @@ volunteerForm.addEventListener('submit', async (e) => {
     document.getElementById('user-name-placeholder').textContent = volunteerData.full_name;
 
     // Handle WhatsApp redirect
+    // setTimeout(() => {
+    //     // const volunteerNumber = "";
+    //     const whatsappGroupLink = "https://chat.whatsapp.com/9594503214"; // <-- Replace with your actual WhatsApp Group link
+    //     const messageText = `Hello! I've just successfully registered as a LVJST member.`;
+    //     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(messageText)}&link=${whatsappGroupLink}`;
+    //     window.open(whatsappUrl, "_blank");
+    // }, 2000);
     setTimeout(() => {
-        // const volunteerNumber = "";
-        const whatsappGroupLink = "https://chat.whatsapp.com/9594503214"; // <-- Replace with your actual WhatsApp Group link
-        const messageText = `Hello! I've just successfully registered as a LVJST member.`;
-        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(messageText)}&link=${whatsappGroupLink}`;
-        window.open(whatsappUrl, "_blank");
-    }, 2000);
+            const volunteerNumber = "919594503214";
+            const messageText = `Jai Jinendra! I've just successfully registered as a LVJST member. From Submitted by ${userName}.\n`;
+            const whatsappUrl = `https://wa.me/${volunteerNumber}?text=${encodeURIComponent(messageText)}`;
+            window.open(whatsappUrl, "_blank");
+        }, 2000);
 });
 
 // --- 4. Share & Modal ---
