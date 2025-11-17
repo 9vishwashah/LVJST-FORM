@@ -1,6 +1,25 @@
 {
   "dependencies": {
     "@supabase/supabase-js": "^2.81.1",
+    "bcryptjs": "^3.0.3",
     "resend": "^6.4.2"
-  }
+  },
+  "name": "lvjst-form",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/9vishwashah/LVJST-FORM.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/9vishwashah/LVJST-FORM/issues"
+  },
+  "homepage": "https://github.com/9vishwashah/LVJST-FORM#readme"
 }

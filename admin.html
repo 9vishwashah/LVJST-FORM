@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard — Volunteers</title>
+
+  <!-- Styles (adapted from your reference design) -->
+  <style>
+    :root{
+      --accent-1: #8B4513;
+      --accent-2: #DA7046;
+      --muted: #f5e6d3;
+      --card-bg: #ffffff;
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg,#f5e6d3 0%,#faf4ed 100%); min-height:100vh;color:#333}
+    header{background:linear-gradient(135deg,var(--accent-1) 0%,var(--accent-2) 100%);color:#fff;padding:18px 24px;box-shadow:0 4px 20px rgba(0,0,0,0.08);position:sticky;top:0;z-index:50}
+    .header-content{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    header h1{font-size:20px;display:flex;align-items:center;gap:10px}
+    .header-actions{display:flex;gap:10px;align-items:center}
+    .btn{background:rgba(255,255,255,0.12);border:none;padding:10px 14px;color:#fff;border-radius:8px;cursor:pointer;font-weight:600}
+    .btn.logout{background:rgba(220,38,38,0.9)}
+    .container{max-width:1200px;margin:24px auto;padding:20px}
+    .stats-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:18px}
+    .stat-card{background:var(--card-bg);padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(139,69,19,0.06);border:2px solid rgba(218,112,70,0.08);display:flex;gap:14px;align-items:center}
+    .stat-icon{width:64px;height:64px;border-radius:10px;background:linear-gradient(135deg,#faf4ed 0%,#f5e6d3 100%);display:flex;align-items:center;justify-content:center;font-size:28px}
+    .stat-info h3{font-size:13px;color:#666;margin-bottom:6px;font-weight:700}
+    .stat-info .number{color:var(--accent-1);font-size:26px;font-weight:800}
+    .controls-section{background:var(--card-bg);padding:14px;border-radius:12px;box-shadow:0 6px 20px rgba(139,69,19,0.05);border:2px solid rgba(218,112,70,0.06);margin-bottom:18px}
+    .controls-grid{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .search-box{flex:1;position:relative}
+    .search-box input{width:100%;padding:10px 40px 10px 12px;border-radius:10px;border:2px solid #e8ded1;font-size:15px}
+    .search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#999}
+    .filter-buttons{display:flex;gap:8px}
+    .filter-btn{padding:8px 12px;border-radius:8px;border:2px solid #e8ded1;background:white;font-weight:700;cursor:pointer}
+    .filter-btn.active{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:white;border-color:transparent}
+    #msg{margin:12px 0;padding:10px;border-radius:10px;font-weight:700;text-align:center}
+    #msg.loading{background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);color:#92400e;border:2px solid #fbbf24}
+    #msg.success{background:linear-gradient(135deg,#d1fae5 0%,#a7f3d0 100%);color:#065f46;border:2px solid #34d399}
+    #msg.error{background:linear-gradient(135deg,#fee2e2 0%,#fecaca 100%);color:#991b1b;border:2px solid #f87171}
+
+    .table-container{background:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.05);border:2px solid rgba(218,112,70,0.06)}
+    .table-wrapper{overflow:auto}
+    table{width:100%;min-width:1000px;border-collapse:collapse}
+    thead{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#fff;position:sticky;top:0}
+    th{padding:12px 14px;text-align:left;font-weight:700;font-size:13px;white-space:nowrap}
+    td{padding:12px 14px;border-bottom:1px solid #f3e8dc;font-size:14px;color:#222;vertical-align:top}
+    tbody tr:hover{background:linear-gradient(135deg,#faf4ed,#f5e6d3)}
+    .action-buttons{display:flex;gap:8px}
+    .action-btn{width:36px;height:36px;border-radius:8px;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+    .whatsapp-btn{background:linear-gradient(135deg,#25D366,#128C7E);color:white}
+    .delete-btn{background:linear-gradient(135deg,#ef4444,#dc2626);color:white}
+    .download-btn{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:white;padding:8px 12px;border-radius:8px;text-decoration:none;display:inline-block}
+    .email-cell{font-weight:700;color:var(--accent-1)}
+    .date-cell{font-size:13px;color:#666;white-space:nowrap}
+    .description-cell{max-width:420px;vertical-align:top;padding:8px;background:transparent}
+    .desc-scroll{max-height:84px;overflow-y:auto;background:#fff9f3;padding:8px;border-radius:6px;line-height:1.4}
+    .empty-state{text-align:center;padding:36px;color:#999}
+
+    /* modal */
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:200}
+    .modal.active{display:flex}
+    .modal-content{background:white;padding:20px;border-radius:12px;width:360px;text-align:center}
+    .modal-buttons{display:flex;gap:10px;justify-content:center;margin-top:12px}
+
+    /* responsive */
+    @media (max-width:900px){table{min-width:900px}}
+    @media (max-width:720px){.header-content{padding:0 12px} .stat-card{padding:12px} th,td{padding:8px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>🎗 LVJST — Volunteer Dashboard</h1>
+      <div class="header-actions">
+        <button class="btn" id="refreshBtn">🔄 Refresh</button>
+        <button class="btn logout" id="logoutBtn">🚪 Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="stats-cards">
+      <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-info"><h3>Total Volunteers</h3><div class="number" id="totalCount">0</div></div></div>
+      <div class="stat-card"><div class="stat-icon">🏙️</div><div class="stat-info"><h3>Cities</h3><div class="number" id="citiesCount">0</div></div></div>
+      <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-info"><h3>By Gender (Top)</h3><div class="number" id="genderTop">—</div></div></div>
+    </div>
+
+    <div class="controls-section">
+      <div class="controls-grid">
+        <div class="search-box">
+          <input id="searchInput" placeholder="🔍 Search by name, email, city, phone..." />
+          <span class="search-icon">🔍</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="city">By City</button>
+            <button class="filter-btn" data-filter="age">By Age</button>
+          </div>
+          <button class="filter-btn" id="exportCsvBtn">Export CSV</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="msg" class="loading">⏳ Loading...</div>
+
+    <div class="table-container" style="margin-top:12px">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Contact</th>
+              <th>Email</th>
+              <th>City</th>
+              <th>Age</th>
+              <th>Skills</th>
+              <th>Reference</th>
+              <th>Submitted At</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="dataBody">
+            <tr><td colspan="9" class="empty-state">⏳ Loading data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Delete confirm modal -->
+  <div class="modal" id="deleteModal"><div class="modal-content">
+    <h3>Confirm delete?</h3>
+    <p>This action will permanently remove the volunteer record.</p>
+    <div class="modal-buttons">
+      <button class="filter-btn" id="cancelDeleteBtn">Cancel</button>
+      <button class="filter-btn" id="confirmDeleteBtn" style="background:linear-gradient(135deg,var(--danger),#c53030);color:white">Delete</button>
+    </div>
+  </div></div>
+
+  <!-- Login overlay (hidden by default) -->
+  <div id="loginOverlay" class="modal active" style="background:linear-gradient(0deg,rgba(0,0,0,0.6),rgba(0,0,0,0.6))">
+    <div class="modal-content" style="max-width:420px">
+      <h2 style="color:var(--accent-1);margin-bottom:8px">Admin Login</h2>
+      <form id="adminLoginForm">
+        <div style="margin-bottom:8px"><label>ID</label><input id="adminId" required style="width:100%;padding:8px;border-radius:6px;border:1px solid #ddd" /></div>
+        <div style="margin-bottom:8px"><label>Password</label><input id="adminPass" type="password" required style="width:100%;padding:8px;border-radius:6px;border:1px solid #ddd" /></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+          <button type="submit" class="filter-btn">Login</button>
+        </div>
+        <p id="loginMsg" style="margin-top:8px;color:#666;font-weight:600"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- include admin.js -->
+  <script src="./admin.js"></script>
+</body>
+</html>
