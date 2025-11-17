@@ -1,19 +1,22 @@
-// This file will handle the survey form logic.
+// script.js — volunteer form with reCAPTCHA v3 integration
+// 1) Set your reCAPTCHA site key here (or set to null to disable)
+const RECAPTCHA_SITE_KEY = 'YOUR_SITE_KEY_OR_NULL'; // <-- replace with your site key (public). If null, recaptcha is skipped.
+
 const SUPABASE_URL = 'https://exuwgrqeecccowoymxxs.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Ov-hEYH3LoEzkQtvzq1URg_TKf5QdeR';
 
+// Keep supabase client for other read-only usage on client if needed.
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// --- 1. Form Elements ---
+// --- DOM references ---
 const volunteerForm = document.getElementById('volunteer-form');
 const formStatus = document.getElementById('form-status');
 const successModal = document.getElementById('success-modal');
-const closeSuccessModalBtn = document.getElementById('save-btn');
 const shareBtn = document.getElementById('share-btn');
-
 const skillsCheckboxes = document.querySelectorAll('input[name="skills"]');
+const saveBtn = document.getElementById('save-btn');
 
-// Map skill values to experience container IDs
+// Skill -> experience container mapping (unchanged)
 const skillFieldsConfig = {
     'History': 'history-experience-container',
     'Exploration': 'exploration-experience-container',
@@ -30,15 +33,15 @@ const skillFieldsConfig = {
     'Other': 'other-experience-container'
 };
 
-// --- 2. Conditional Logic ---
+// --- Conditional skill experience fields ---
 skillsCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', (e) => {
         const value = e.target.value;
         const containerId = skillFieldsConfig[value];
         const isChecked = e.target.checked;
         const container = document.getElementById(containerId);
+        if (!container) return;
 
-        // Conditional logic for skills: show experience field if checked
         if (isChecked) {
             container.innerHTML = `
                 <div class="conditional-fields">
@@ -52,7 +55,43 @@ skillsCheckboxes.forEach(checkbox => {
     });
 });
 
-// --- 3. Form Submission ---
+// --- recaptcha helper (v3) ---
+// Returns token string or null if not configured or failed.
+async function getRecaptchaToken(action = 'submit_volunteer') {
+    try {
+        if (!RECAPTCHA_SITE_KEY) return null;
+        if (!window.grecaptcha || typeof window.grecaptcha.execute !== 'function') {
+            console.warn('grecaptcha not loaded or execute not available.');
+            return null;
+        }
+        // execute returns a Promise for token
+        const token = await grecaptcha.execute(RECAPTCHA_SITE_KEY, { action });
+        return token || null;
+    } catch (err) {
+        console.warn('recaptcha error', err);
+        return null;
+    }
+}
+
+// --- call server function ---
+async function callSubmitVolunteerFunction(volunteerData, recaptchaToken = null) {
+    const payload = { ...volunteerData, recaptchaToken };
+    const url = '/.netlify/functions/submitVolunteer'; // change if using another host
+    const resp = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    });
+    const body = await resp.json().catch(() => null);
+    if (!resp.ok) {
+        const message = body?.error || body?.message || `HTTP ${resp.status}`;
+        const details = body?.details ? ` - ${JSON.stringify(body.details)}` : '';
+        throw new Error(message + details);
+    }
+    return body;
+}
+
+// --- Form submit handler ---
 volunteerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(volunteerForm);
@@ -60,14 +99,14 @@ volunteerForm.addEventListener('submit', async (e) => {
     submitBtn.disabled = true;
     formStatus.textContent = 'Submitting...';
 
-    // Collect skills data with experience
+    // Collect skills & experiences
     const skills = {};
     const selectedSkills = Array.from(skillsCheckboxes)
         .filter(cb => cb.checked)
         .map(cb => {
             const skillName = cb.value;
             const experienceFieldName = `${skillName.toLowerCase()}_experience`;
-            const experience = formData.get(experienceFieldName) || null;
+            const experience = (formData.get(experienceFieldName) || '').toString().trim() || null;
             skills[skillName] = {
                 selected: true,
                 experience: experience
@@ -75,21 +114,20 @@ volunteerForm.addEventListener('submit', async (e) => {
             return skillName;
         });
 
-    // Form validation checks for skills only
+    // Validation
     if (selectedSkills.length === 0) {
         alert('Please select at least one skill or interest to proceed.');
         submitBtn.disabled = false;
         formStatus.textContent = '';
         return;
     }
-    if (selectedSkills.includes('Other') && !formData.get('other_experience')?.trim()) {
+    if (selectedSkills.includes('Other') && !formData.get('other_experience')?.toString().trim()) {
         alert('Please specify your "Other" skill experience.');
         submitBtn.disabled = false;
         formStatus.textContent = '';
         return;
     }
 
-    // Validate age (replaces DOB)
     const ageValue = parseInt(formData.get('age'), 10);
     if (Number.isNaN(ageValue) || ageValue < 1 || ageValue > 120) {
         alert('Please enter a valid age between 1 and 120.');
@@ -98,83 +136,77 @@ volunteerForm.addEventListener('submit', async (e) => {
         return;
     }
 
-    // Create volunteer data object (use age instead of date_of_birth)
     const volunteerData = {
-        full_name: formData.get('full_name'),
-        email: formData.get('email'),
-        mobile_number: formData.get('mobile_no'),
-        gender: formData.get('gender'),
+        full_name: formData.get('full_name')?.toString().trim(),
+        email: formData.get('email')?.toString().trim(),
+        mobile_number: formData.get('mobile_no')?.toString().trim(),
+        gender: formData.get('gender')?.toString().trim(),
         age: ageValue,
-        education: formData.get('education'),
-        city: formData.get('city'),
-        address: formData.get('address'),
-        skills: skills,
-        // contribution_text: formData.get('contribution'),
-        reference: formData.get('reference'),
+        education: formData.get('education')?.toString().trim(),
+        city: formData.get('city')?.toString().trim(),
+        address: formData.get('address')?.toString().trim(),
+        skills,
+        contribution_text: null,
+        reference: formData.get('reference')?.toString().trim()
     };
 
-    // Insert data into Supabase
-    const { data, error } = await supabaseClient
-        .from('volunteers')
-        .insert([volunteerData])
-        .select();
+    try {
+        // Acquire fresh token right before submit. If SITE_KEY is null, token will be null and server
+        // must allow missing token only if RECAPTCHA_SECRET not configured.
+        const recaptchaToken = await getRecaptchaToken();
 
-    if (error) {
-        console.error('Error submitting form:', error);
-        formStatus.textContent = `Error: ${error.message}`;
+        // If you require recaptcha on client, you may choose to block submission here when token is null.
+        // For now we pass null to server if not available (server will validate if RECAPTCHA_SECRET set).
+        const result = await callSubmitVolunteerFunction(volunteerData, recaptchaToken);
+        console.log('Server returned', result);
+
+        // Success UI & email send (unchanged)
+        const userName = volunteerData.full_name;
+        document.getElementById('user-name-placeholder').textContent = userName;
+        formStatus.textContent = '';
+        volunteerForm.reset();
+
+        // send confirmation email via your existing function
+        (async () => {
+            try {
+                const response = await fetch("/.netlify/functions/send_email", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: volunteerData.email, name: volunteerData.full_name })
+                });
+                const resJson = await response.json().catch(() => null);
+                if (!response.ok) throw new Error(resJson?.error || 'Email send failed');
+                console.log('Confirmation email sent');
+            } catch (err) {
+                console.warn('Email send failed', err);
+            }
+        })();
+
+        // Reset conditional fields
+        const allSkillContainers = Object.values(skillFieldsConfig).map(id => document.getElementById(id)).filter(Boolean);
+        allSkillContainers.forEach(container => container.innerHTML = '');
+
         submitBtn.disabled = false;
-        return;
-    }
+        successModal.classList.add('active');
+        document.getElementById('user-name-placeholder').textContent = volunteerData.full_name;
 
-    const userName = formData.get('full_name');
-    document.getElementById('user-name-placeholder').textContent = userName;
-    // Show success message
-    formStatus.textContent = '';
-    volunteerForm.reset();
-    if (!error) {
-        // Trigger confirmation email
-        try {
-    const response = await fetch("/.netlify/functions/send_email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            email: volunteerData.email,
-            name: volunteerData.full_name
-        })
-    });
-
-    if (!response.ok) throw new Error("Email sending failed");
-    console.log("✅ Confirmation email sent to", volunteerData.email);
-} catch (err) {
-    console.error("❌ Email send failed:", err);
-}
-
-    }
-    // Reset conditional fields
-    const allSkillContainers = Object.values(skillFieldsConfig).map(id => document.getElementById(id)).filter(el => el);
-    allSkillContainers.forEach(container => container.innerHTML = '');
-
-    submitBtn.disabled = false;
-    successModal.classList.add('active');
-    document.getElementById('user-name-placeholder').textContent = volunteerData.full_name;
-
-    // Handle WhatsApp redirect
-    // setTimeout(() => {
-    //     // const volunteerNumber = "";
-    //     const whatsappGroupLink = "https://chat.whatsapp.com/9594503214"; // <-- Replace with your actual WhatsApp Group link
-    //     const messageText = `Hello! I've just successfully registered as a LVJST member.`;
-    //     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(messageText)}&link=${whatsappGroupLink}`;
-    //     window.open(whatsappUrl, "_blank");
-    // }, 2000);
-    setTimeout(() => {
+        // WhatsApp redirect
+        setTimeout(() => {
             const volunteerNumber = "919594503214";
             const messageText = `Jai Jinendra! I've just successfully registered as a LVJST member. From Submitted by ${userName}.\n`;
             const whatsappUrl = `https://wa.me/${volunteerNumber}?text=${encodeURIComponent(messageText)}`;
             window.open(whatsappUrl, "_blank");
         }, 2000);
+
+    } catch (err) {
+        console.error('Submission error', err);
+        alert('Submission failed: ' + (err.message || 'server error'));
+        formStatus.textContent = `Error: ${err.message || 'Submission failed'}`;
+        submitBtn.disabled = false;
+    }
 });
 
-// --- 4. Share & Modal ---
+// Share button, save button, counter, modal click — unchanged (copied from your original script)
 shareBtn.addEventListener('click', async () => {
     const originalText = 'Share';
     shareBtn.innerHTML = 'Success';
@@ -182,27 +214,23 @@ shareBtn.addEventListener('click', async () => {
 
     try {
         const shareMessage =
-            `RUSHABHAYAN 2.0, A cultural event that celebrates our Indian knowledge systems and the explore Teachings of Raja Rushabh. 
+`RUSHABHAYAN 2.0, A cultural event that celebrates our Indian knowledge systems and the explore Teachings of Raja Rushabh. 
 
-Join the Team not just for work, but also learn and grow knowledge. You won't just be working but learn valuable Facts and hands-on Team experience.  
+Join the Team not just for work, but also learn and grow knowledge. You won't just be working but learn valuable Facts and hands-on Team experience.  
 
-✨ Deeply connect with our roots of Jainism and understand the Importance of Jain Knowledge Base in Indian Civilization  
-✨ Connect with Kalyanmitras and share your Ideas & Perspectives  
-✨ Gain real experience in teamwork, event planning, and creative work  
+✨ Deeply connect with our roots of Jainism and understand the Importance of Jain Knowledge Base in Indian Civilization  
+✨ Connect with Kalyanmitras and share your Ideas & Perspectives  
+✨ Gain real experience in teamwork, event planning, and creative work  
 
-Various teams:  
-📢 Social Media & Promotions – posters, designs, marketing  
-🔎 Research Team – collect scripts and letter drafting  
+Various teams:  
+📢 Social Media & Promotions – posters, designs, marketing  
+🔎 Research Team – collect scripts and letter drafting  
 🤝 Connections & Outreach – Meet with scholars and Communities
 
 Fill Form : https://rushabhayan.netlify.app/
 `;
-
         if (navigator.share) {
-            await navigator.share({
-                title: 'Rushabhayan 2.0 Invitation',
-                text: shareMessage
-            });
+            await navigator.share({ title: 'Rushabhayan 2.0 Invitation', text: shareMessage });
         } else {
             const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
             window.open(whatsappUrl, "_blank");
@@ -216,14 +244,10 @@ Fill Form : https://rushabhayan.netlify.app/
     }
 });
 
-// --- 5. Save Button (Download Card Image) ---
-const saveBtn = document.getElementById('save-btn');
-
 saveBtn.addEventListener('click', async () => {
     try {
         const elementToCapture = document.querySelector('#success-modal .modal-content');
         if (!elementToCapture) throw new Error("Modal content not found!");
-
         const canvas = await html2canvas(elementToCapture, { scale: 2, useCORS: true, backgroundColor: null });
         const link = document.createElement('a');
         link.download = 'rushabhayan_card.png';
@@ -240,7 +264,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const targetCount = 999;
     const duration = 4000;
     const steps = 40;
-
     let currentCount = 0;
     const increment = targetCount / steps;
     const stepDuration = duration / steps;
@@ -251,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentCount = targetCount;
             clearInterval(counter);
         }
-        countElement.textContent = Math.floor(currentCount);
+        if (countElement) countElement.textContent = Math.floor(currentCount);
     }, stepDuration);
 });
 
