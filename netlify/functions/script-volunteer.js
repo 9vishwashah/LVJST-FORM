@@ -2,7 +2,7 @@
 // Client-side submission that calls the server function.
 // If you have reCAPTCHA, set RECAPTCHA_SITE_KEY; otherwise set to null.
 
-const RECAPTCHA_SITE_KEY = 'YOUR_RECAPTCHA_SITE_KEY_OR_NULL'; // replace or set to null
+const RECAPTCHA_SITE_KEY = '6LemHQ8sAAAAABuB7GU5VRpLw7dMFxxGE1zDkMMH'; // replace or set to null
 
 // For recaptcha v3: load script in index.html when RECAPTCHA_SITE_KEY is set:
 // <script src="https://www.google.com/recaptcha/api.js?render=YOUR_RECAPTCHA_SITE_KEY"></script>
