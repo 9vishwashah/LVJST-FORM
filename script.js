@@ -1,6 +1,6 @@
 // script.js — volunteer form with reCAPTCHA v3 integration
 // 1) Set your reCAPTCHA site key here (or set to null to disable)
-const RECAPTCHA_SITE_KEY = 'YOUR_SITE_KEY_OR_NULL'; // <-- replace with your site key (public). If null, recaptcha is skipped.
+const RECAPTCHA_SITE_KEY = '6LemHQ8sAAAAABuB7GU5VRpLw7dMFxxGE1zDkMMH'; // <-- replace with your site key (public). If null, recaptcha is skipped.
 
 const SUPABASE_URL = 'https://exuwgrqeecccowoymxxs.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Ov-hEYH3LoEzkQtvzq1URg_TKf5QdeR';
