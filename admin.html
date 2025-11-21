@@ -3,161 +3,957 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Dashboard — Volunteers</title>
+  <title>LVJST — Volunteer Dashboard</title>
 
-  <!-- Styles (adapted from your reference design) -->
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
-    :root{
-      --accent-1: #8B4513;
-      --accent-2: #DA7046;
-      --muted: #f5e6d3;
+    /* ============================================
+       CSS VARIABLES & RESET
+       ============================================ */
+    :root {
+      --primary-blue: #2563eb;
+      --primary-blue-dark: #1e40af;
+      --primary-blue-light: #3b82f6;
+      --accent-blue: #60a5fa;
+      --bg-gradient-start: #f0f9ff;
+      --bg-gradient-end: #ffffff;
       --card-bg: #ffffff;
-      --success: #10b981;
-      --danger: #ef4444;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 12px rgba(37, 99, 235, 0.08);
+      --shadow-lg: 0 10px 25px rgba(37, 99, 235, 0.12);
+      --shadow-xl: 0 20px 40px rgba(15, 23, 42, 0.15);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --transition-fast: 150ms ease;
+      --transition-base: 250ms ease;
+      --transition-slow: 350ms ease;
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg,#f5e6d3 0%,#faf4ed 100%); min-height:100vh;color:#333}
-    header{background:linear-gradient(135deg,var(--accent-1) 0%,var(--accent-2) 100%);color:#fff;padding:18px 24px;box-shadow:0 4px 20px rgba(0,0,0,0.08);position:sticky;top:0;z-index:50}
-    .header-content{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;gap:10px;align-items:center}
-    header h1{font-size:20px;display:flex;align-items:center;gap:10px}
-    .header-actions{display:flex;gap:10px;align-items:center}
-    .btn{background:rgba(255,255,255,0.12);border:none;padding:10px 14px;color:#fff;border-radius:8px;cursor:pointer;font-weight:600}
-    .btn.logout{background:rgba(220,38,38,0.9)}
-    .container{max-width:1200px;margin:24px auto;padding:20px}
-    .stats-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:18px}
-    .stat-card{background:var(--card-bg);padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(139,69,19,0.06);border:2px solid rgba(218,112,70,0.08);display:flex;gap:14px;align-items:center}
-    .stat-icon{width:64px;height:64px;border-radius:10px;background:linear-gradient(135deg,#faf4ed 0%,#f5e6d3 100%);display:flex;align-items:center;justify-content:center;font-size:28px}
-    .stat-info h3{font-size:13px;color:#666;margin-bottom:6px;font-weight:700}
-    .stat-info .number{color:var(--accent-1);font-size:26px;font-weight:800}
-    .controls-section{background:var(--card-bg);padding:14px;border-radius:12px;box-shadow:0 6px 20px rgba(139,69,19,0.05);border:2px solid rgba(218,112,70,0.06);margin-bottom:18px}
-    .controls-grid{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    .search-box{flex:1;position:relative}
-    .search-box input{width:100%;padding:10px 40px 10px 12px;border-radius:10px;border:2px solid #e8ded1;font-size:15px}
-    .search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#999}
-    .filter-buttons{display:flex;gap:8px}
-    .filter-btn{padding:8px 12px;border-radius:8px;border:2px solid #e8ded1;background:white;font-weight:700;cursor:pointer}
-    .filter-btn.active{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:white;border-color:transparent}
-    #msg{margin:12px 0;padding:10px;border-radius:10px;font-weight:700;text-align:center}
-    #msg.loading{background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);color:#92400e;border:2px solid #fbbf24}
-    #msg.success{background:linear-gradient(135deg,#d1fae5 0%,#a7f3d0 100%);color:#065f46;border:2px solid #34d399}
-    #msg.error{background:linear-gradient(135deg,#fee2e2 0%,#fecaca 100%);color:#991b1b;border:2px solid #f87171}
 
-    .table-container{background:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.05);border:2px solid rgba(218,112,70,0.06)}
-    .table-wrapper{overflow:auto}
-    table{width:100%;min-width:1000px;border-collapse:collapse}
-    thead{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#fff;position:sticky;top:0}
-    th{padding:12px 14px;text-align:left;font-weight:700;font-size:13px;white-space:nowrap}
-    td{padding:12px 14px;border-bottom:1px solid #f3e8dc;font-size:14px;color:#222;vertical-align:top}
-    tbody tr:hover{background:linear-gradient(135deg,#faf4ed,#f5e6d3)}
-    .action-buttons{display:flex;gap:8px}
-    .action-btn{width:36px;height:36px;border-radius:8px;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
-    .whatsapp-btn{background:linear-gradient(135deg,#25D366,#128C7E);color:white}
-    .delete-btn{background:linear-gradient(135deg,#ef4444,#dc2626);color:white}
-    .download-btn{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:white;padding:8px 12px;border-radius:8px;text-decoration:none;display:inline-block}
-    .email-cell{font-weight:700;color:var(--accent-1)}
-    .date-cell{font-size:13px;color:#666;white-space:nowrap}
-    .description-cell{max-width:420px;vertical-align:top;padding:8px;background:transparent}
-    .desc-scroll{max-height:84px;overflow-y:auto;background:#fff9f3;padding:8px;border-radius:6px;line-height:1.4}
-    .empty-state{text-align:center;padding:36px;color:#999}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    /* modal */
-    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:200}
-    .modal.active{display:flex}
-    .modal-content{background:white;padding:20px;border-radius:12px;width:360px;text-align:center}
-    .modal-buttons{display:flex;gap:10px;justify-content:center;margin-top:12px}
+    html {
+      scroll-behavior: smooth;
+    }
 
-    /* responsive */
-    @media (max-width:900px){table{min-width:900px}}
-    @media (max-width:720px){.header-content{padding:0 12px} .stat-card{padding:12px} th,td{padding:8px}}
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ============================================
+       HEADER
+       ============================================ */
+    header {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+      color: #ffffff;
+      padding: 16px 24px;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      animation: slideDown 0.4s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 9px 16px;
+      border-radius: var(--radius-sm);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn.ghost:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .btn.red {
+      background: #ef4444;
+      border: none;
+    }
+
+    .btn.red:hover {
+      background: #dc2626;
+    }
+
+    /* ============================================
+       MAIN CONTAINER
+       ============================================ */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 28px 20px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       STATS CARDS
+       ============================================ */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      transition: all var(--transition-base);
+      animation: scaleIn 0.4s ease backwards;
+    }
+
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-blue-light);
+    }
+
+    .icon {
+      background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .meta h3 {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .meta .num {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary-blue);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .small-icon {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      gap: 6px;
+    }
+
+    /* ============================================
+       CHARTS ROW
+       ============================================ */
+    .charts-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .panel {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      transition: all var(--transition-base);
+    }
+
+    .panel:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .chart-wrap h4 {
+      margin-bottom: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .chart-wrap p {
+      margin-top: 12px;
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    /* ============================================
+       SEARCH & CONTROLS
+       ============================================ */
+    .controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .search {
+      flex: 1;
+      min-width: 280px;
+      display: flex;
+      align-items: center;
+      background: #f8fafc;
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      transition: all var(--transition-fast);
+    }
+
+    .search:focus-within {
+      background: #ffffff;
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .search input {
+      border: 0;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+      padding: 0;
+      color: var(--text-primary);
+    }
+
+    .search input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* ============================================
+       TABLE WRAPPER & STICKY HEADER
+       ============================================ */
+    .table-wrap {
+      margin-top: 0;
+      overflow-x: auto;
+      overflow-y: visible;
+      -webkit-overflow-scrolling: touch;
+      border-radius: var(--radius-md);
+      background: var(--card-bg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Custom scrollbar */
+    .table-wrap::-webkit-scrollbar {
+      height: 12px;
+    }
+
+    .table-wrap::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+    }
+
+    .table-wrap::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+      border-radius: 6px;
+      border: 2px solid #f1f5f9;
+    }
+
+    .table-wrap::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-blue-dark);
+    }
+
+    table {
+      min-width: 1400px;
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: transparent;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+      color: #ffffff;
+      padding: 16px 14px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      z-index: 10;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    thead th:first-child {
+      border-radius: var(--radius-md) 0 0 0;
+    }
+
+    thead th:last-child {
+      border-radius: 0 var(--radius-md) 0 0;
+    }
+
+    tbody td {
+      padding: 16px 14px;
+      border-bottom: 1px solid #f1f5f9;
+      background: #ffffff;
+      font-size: 14px;
+      transition: background var(--transition-fast);
+    }
+
+    tbody tr:hover td {
+      background: #f8fafc;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:last-child td:first-child {
+      border-radius: 0 0 0 var(--radius-md);
+    }
+
+    tbody tr:last-child td:last-child {
+      border-radius: 0 0 var(--radius-md) 0;
+    }
+
+    .srno {
+      width: 70px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .email-cell {
+      font-weight: 600;
+      color: var(--primary-blue);
+    }
+
+    .date-cell {
+      white-space: nowrap;
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .skills-cell {
+      max-width: 300px;
+    }
+
+    .skills-cell .chip {
+      display: inline-block;
+      background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+      color: var(--primary-blue);
+      padding: 4px 10px;
+      border-radius: 16px;
+      margin: 2px;
+      font-size: 12px;
+      border: 1px solid #bfdbfe;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+    }
+
+    .skills-cell .chip:hover {
+      background: var(--primary-blue);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .actions-col {
+      width: 140px;
+      text-align: center;
+    }
+
+    /* ============================================
+       COLUMN HEADER ACTIONS
+       ============================================ */
+    .col-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 4px;
+    }
+
+    .col-action button {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all var(--transition-fast);
+    }
+
+    .col-action button:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.05);
+    }
+
+    /* ============================================
+       CONTACT & ACTION BUTTONS
+       ============================================ */
+    .icon-btn {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      transition: all var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .whatsapp {
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      box-shadow: 0 2px 6px rgba(37, 211, 102, 0.3);
+    }
+
+    .whatsapp:hover {
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.5);
+    }
+
+    .email-icon {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid var(--border-color);
+      color: var(--primary-blue);
+      width: 32px;
+      height: 32px;
+    }
+
+    .email-icon:hover {
+      background: var(--primary-blue);
+      color: #ffffff;
+      border-color: var(--primary-blue);
+    }
+
+    .action-delete {
+      color: #ef4444;
+      width: 32px;
+      height: 32px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+    }
+
+    .action-delete:hover {
+      background: #ef4444;
+      color: #ffffff;
+      border-color: #ef4444;
+    }
+
+    /* ============================================
+       LOGIN OVERLAY
+       ============================================ */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .login-overlay[style*="display: flex"] {
+      display: flex !important;
+    }
+
+    .login-card {
+      width: 440px;
+      max-width: calc(100% - 40px);
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      box-shadow: var(--shadow-xl);
+      animation: scaleIn 0.4s ease;
+    }
+
+    .login-card h2 {
+      margin-bottom: 24px;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--primary-blue);
+      text-align: center;
+    }
+
+    .login-card label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .login-card input[type="text"],
+    .login-card input[type="password"] {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      margin-bottom: 16px;
+      font-size: 14px;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .login-card input:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .login-card .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    .login-card .login-btn {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+      border: none;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all var(--transition-base);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .login-card .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    }
+
+    .login-card .error {
+      color: #ef4444;
+      margin-top: 12px;
+      font-weight: 600;
+      text-align: center;
+      display: none;
+      background: #fef2f2;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid #fecaca;
+    }
+
+    /* ============================================
+       RESPONSIVE DESIGN
+       ============================================ */
+    @media (max-width: 1024px) {
+      .charts-row {
+        grid-template-columns: 1fr;
+      }
+
+      table {
+        min-width: 1200px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 14px 16px;
+      }
+
+      header h1 {
+        font-size: 16px;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .btn {
+        font-size: 13px;
+        padding: 8px 12px;
+      }
+
+      .container {
+        padding: 20px 12px;
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      .icon {
+        width: 56px;
+        height: 56px;
+        font-size: 24px;
+      }
+
+      .meta .num {
+        font-size: 28px;
+      }
+
+      .panel {
+        padding: 18px;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search {
+        min-width: 100%;
+      }
+
+      .login-card {
+        padding: 28px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .btn {
+        flex: 1;
+        justify-content: center;
+      }
+
+      .header-actions {
+        flex-wrap: wrap;
+      }
+    }
+
+    /* ============================================
+       UTILITY & ANIMATION CLASSES
+       ============================================ */
+    .fade-in {
+      animation: fadeIn 0.5s ease;
+    }
+
+    .slide-up {
+      animation: slideUp 0.4s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Focus visible for accessibility */
+    *:focus-visible {
+      outline: 2px solid var(--primary-blue);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
   <header>
-    <div class="header-content">
-      <h1>🎗 LVJST — Volunteer Dashboard</h1>
+    <div class="header-inner">
+      <h1><span>🔷</span> LVJST Volunteer Dashboard</h1>
       <div class="header-actions">
-        <button class="btn" id="refreshBtn">🔄 Refresh</button>
-        <button class="btn logout" id="logoutBtn">🚪 Logout</button>
+        <button id="exportPdfBtn" class="btn">
+          <i class="fa-solid fa-file-pdf"></i> PDF
+        </button>
+        <button id="exportCsvBtn" class="btn ghost">
+          <i class="fa-solid fa-download"></i> CSV
+        </button>
+        <button id="refreshBtn" class="btn ghost">
+          <i class="fa-solid fa-rotate"></i> Refresh
+        </button>
+        <button id="logoutBtn" class="btn red">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
       </div>
     </div>
   </header>
 
-  <main class="container">
-    <div class="stats-cards">
-      <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-info"><h3>Total Volunteers</h3><div class="number" id="totalCount">0</div></div></div>
-      <div class="stat-card"><div class="stat-icon">🏙️</div><div class="stat-info"><h3>Cities</h3><div class="number" id="citiesCount">0</div></div></div>
-      <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-info"><h3>By Gender (Top)</h3><div class="number" id="genderTop">—</div></div></div>
-    </div>
-
-    <div class="controls-section">
-      <div class="controls-grid">
-        <div class="search-box">
-          <input id="searchInput" placeholder="🔍 Search by name, email, city, phone..." />
-          <span class="search-icon">🔍</span>
+  <main class="container" id="dashboardMain">
+    <div class="stats-row">
+      <div class="card">
+        <div class="icon">📋</div>
+        <div class="meta">
+          <h3>Total Volunteers</h3>
+          <div class="num" id="totalCount">0</div>
         </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <div class="filter-buttons">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="city">By City</button>
-            <button class="filter-btn" data-filter="age">By Age</button>
+      </div>
+
+      <div class="card">
+        <div class="icon">🌆</div>
+        <div class="meta">
+          <h3>Cities</h3>
+          <div class="num" id="citiesCount">0</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="icon">👥</div>
+        <div class="meta">
+          <h3>Gender</h3>
+          <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap">
+            <span id="maleBadge" class="small-icon" style="background:#dbeafe;color:var(--primary-blue)">
+              <i class="fa-solid fa-person"></i> Male 0
+            </span>
+            <span id="femaleBadge" class="small-icon" style="background:#fce7f3;color:#db2777">
+              <i class="fa-solid fa-person-dress"></i> Female 0
+            </span>
           </div>
-          <button class="filter-btn" id="exportCsvBtn">Export CSV</button>
         </div>
       </div>
     </div>
 
-    <div id="msg" class="loading">⏳ Loading...</div>
+    <div class="charts-row">
+      <div class="panel chart-wrap">
+        <h4><i class="fa-solid fa-chart-pie" style="color:var(--primary-blue);margin-right:8px"></i>Volunteers by City</h4>
+        <canvas id="cityPie" style="max-height:280px"></canvas>
+        <p id="cityHint"><i class="fa-solid fa-info-circle"></i> Click a slice to filter by city. Click again to clear.</p>
+      </div>
 
-    <div class="table-container" style="margin-top:12px">
-      <div class="table-wrapper">
-        <table>
+      <div class="panel chart-wrap">
+        <h4><i class="fa-solid fa-chart-bar" style="color:var(--primary-blue);margin-right:8px"></i>Top Skills</h4>
+        <canvas id="skillsBar" style="max-height:280px"></canvas>
+        <p><i class="fa-solid fa-info-circle"></i> Click a bar to filter by skill. Click again to clear.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="controls">
+        <div class="search">
+          <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted);margin-right:10px"></i>
+          <input id="globalSearch" placeholder="Search by name, email, city, skills..." />
+        </div>
+      </div>
+
+      <div class="table-wrap" id="tablePanel">
+        <table id="volTable" aria-label="Volunteers table">
           <thead>
             <tr>
-              <th>Name</th>
+              <th class="srno">Sr No</th>
+              <th>
+                Name
+                <span class="col-action">
+                  <button data-col="full_name" class="col-sort" title="Sort by name">
+                    <i class="fa-solid fa-sort"></i>
+                  </button>
+                </span>
+              </th>
               <th>Contact</th>
-              <th>Email</th>
-              <th>City</th>
-              <th>Age</th>
+              <th>
+                Email
+                <span class="col-action">
+                  <button data-col="email" class="col-sort" title="Sort by email">
+                    <i class="fa-solid fa-sort"></i>
+                  </button>
+                </span>
+              </th>
+              <th>
+                City
+                <span class="col-action">
+                  <button data-col="city" class="col-sort" title="Sort by city">
+                    <i class="fa-solid fa-sort"></i>
+                  </button>
+                </span>
+              </th>
+              <th>
+                Age
+                <span class="col-action">
+                  <button data-col="age" class="col-sort" title="Sort by age">
+                    <i class="fa-solid fa-sort"></i>
+                  </button>
+                </span>
+              </th>
               <th>Skills</th>
-              <th>Reference</th>
-              <th>Submitted At</th>
-              <th>Actions</th>
+              <th>
+                Reference
+                <span class="col-action">
+                  <button data-col="reference" class="col-sort" title="Sort by reference">
+                    <i class="fa-solid fa-sort"></i>
+                  </button>
+                </span>
+              </th>
+              <th>
+                Submitted
+                <span class="col-action">
+                  <button data-col="Timestamp" class="col-sort" title="Sort by date">
+                    <i class="fa-solid fa-sort"></i>
+                  </button>
+                </span>
+              </th>
+              <th class="actions-col">Actions</th>
             </tr>
           </thead>
           <tbody id="dataBody">
-            <tr><td colspan="9" class="empty-state">⏳ Loading data...</td></tr>
+            <tr>
+              <td colspan="10" style="text-align:center;padding:40px;color:var(--text-muted)">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size:24px;color:var(--primary-blue)"></i>
+                <div style="margin-top:12px">Loading volunteers...</div>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
   </main>
 
-  <!-- Delete confirm modal -->
-  <div class="modal" id="deleteModal"><div class="modal-content">
-    <h3>Confirm delete?</h3>
-    <p>This action will permanently remove the volunteer record.</p>
-    <div class="modal-buttons">
-      <button class="filter-btn" id="cancelDeleteBtn">Cancel</button>
-      <button class="filter-btn" id="confirmDeleteBtn" style="background:linear-gradient(135deg,var(--danger),#c53030);color:white">Delete</button>
-    </div>
-  </div></div>
-
-  <!-- Login overlay (hidden by default) -->
-  <div id="loginOverlay" class="modal active" style="background:linear-gradient(0deg,rgba(0,0,0,0.6),rgba(0,0,0,0.6))">
-    <div class="modal-content" style="max-width:420px">
-      <h2 style="color:var(--accent-1);margin-bottom:8px">Admin Login</h2>
+  <!-- Login overlay -->
+  <div id="loginOverlay" class="login-overlay" aria-hidden="true">
+    <div class="login-card" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <h2 id="loginTitle"><i class="fa-solid fa-shield-halved"></i> Admin Login</h2>
       <form id="adminLoginForm">
-        <div style="margin-bottom:8px"><label>ID</label><input id="adminId" required style="width:100%;padding:8px;border-radius:6px;border:1px solid #ddd" /></div>
-        <div style="margin-bottom:8px"><label>Password</label><input id="adminPass" type="password" required style="width:100%;padding:8px;border-radius:6px;border:1px solid #ddd" /></div>
-        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
-          <button type="submit" class="filter-btn">Login</button>
+        <label for="adminId">Admin ID</label>
+        <input id="adminId" name="id" type="text" autocomplete="username" required placeholder="Enter your admin ID" />
+        
+        <label for="adminPass">Password</label>
+        <input id="adminPass" name="password" type="password" autocomplete="current-password" required placeholder="Enter your password" />
+        
+        <div class="actions">
+          <button type="button" id="cancelLoginBtn" class="btn ghost" style="color:var(--text-secondary)">Cancel</button>
+          <button type="submit" class="login-btn">
+            <i class="fa-solid fa-right-to-bracket"></i> Login
+          </button>
         </div>
-        <p id="loginMsg" style="margin-top:8px;color:#666;font-weight:600"></p>
+        <div id="loginError" class="error">
+          <i class="fa-solid fa-triangle-exclamation"></i> Invalid credentials
+        </div>
       </form>
     </div>
   </div>
 
-  <!-- include admin.js -->
-  <script src="./admin.js"></script>
+  <script src="admin.js"></script>
 </body>
 </html>

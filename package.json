@@ -2,6 +2,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.81.1",
     "bcryptjs": "^3.0.3",
+    "jsonwebtoken": "^9.0.2",
     "resend": "^6.4.2"
   },
   "name": "lvjst-form",
