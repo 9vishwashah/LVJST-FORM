@@ -1,6 +1,10 @@
 // netlify/functions/adminLogin.js
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+const { compareSync } = bcrypt;
+const { sign } = jwt;
 
 // debug block — temporary
 const missing = [];
@@ -15,7 +19,7 @@ if (missing.length) {
 
 
 
-exports.handler = async function (event) {
+export async function handler (event) {
   try {
     if (event.httpMethod !== 'POST') {
       return { statusCode: 405, body: JSON.stringify({ error: 'Only POST allowed' }) };
@@ -42,12 +46,12 @@ exports.handler = async function (event) {
       return { statusCode: 401, body: JSON.stringify({ error: 'invalid_credentials' }) };
     }
 
-    const ok = bcrypt.compareSync(password, process.env.ADMIN_PASSWORD_HASH);
+    const ok = compareSync(password, process.env.ADMIN_PASSWORD_HASH);
     if (!ok) {
       return { statusCode: 401, body: JSON.stringify({ error: 'invalid_credentials' }) };
     }
 
-    const token = jwt.sign(
+    const token = sign(
       { sub: id, role: 'admin' },
       process.env.ADMIN_JWT_SECRET,
       { expiresIn: '1h' }
@@ -61,4 +65,4 @@ exports.handler = async function (event) {
     console.error('adminLogin error', err);
     return { statusCode: 500, body: JSON.stringify({ error: 'server_error', details: String(err) }) };
   }
-};
+}
