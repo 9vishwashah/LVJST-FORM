@@ -41,6 +41,12 @@ exports.handler = async (event) => {
         </div>
       `,
     });
+if (!process.env.SENDGRID_API_KEY) {
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ ok: false, skipped: 'email_not_configured' })
+  };
+}
 
     if (error) {
       console.error("❌ Resend API Error:", error);
