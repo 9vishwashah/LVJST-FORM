@@ -99,6 +99,10 @@ volunteerForm.addEventListener('submit', async (e) => {
     submitBtn.disabled = true;
     formStatus.textContent = 'Submitting...';
 
+    if (!validateMandatoryFields(volunteerForm)) {
+    return; // ⛔ stop submission
+    }
+    
     // Collect skills & experiences
     const skills = {};
     const selectedSkills = Array.from(skillsCheckboxes)
@@ -205,6 +209,71 @@ volunteerForm.addEventListener('submit', async (e) => {
         submitBtn.disabled = false;
     }
 });
+function validateMandatoryFields(form) {
+  let firstInvalidField = null;
+  let errors = [];
+
+  // Clear previous errors
+  document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+
+  // 1️⃣ Text / input / textarea fields
+  const requiredFields = form.querySelectorAll('.required-field');
+  requiredFields.forEach(field => {
+    if (!field.value || !field.value.trim()) {
+      field.classList.add('field-error');
+      errors.push(field.previousElementSibling?.innerText || field.name);
+      if (!firstInvalidField) firstInvalidField = field;
+    }
+  });
+
+  // 2️⃣ Gender (radio)
+  const genderChecked = form.querySelector('input[name="gender"]:checked');
+  if (!genderChecked) {
+    const genderGroup = document.getElementById('gender-group');
+    if (genderGroup) genderGroup.classList.add('field-error');
+    errors.push('Gender');
+    if (!firstInvalidField) firstInvalidField = genderGroup;
+  }
+
+  // 3️⃣ Skills (checkbox group)
+  const skillsChecked = form.querySelectorAll('input[name="skills"]:checked');
+  if (skillsChecked.length === 0) {
+    const skillsGroup = document.getElementById('skills-checkbox-group');
+    if (skillsGroup) skillsGroup.classList.add('field-error');
+    errors.push('Skills / Interest');
+    if (!firstInvalidField) firstInvalidField = skillsGroup;
+  }
+
+  // 4️⃣ Other skill validation
+  const otherChecked = Array.from(skillsChecked).some(cb => cb.value === 'Other');
+  if (otherChecked) {
+    const otherExp = document.querySelector('input[name="other_experience"]');
+    if (!otherExp || !otherExp.value.trim()) {
+      otherExp?.classList.add('field-error');
+      errors.push('Other skill description');
+      if (!firstInvalidField) firstInvalidField = otherExp;
+    }
+  }
+
+  // ❌ If errors found
+  if (errors.length > 0) {
+    alert(`Please complete the following mandatory fields:\n\n• ${errors.join('\n• ')}`);
+    firstInvalidField?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    firstInvalidField?.focus?.();
+    return false;
+  }
+
+  return true;
+}
+
+const instagramBtn = document.getElementById('instagramFollowBtn');
+
+if (instagramBtn) {
+  instagramBtn.addEventListener('click', () => {
+    window.open('https://www.instagram.com/lvjst_org/', '_blank');
+  });
+}
+
 
 // Share button, save button, counter, modal click — unchanged (copied from your original script)
 shareBtn.addEventListener('click', async () => {
@@ -250,7 +319,7 @@ saveBtn.addEventListener('click', async () => {
         if (!elementToCapture) throw new Error("Modal content not found!");
         const canvas = await html2canvas(elementToCapture, { scale: 2, useCORS: true, backgroundColor: null });
         const link = document.createElement('a');
-        link.download = 'rushabhayan_card.png';
+        link.download = 'lvjst_card.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
     } catch (err) {
