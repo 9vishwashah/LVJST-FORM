@@ -1,9 +1,5 @@
-// functions/submitVolunteer.js
-// Netlify function endpoint: /.netlify/functions/submitVolunteer
-// Env vars required: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
-// Optional: RECAPTCHA_SECRET (if set, recaptchaToken is required in request)
-
-const { createClient } = require('@supabase/supabase-js');
+import { createClient } from '@supabase/supabase-js';
+console.log('RUNTIME ENV:', Object.keys(process.env));
 
 async function verifyRecaptcha(token, secret) {
   if (!token || !secret) return { success: false, error: 'missing_token_or_secret' };
@@ -18,7 +14,14 @@ async function verifyRecaptcha(token, secret) {
   return resp.json(); // returns { success, score, action, ... }
 }
 
-exports.handler = async function (event, context) {
+export async function handler (event, context) {
+
+  console.log('ENV CHECK', {
+  SUPABASE_URL: !!process.env.SUPABASE_URL,
+  SUPABASE_SERVICE_ROLE_KEY: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+  RECAPTCHA_SECRET: !!process.env.RECAPTCHA_SECRET
+});
+
   try {
     if (event.httpMethod !== 'POST') {
       return {
@@ -139,4 +142,4 @@ exports.handler = async function (event, context) {
       body: JSON.stringify({ error: 'server_error', details: String(err) })
     };
   }
-};
+}
