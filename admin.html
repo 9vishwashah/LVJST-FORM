@@ -862,64 +862,72 @@
       <div class="table-wrap" id="tablePanel">
         <table id="volTable" aria-label="Volunteers table">
           <thead>
-            <tr>
-              <th class="srno">Sr No</th>
-              <th>
-                Name
-                <span class="col-action">
-                  <button data-col="full_name" class="col-sort" title="Sort by name">
-                    <i class="fa-solid fa-sort"></i>
-                  </button>
-                </span>
-              </th>
-              <th>Contact</th>
-              <th>
-                Email
-                <span class="col-action">
-                  <button data-col="email" class="col-sort" title="Sort by email">
-                    <i class="fa-solid fa-sort"></i>
-                  </button>
-                </span>
-              </th>
-              <th>
-                City
-                <span class="col-action">
-                  <button data-col="city" class="col-sort" title="Sort by city">
-                    <i class="fa-solid fa-sort"></i>
-                  </button>
-                </span>
-              </th>
-              <th>
-                Age
-                <span class="col-action">
-                  <button data-col="age" class="col-sort" title="Sort by age">
-                    <i class="fa-solid fa-sort"></i>
-                  </button>
-                </span>
-              </th>
-              <th>Skills</th>
-              <th>
-                Reference
-                <span class="col-action">
-                  <button data-col="reference" class="col-sort" title="Sort by reference">
-                    <i class="fa-solid fa-sort"></i>
-                  </button>
-                </span>
-              </th>
-              <th>
-                Submitted
-                <span class="col-action">
-                  <button data-col="Timestamp" class="col-sort" title="Sort by date">
-                    <i class="fa-solid fa-sort"></i>
-                  </button>
-                </span>
-              </th>
-              <th class="actions-col">Actions</th>
-            </tr>
-          </thead>
+  <tr>
+    <th class="srno">Sr No</th>
+
+    <th>
+      Name
+      <span class="col-action">
+        <button data-col="full_name" class="col-sort" title="Sort by name">
+          <i class="fa-solid fa-sort"></i>
+        </button>
+      </span>
+    </th>
+
+    <th>
+      Email
+      <span class="col-action">
+        <button data-col="email" class="col-sort" title="Sort by email">
+          <i class="fa-solid fa-sort"></i>
+        </button>
+      </span>
+    </th>
+
+    <th>
+      City
+      <span class="col-action">
+        <button data-col="city" class="col-sort" title="Sort by city">
+          <i class="fa-solid fa-sort"></i>
+        </button>
+      </span>
+    </th>
+
+    <th>
+      Age
+      <span class="col-action">
+        <button data-col="age" class="col-sort" title="Sort by age">
+          <i class="fa-solid fa-sort"></i>
+        </button>
+      </span>
+    </th>
+
+    <th>Skills</th>
+
+    <th>
+      Reference
+      <span class="col-action">
+        <button data-col="reference" class="col-sort" title="Sort by reference">
+          <i class="fa-solid fa-sort"></i>
+        </button>
+      </span>
+    </th>
+
+    <th>
+      Submitted
+      <span class="col-action">
+        <button data-col="Timestamp" class="col-sort" title="Sort by date">
+          <i class="fa-solid fa-sort"></i>
+        </button>
+      </span>
+    </th>
+
+    <th class="actions-col">Actions</th>
+  </tr>
+</thead>
+
           <tbody id="dataBody">
             <tr>
-              <td colspan="10" style="text-align:center;padding:40px;color:var(--text-muted)">
+              <td colspan="9" style="text-align:center;padding:40px;color:var(--text-muted)">
                 <i class="fa-solid fa-spinner fa-spin" style="font-size:24px;color:var(--primary-blue)"></i>
                 <div style="margin-top:12px">Loading volunteers...</div>
               </td>
