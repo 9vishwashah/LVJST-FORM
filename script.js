@@ -283,23 +283,24 @@ shareBtn.addEventListener('click', async () => {
 
     try {
         const shareMessage =
-`RUSHABHAYAN 2.0, A cultural event that celebrates our Indian knowledge systems and the explore Teachings of Raja Rushabh. 
+`🌿 LABDHI VIKRAM JANSEVA TRUST (LVJST)
+Preserving Heritage | Inspiring Values | Serving Society
 
-Join the Team not just for work, but also learn and grow knowledge. You won't just be working but learn valuable Facts and hands-on Team experience.  
+LVJST is a national cultural and social organization working to protect India’s ancient heritage, spiritual wisdom, and compassionate traditions, while creating meaningful social impact across communities.
 
-✨ Deeply connect with our roots of Jainism and understand the Importance of Jain Knowledge Base in Indian Civilization  
-✨ Connect with Kalyanmitras and share your Ideas & Perspectives  
-✨ Gain real experience in teamwork, event planning, and creative work  
+Our Key Work Areas:
+🔹 Heritage Protection: Restoration, research & documentation of ancient Jain and Indic sites
+🔹 Shrutodhar: Manuscript digitization, value education & knowledge dissemination
+🔹 RUSHABHAYAN: National & global conclave honoring Lord Rushabhdev 
+🔹 Jeevdaya: Panjrapoles, bird hospitals & animal welfare initiatives
+🔹 Vaiyavacha: 600+ volunteers serving saints; medical kit distribution
 
-Various teams:  
-📢 Social Media & Promotions – posters, designs, marketing  
-🔎 Research Team – collect scripts and letter drafting  
-🤝 Connections & Outreach – Meet with scholars and Communities
+🤝 Join us in this collective mission to preserve India’s civilizational legacy.
 
-Fill Form : https://rushabhayan.netlify.app/
-`;
+👉 Member Registration Link:
+https://lvjstregister.netlify.app/`;
         if (navigator.share) {
-            await navigator.share({ title: 'Rushabhayan 2.0 Invitation', text: shareMessage });
+            await navigator.share({ title: 'LVJST', text: shareMessage });
         } else {
             const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
             window.open(whatsappUrl, "_blank");
