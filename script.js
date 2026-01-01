@@ -197,7 +197,7 @@ volunteerForm.addEventListener('submit', async (e) => {
         // WhatsApp redirect
         setTimeout(() => {
             const volunteerNumber = "919594503214";
-            const messageText = `Jai Jinendra! I've just successfully registered as a LVJST member. From Submitted by ${userName}.\n`;
+            const messageText = `Jai Jinendra! I've just successfully registered as a LVJST member. Form Submitted by ${userName}.\n`;
             const whatsappUrl = `https://wa.me/${volunteerNumber}?text=${encodeURIComponent(messageText)}`;
             window.open(whatsappUrl, "_blank");
         }, 2000);
