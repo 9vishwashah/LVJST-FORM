@@ -111,7 +111,7 @@ function generateTemplateHtml(firstName) {
     <img 
       src="https://lvjst.netlify.app/assets/lvjst-logo.png"
       alt="LVJST Logo"
-      style="max-width:120px; height:auto; display:block;"
+      style="max-width:80px; height:auto; display:block;"
     />
   </td>
 </tr>
