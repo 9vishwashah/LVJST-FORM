@@ -150,6 +150,7 @@ volunteerForm.addEventListener('submit', async (e) => {
         city: formData.get('city')?.toString().trim(),
         address: formData.get('address')?.toString().trim(),
         skills,
+        attend_orientation: formData.get('attend_orientation')?.toString().trim(),
         contribution_text: null,
         reference: formData.get('reference')?.toString().trim()
     };

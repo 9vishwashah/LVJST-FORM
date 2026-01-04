@@ -691,6 +691,275 @@ footer .fa-whatsapp:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
+/* Announcement card styling */
+.announcement-card {
+    background: linear-gradient(180deg, #ffffff 0%, #fffaf8 100%);
+    border-left: 6px solid #c13584;
+    padding: 18px 20px;
+    border-radius: 10px;
+    margin: 18px 0 22px 0;
+    box-shadow: 0 6px 18px rgba(193, 53, 132, 0.06);
+}
+.announcement-card h4 {
+    margin-bottom: 8px;
+    color: #c13584;
+    font-size: 1.15rem;
+}
+.announcement-card p {
+    color: #444;
+    margin-bottom: 8px;
+}
+.announcement-card .announcement-list {
+    margin: 8px 0 12px 18px;
+    color: #333;
+}
+
+/* Orientation poll highlight */
+.orientation-card {
+    padding: 8px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, rgba(37,99,235,0.06), rgba(193,53,132,0.03));
+    border: 1px solid rgba(37,99,235,0.08);
+    box-shadow: 0 6px 18px rgba(37,99,235,0.04);
+}
+.orientation-card label {
+    padding: 12px 14px;
+    border-radius: 8px;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.orientation-card input[type="radio"]:checked + label {
+    background: linear-gradient(90deg,#2563eb,#c13584);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 6px 18px rgba(37,99,235,0.18);
+    transform: translateY(-2px);
+}
+
+/* Slightly emphasize the poll label text */
+.orientation-card + label,
+.orientation-card label {
+    font-weight: 600;
+}
+
+/* === MODERNIZED CARD STYLING === */
+
+/* Fill Form Now Card */
+.fill-form-card {
+    background: linear-gradient(135deg, #fff5f8 0%, #fffbfe 100%);
+    border: 2px solid #ff69b4;
+    border-left: 6px solid #ff1493;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgba(255, 20, 147, 0.12);
+    margin: 20px 0 24px 0;
+}
+.fill-form-card .card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #c41e3a;
+    text-align: center;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+}
+.fill-form-card .card-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.fill-form-card .card-list li {
+    background: linear-gradient(90deg, rgba(255,20,147,0.04), rgba(255,105,180,0.04));
+    padding: 12px 14px;
+    border-left: 4px solid #ff69b4;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: #333;
+}
+.fill-form-card .card-list strong {
+    color: #c41e3a;
+}
+
+/* LVJST Initiatives Card */
+.initiatives-card {
+    background: linear-gradient(135deg, #f0f8ff 0%, #f5fbff 100%);
+    border: 2px solid #2563eb;
+    border-left: 6px solid #1e40af;
+    padding: 28px;
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.12);
+    margin: 20px 0 24px 0;
+}
+.initiatives-card .initiatives-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e40af;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+}
+.initiatives-card .counter-card {
+    background: linear-gradient(90deg, #dbeafe, #eff6ff);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+}
+.initiatives-card .counter-content {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+.initiatives-card .counter {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #2563eb;
+}
+.initiatives-card .counter-suffix {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2563eb;
+}
+.initiatives-card .counter-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 8px;
+}
+.initiatives-card .counter-target {
+    font-size: 0.95rem;
+    color: #0f172a;
+    font-weight: 600;
+    margin: 0;
+}
+.initiatives-card .counter-subtitle {
+    margin-top: 16px;
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.5;
+}
+
+/* Event Card (Announcement) */
+.event-card {
+    background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 50%, #ffffff 100%);
+    border: 2px solid #d97706;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 16px 40px rgba(217, 119, 6, 0.15);
+    margin: 20px 0 24px 0;
+    position: relative;
+}
+.event-card::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 4px;
+    background: linear-gradient(90deg, #d97706, #f59e0b, #fbbf24);
+    border-radius: 2px;
+}
+.event-badge {
+    display: inline-block;
+    background: linear-gradient(90deg, #dc2626, #f87171);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+.event-card .event-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #92400e;
+    margin: 12px 0 14px 0;
+    line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.event-card .event-date {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #b45309;
+    margin-bottom: 16px;
+}
+.event-divider {
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #d97706, transparent);
+    margin: 16px 0;
+    border-radius: 2px;
+}
+.event-card .event-greeting {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #92400e;
+    margin-bottom: 8px;
+}
+.event-card .event-message {
+    font-size: 1rem;
+    color: #b45309;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.event-card p {
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+.event-card strong {
+    color: #92400e;
+}
+.initiatives-list {
+    background: rgba(217, 119, 6, 0.06);
+    padding: 16px;
+    border-radius: 10px;
+    margin: 16px 0;
+    border-left: 4px solid #f59e0b;
+}
+.initiatives-list .list-title {
+    font-weight: 700;
+    color: #92400e;
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+.announcement-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.announcement-list li {
+    color: #333;
+    padding-left: 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+.event-card .event-cta {
+    background: linear-gradient(90deg, rgba(217, 119, 6, 0.1), rgba(245, 158, 11, 0.1));
+    padding: 12px 14px;
+    border-radius: 8px;
+    border-left: 3px solid #f59e0b;
+    margin-top: 14px;
+    font-size: 0.95rem;
+    color: #92400e;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .fill-form-card { padding: 18px; }
+    .initiatives-card { padding: 18px; }
+    .event-card { padding: 18px; }
+    .event-card .event-title { font-size: 1.6rem; }
+    .initiatives-card .counter { font-size: 2.8rem; }
+}
+
 .temples-counter-section h3 {
     color: crimson;
     font-size: 1.8rem;

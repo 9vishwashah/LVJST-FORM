@@ -52,6 +52,7 @@ export async function handler (event, context) {
       address,
       skills,
       contribution_text,
+      attend_orientation,
       reference,
       age,
       recaptchaToken
@@ -116,6 +117,7 @@ export async function handler (event, context) {
       city: city ? String(city).trim() : null,
       address: address ? String(address).trim() : null,
       skills: skills || null, // expects array/object that fits your jsonb column
+      attend_orientation: attend_orientation ? String(attend_orientation).trim() : null,
       contribution_text: contribution_text ? String(contribution_text).trim() : null,
       reference: String(reference).trim(),
       age: age ? Number(age) : null,

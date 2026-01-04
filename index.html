@@ -34,34 +34,48 @@
                     </div>
                 </div>
 
-                <div class="note-box">
-                    <p>Fill Form Now!</p>
-                    <ul class="custom-bullets">
-                        <li>TIRTH RAKSHA & JIRNODHAAR
-: Our goal is to
-document, protect, and restore these
-historical temples.</li>
-                        <li>SHRUTODDHAAR: We aim to save and protect
-ancient Jain manuscripts, which are
-full of wisdom and spiritual knowledge. </li>
-                        <li>RUSHABHAYAN: The Pioneer of Indic Civilization seminar
-to honour Lord Rishabhdev’s contributions
-to Indian culture and civilization.</li>
+                <div class="info-card fill-form-card">
+                    <h3 class="card-title">✨ Fill Form Now! ✨</h3>
+                    <ul class="card-list">
+                        <li><strong>🏛️ TIRTH RAKSHA & JIRNODHAAR</strong><br>Document, protect, and restore historical temples.</li>
+                        <li><strong>📚 SHRUTODDHAAR</strong><br>Save and protect ancient Jain manuscripts rich with wisdom.</li>
+                        <li><strong>🌟 RUSHABHAYAN</strong><br>Pioneer of Indic Civilization seminar honoring Lord Rishabhdev.</li>
                     </ul>
                 </div>
 
-                <div class="temples-counter-section">
-                    <h3>LVJST Initiatives</h3>
-                    <div class="counter-container">
-                        <span id="templesCount" class="counter">0</span>
-                        <span class="counter-suffix">+</span>
+                <div class="initiatives-card">
+                    <h3 class="initiatives-title">🏜️ LVJST Initiatives Impact</h3>
+                    <div class="counter-card">
+                        <div class="counter-content">
+                            <span id="templesCount" class="counter">0</span><span class="counter-suffix">+</span>
+                        </div>
+                        <p class="counter-label">TEMPLES SURVEYED</p>
+                        <p class="counter-target">Target: 15,000 temples in 5 years</p>
                     </div>
-                    <h4 class="counter-title">TEMPLES SURVEYED</h4>
-                    <p class="counter-target">Target: 15,000 temples in 5 years</p>
-                    <p class="counter-subtitle">(Guided by <b>🙏🏻 प. पु. आचार्य श्री यशोवर्मसूरीश्वरजी मा. सा 🙏🏻</b>
-<br> <b>
-🙏🏻 प. पु. आचार्य श्री भाग्ययशसूरीश्वरजी मा. सा 🙏🏻
-)</b></p>
+                    <p class="counter-subtitle">🙏 Guided by revered Acharyas 🙏<br><em>प. पु. आचार्य श्री यशोवर्मसूरीश्वरजी & श्री भाग्ययशसूरीश्वरजी</em></p>
+                </div>
+
+                <div class="event-card">
+                    <div class="event-badge">📌 UPCOMING EVENT</div>
+                    <h2 class="event-title">🌟 Grand Meet with Gurubhagwant 🌟</h2>
+                    <p class="event-date">📅 <strong>18th January</strong> | 📍 <strong>Mumbai</strong></p>
+                    <div class="event-divider"></div>
+                    <p class="event-greeting">🙏 Pranam | Jay Jinendra 🙏</p>
+                    <p class="event-message">Rushabhayan 2.0 ke grand success ke liye aap sabhi ko hriday se dhanyawad 🌸✨</p>
+                    <p>Rushabhayan ke organising trust — <strong>Labdhi Vikram Jan Seva Trust</strong> — Jinshasan ke liye anek mahan aur visionary karya kar rahi hai 🙏</p>
+                    <div class="initiatives-list">
+                        <p class="list-title">🔹 Mukhya Karya:</p>
+                        <ul class="announcement-list">
+                            <li>Tirthodhar & Shrutodhar</li>
+                            <li>Shraman Seva</li>
+                            <li>Preservation & Conservation of Rich Jain Heritage</li>
+                            <li>National & International Universities aur sansthaon ke saath tie-ups</li>
+                            <li>Jirnodhar | Panjrapol | Bird Surveys 🐦</li>
+                            <li>Legal documentation of our Dharohar</li>
+                            <li>Awareness campaigns ✨</li>
+                        </ul>
+                    </div>
+                    <p class="event-cta"><em>Join us and contribute to preserving Jinshasan's heritage. More precise details coming soon!</em></p>
                 </div>
 
                 <form id="volunteer-form">
@@ -135,6 +149,14 @@ to Indian culture and civilization.</li>
                         <small>(e.g., Social Media, Shankheswar Samrajya, Friend, Cousin, Sadhu Maharasaheb)</small></label>
                     <input type="text" id="reference" name="reference" required>
 
+                    <label for="attend_orientation">11. I will be coming to 18th LVJST Orientation<span class="required-asterisk">*</span></label>
+                    <div class="toggle-group orientation-card" id="attend-orientation-group">
+                        <input type="radio" id="attend_yes" name="attend_orientation" value="Yes" required>
+                        <label for="attend_yes">Yes</label>
+                        <input type="radio" id="attend_maybe" name="attend_orientation" value="Maybe">
+                        <label for="attend_maybe">Maybe</label>
+                    </div>
+
                     <button type="submit" id="submit-btn">Submit</button>
                     <p id="form-status"></p>
                 </form>
@@ -149,7 +171,7 @@ to Indian culture and civilization.</li>
                     </div>
                     <h2>Thank You, <br><span id="user-name-placeholder"></span>!</h2>
                     <div class="note-box">
-                        We will reach out shortly.
+                        Join us at 18th LVJST Orientation to know more !
                     </div>
 
                     <div class="modal-actions">
