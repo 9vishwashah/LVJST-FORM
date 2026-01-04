@@ -158,6 +158,8 @@ volunteerForm.addEventListener('submit', async (e) => {
         // Acquire fresh token right before submit. If SITE_KEY is null, token will be null and server
         // must allow missing token only if RECAPTCHA_SECRET not configured.
         const recaptchaToken = await getRecaptchaToken();
+        console.log('recaptchaToken:', recaptchaToken);
+        if (RECAPTCHA_SITE_KEY && !recaptchaToken) console.warn('reCAPTCHA token missing — check site key and allowed origins.');
 
         // If you require recaptcha on client, you may choose to block submission here when token is null.
         // For now we pass null to server if not available (server will validate if RECAPTCHA_SECRET set).
