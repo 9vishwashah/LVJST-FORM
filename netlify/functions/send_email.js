@@ -105,16 +105,15 @@ function generateTemplateHtml(firstName) {
         <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:8px; overflow:hidden;">
 
           <!-- LOGO -->
-          <!-- LOGO -->
-<tr>
-  <td align="center" style="padding:8px 15px 6px 15px;">
-    <img 
-      src="https://lvjst.netlify.app/assets/lvjst-logo.png"
-      alt="LVJST Logo"
-      style="max-width:60px; height:auto; display:block;"
-    />
-  </td>
-</tr>
+          <tr>
+            <td align="center" style="padding:12px 0 6px 0;">
+              <img
+                src="https://lvjst.netlify.app/assets/lvjst-logo.png"
+                alt="LVJST Logo"
+                style="max-width:80px; height:auto; display:block;"
+              />
+            </td>
+          </tr>
 
 
           <!-- CONTENT -->

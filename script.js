@@ -172,21 +172,8 @@ volunteerForm.addEventListener('submit', async (e) => {
         formStatus.textContent = '';
         volunteerForm.reset();
 
-        // send confirmation email via your existing function
-        (async () => {
-            try {
-                const response = await fetch("/.netlify/functions/send_email", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email: volunteerData.email, name: volunteerData.full_name })
-                });
-                const resJson = await response.json().catch(() => null);
-                if (!response.ok) throw new Error(resJson?.error || 'Email send failed');
-                console.log('Confirmation email sent');
-            } catch (err) {
-                console.warn('Email send failed', err);
-            }
-        })();
+        // NOTE: email is sent server-side by `submitVolunteer` function.
+        // Removed client-side call to avoid duplicate confirmation emails.
 
         // Reset conditional fields
         const allSkillContainers = Object.values(skillFieldsConfig).map(id => document.getElementById(id)).filter(Boolean);
