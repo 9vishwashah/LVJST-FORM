@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="initiatives-card">
-                    <h3 class="initiatives-title">🏜️ LVJST Initiatives Impact</h3>
+                    <h3 class="initiatives-title">LVJST Initiatives Impact</h3>
                     <div class="counter-card">
                         <div class="counter-content">
                             <span id="templesCount" class="counter">0</span><span class="counter-suffix">+</span>
@@ -52,7 +52,7 @@
                         <p class="counter-label">TEMPLES SURVEYED</p>
                         <p class="counter-target">Target: 15,000 temples in 5 years</p>
                     </div>
-                    <p class="counter-subtitle">🙏 Guided by revered Acharyas 🙏<br><em>प. पु. आचार्य श्री यशोवर्मसूरीश्वरजी & श्री भाग्ययशसूरीश्वरजी</em></p>
+                    <p class="counter-subtitle">🙏 Guided by 🙏<br><em><strong>प. पु. आचार्य श्री यशोवर्मसूरीश्वरजी & श्री भाग्ययशसूरीश्वरजी</strong></em></p>
                 </div>
 
                 <div class="event-card">
@@ -97,10 +97,18 @@
                     </div>
 
                     <label for="age">5. Age<span class="required-asterisk">*</span></label>
-                    <input type="number" id="age" name="age" min="1" max="120" inputmode="numeric" required placeholder="e.g., 30">
+                    <input type="number" id="age" name="age" min="1" max="120" inputmode="numeric" required placeholder="">
 
-                    <label for="education">6. Education Qualification<span class="required-asterisk">*</span></label>
-                    <input type="text" id="education" name="education" required>
+                    <label>6. Current Occupation<span class="required-asterisk">*</span></label>
+                    <div class="toggle-group" id="occupation-group">
+                        <input type="radio" id="occupation_student" name="occupation_type" value="Student" required>
+                        <label for="occupation_student">Student</label>
+                        <input type="radio" id="occupation_working" name="occupation_type" value="Working">
+                        <label for="occupation_working">Working Profession</label>
+                    </div>
+
+                    <div id="occupation-student-container" class="conditional-inputs"></div>
+                    <div id="occupation-working-container" class="conditional-inputs"></div>
 
                     <label for="city">7. City<span class="required-asterisk">*</span></label>
                     <input type="text" id="city" name="city" required>

@@ -32,7 +32,8 @@ async function submitVolunteerForm(e) {
   const email = document.querySelector('#email')?.value || document.querySelector('[name="email"]')?.value;
   const mobile_number = document.querySelector('#mobile_number')?.value || document.querySelector('[name="mobile_number"]')?.value;
   const gender = document.querySelector('#gender')?.value || document.querySelector('[name="gender"]')?.value;
-  const education = document.querySelector('#education')?.value || document.querySelector('[name="education"]')?.value;
+  const occupation_type = (document.querySelector('input[name="occupation_type"]:checked')?.value) || null;
+  const occupation_detail = document.querySelector('#occupation_student_detail')?.value || document.querySelector('#occupation_working_detail')?.value || document.querySelector('[name="occupation_detail"]')?.value || null;
   const city = document.querySelector('#city')?.value || document.querySelector('[name="city"]')?.value;
   const address = document.querySelector('#address')?.value || document.querySelector('[name="address"]')?.value;
   const contribution_text = document.querySelector('#contribution_text')?.value || document.querySelector('[name="contribution_text"]')?.value;
@@ -58,7 +59,8 @@ async function submitVolunteerForm(e) {
     email,
     mobile_number,
     gender,
-    education,
+    occupation_type,
+    occupation_detail,
     city,
     address,
     skills,

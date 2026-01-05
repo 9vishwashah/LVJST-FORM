@@ -15,6 +15,9 @@ const successModal = document.getElementById('success-modal');
 const shareBtn = document.getElementById('share-btn');
 const skillsCheckboxes = document.querySelectorAll('input[name="skills"]');
 const saveBtn = document.getElementById('save-btn');
+const occupationRadios = document.querySelectorAll('input[name="occupation_type"]');
+const occupationStudentContainer = document.getElementById('occupation-student-container');
+const occupationWorkingContainer = document.getElementById('occupation-working-container');
 
 // Skill -> experience container mapping (unchanged)
 const skillFieldsConfig = {
@@ -54,6 +57,38 @@ skillsCheckboxes.forEach(checkbox => {
         }
     });
 });
+
+// --- Occupation toggle handling ---
+if (occupationRadios && occupationRadios.length) {
+    occupationRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const val = e.target.value;
+            // Clear both containers first
+            if (occupationStudentContainer) occupationStudentContainer.innerHTML = '';
+            if (occupationWorkingContainer) occupationWorkingContainer.innerHTML = '';
+
+            if (val === 'Student') {
+                if (occupationStudentContainer) {
+                    occupationStudentContainer.innerHTML = `
+                        <div class="conditional-fields">
+                            <label for="occupation_student_detail">Currently Pursuing <span class="required-asterisk">*</span><small> (e.g., BA / BSc / Engineering / Masters / PhD / Other)</small></label>
+                            <input type="text" id="occupation_student_detail" name="occupation_detail" required placeholder="e.g., BA / BSc / Engineering">
+                        </div>
+                    `;
+                }
+            } else if (val === 'Working') {
+                if (occupationWorkingContainer) {
+                    occupationWorkingContainer.innerHTML = `
+                        <div class="conditional-fields">
+                            <label for="occupation_working_detail">Current Role / Domain / Business Type <span class="required-asterisk">*</span><small> (e.g., Software Engineer, Teacher, Business Owner, Consultant)</small></label>
+                            <input type="text" id="occupation_working_detail" name="occupation_detail" required placeholder="e.g., Teacher">
+                        </div>
+                    `;
+                }
+            }
+        });
+    });
+}
 
 // --- recaptcha helper (v3) ---
 // Returns token string or null if not configured or failed.
@@ -140,13 +175,30 @@ volunteerForm.addEventListener('submit', async (e) => {
         return;
     }
 
+    // Occupation validation: ensure a type is selected and detail is provided
+    const occupationType = formData.get('occupation_type')?.toString().trim();
+    const occupationDetail = formData.get('occupation_detail')?.toString().trim();
+    if (!occupationType) {
+        alert('Please select your current occupation (Student or Working Profession).');
+        submitBtn.disabled = false;
+        formStatus.textContent = '';
+        return;
+    }
+    if (!occupationDetail) {
+        alert('Please provide details for your current occupation.');
+        submitBtn.disabled = false;
+        formStatus.textContent = '';
+        return;
+    }
+
     const volunteerData = {
         full_name: formData.get('full_name')?.toString().trim(),
         email: formData.get('email')?.toString().trim(),
         mobile_number: formData.get('mobile_no')?.toString().trim(),
         gender: formData.get('gender')?.toString().trim(),
         age: ageValue,
-        education: formData.get('education')?.toString().trim(),
+        occupation_type: formData.get('occupation_type')?.toString().trim(),
+        occupation_detail: formData.get('occupation_detail')?.toString().trim() || null,
         city: formData.get('city')?.toString().trim(),
         address: formData.get('address')?.toString().trim(),
         skills,
@@ -224,6 +276,15 @@ function validateMandatoryFields(form) {
     errors.push('Gender');
     if (!firstInvalidField) firstInvalidField = genderGroup;
   }
+
+    // 2.5️⃣ Attend Orientation (radio) - must choose an option
+    const attendChecked = form.querySelector('input[name="attend_orientation"]:checked');
+    if (!attendChecked) {
+        const attendGroup = document.getElementById('attend-orientation-group');
+        if (attendGroup) attendGroup.classList.add('field-error');
+        errors.push('I will be coming to 18th LVJST Orientation');
+        if (!firstInvalidField) firstInvalidField = attendGroup;
+    }
 
   // 3️⃣ Skills (checkbox group)
   const skillsChecked = form.querySelectorAll('input[name="skills"]:checked');
