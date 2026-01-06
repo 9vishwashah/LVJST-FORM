@@ -237,12 +237,12 @@ volunteerForm.addEventListener('submit', async (e) => {
         document.getElementById('user-name-placeholder').textContent = volunteerData.full_name;
 
         // WhatsApp redirect
-        setTimeout(() => {
-            const volunteerNumber = "919594503214";
-            const messageText = `Jai Jinendra! I've just successfully registered as a LVJST member. Form Submitted by ${userName}.\n`;
-            const whatsappUrl = `https://wa.me/${volunteerNumber}?text=${encodeURIComponent(messageText)}`;
-            window.open(whatsappUrl, "_blank");
-        }, 2000);
+        // setTimeout(() => {
+        //     const volunteerNumber = "919594503214";
+        //     const messageText = `Jai Jinendra! I've just successfully registered as a LVJST member. Form Submitted by ${userName}.\n`;
+        //     const whatsappUrl = `https://wa.me/${volunteerNumber}?text=${encodeURIComponent(messageText)}`;
+        //     window.open(whatsappUrl, "_blank");
+        // }, 2000);
 
     } catch (err) {
         console.error('Submission error', err);
@@ -381,6 +381,24 @@ saveBtn.addEventListener('click', async () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+
+  const VISITOR_KEY = "lvjst_form_visited";
+  let isUnique = false;
+
+  if (!localStorage.getItem(VISITOR_KEY)) {
+    localStorage.setItem(VISITOR_KEY, "1");
+    isUnique = true;
+  }
+
+  fetch("/.netlify/functions/track-visit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      pageKey: "lvjst_member_registration",
+      isUnique
+    })
+  });
+
     const countElement = document.getElementById('templesCount');
     const targetCount = 999;
     const duration = 4000;
