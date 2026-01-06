@@ -6,28 +6,57 @@ const supabase = createClient(
 );
 
 export async function handler(event) {
-  const { pageKey, isUnique } = JSON.parse(event.body);
 
-  const updates = {
-    total_visits: supabase.rpc('increment'),
-    last_visited_at: new Date()
-  };
-
-  if (isUnique) {
-    updates.unique_visits = supabase.rpc('increment');
+  // Allow only POST
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "OK" })
+    };
   }
 
-  const { error } = await supabase
-    .from('form_visits')
-    .update(updates)
-    .eq('page_key', pageKey);
-
-  if (error) {
-    return { statusCode: 500, body: JSON.stringify({ error }) };
+  // Safely parse body
+  let body = {};
+  try {
+    body = JSON.parse(event.body || "{}");
+  } catch (err) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: "Invalid JSON body" })
+    };
   }
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ success: true })
-  };
+  const { pageKey, isUnique } = body;
+
+  if (!pageKey) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: "Missing pageKey" })
+    };
+  }
+
+  try {
+    // Increment total visits
+    await supabase.rpc("increment_total_visits", {
+      p_page_key: pageKey
+    });
+
+    // Increment unique visits if applicable
+    if (isUnique) {
+      await supabase.rpc("increment_unique_visits", {
+        p_page_key: pageKey
+      });
+    }
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ success: true })
+    };
+
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: error.message })
+    };
+  }
 }

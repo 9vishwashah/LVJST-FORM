@@ -382,13 +382,10 @@ saveBtn.addEventListener('click', async () => {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  const VISITOR_KEY = "lvjst_form_visited";
-  let isUnique = false;
+    const key = "lvjst_form_visited";
+  const isUnique = !localStorage.getItem(key);
 
-  if (!localStorage.getItem(VISITOR_KEY)) {
-    localStorage.setItem(VISITOR_KEY, "1");
-    isUnique = true;
-  }
+  if (isUnique) localStorage.setItem(key, "1");
 
   fetch("/.netlify/functions/track-visit", {
     method: "POST",
