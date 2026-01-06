@@ -109,13 +109,17 @@ export async function handler (event, context) {
 
     // No sendgrid package required — we'll call SendGrid HTTP API directly if API key is provided
 
+    // Log incoming data for debugging
+    console.log('Incoming occupation_type:', occupation_type);
+    console.log('Incoming occupation_detail:', occupation_detail);
+
     const insertPayload = {
       full_name: String(full_name).trim(),
       email: String(email).trim(),
       mobile_number: String(mobile_number).trim(),
       gender: gender ? String(gender).trim() : null,
-      occupation_type: occupation_type ? String(occupation_type).trim() : null,
-      occupation_detail: occupation_detail ? String(occupation_detail).trim() : null,
+      occupation_type: occupation_type && String(occupation_type).trim().length > 0 ? String(occupation_type).trim() : null,
+      occupation_detail: occupation_detail && String(occupation_detail).trim().length > 0 ? String(occupation_detail).trim() : null,
       city: city ? String(city).trim() : null,
       address: address ? String(address).trim() : null,
       skills: skills || null, // expects array/object that fits your jsonb column
@@ -125,6 +129,11 @@ export async function handler (event, context) {
       age: age ? Number(age) : null,
       Timestamp: new Date().toISOString()
     };
+
+    console.log('Insert payload occupation fields:', { 
+      occupation_type: insertPayload.occupation_type, 
+      occupation_detail: insertPayload.occupation_detail 
+    });
 
     const { data, error } = await supabase
       .from('volunteers')
