@@ -836,6 +836,48 @@
         </div>
       </div>
     </div>
+<!-- <div class="stats-row"> -->
+<div class="card" style="flex-direction:column;align-items:flex-start">
+  <div style="display:flex;align-items:center;gap:14px;width:100%">
+    <div class="icon">📈</div>
+    <div>
+      <h3 style="margin-bottom:4px">Form Visits</h3>
+      <div style="font-size:13px;color:var(--text-muted)">
+        Registration funnel overview
+      </div>
+    </div>
+
+    <!-- Time Filter -->
+    <div style="margin-left:auto">
+      <select id="formTimeFilter" class="time-filter">
+        <option value="all">All Time</option>
+        <option value="today">Today</option>
+        <option value="7d">Last 7 Days</option>
+        <option value="30d">Last 30 Days</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;width:100%;margin-top:20px">
+    
+    <div class="metric">
+      <span class="label">Total Page Views</span>
+      <span class="value" id="totalPageViews">—</span>
+    </div>
+
+    <div class="metric">
+      <span class="label">Form Submissions</span>
+      <span class="value" id="totalSubmissions">—</span>
+    </div>
+
+    <div class="metric">
+      <span class="label">Conversion Rate</span>
+      <span class="value accent" id="visitConversion">—%</span>
+    </div>
+
+  </div>
+</div>
+
 
     <div class="charts-row">
       <div class="panel chart-wrap">

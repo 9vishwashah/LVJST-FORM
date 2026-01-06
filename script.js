@@ -382,20 +382,6 @@ saveBtn.addEventListener('click', async () => {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const key = "lvjst_form_visited";
-  const isUnique = !localStorage.getItem(key);
-
-  if (isUnique) localStorage.setItem(key, "1");
-
-  fetch("/.netlify/functions/track-visit", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      pageKey: "lvjst_member_registration",
-      isUnique
-    })
-  });
-
     const countElement = document.getElementById('templesCount');
     const targetCount = 999;
     const duration = 4000;
@@ -412,6 +398,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (countElement) countElement.textContent = Math.floor(currentCount);
     }, stepDuration);
+
+    // Initialize Carousel
+    initializeCarousel();
 });
 
 successModal.addEventListener('click', (e) => {
@@ -419,3 +408,71 @@ successModal.addEventListener('click', (e) => {
         successModal.classList.remove('active');
     }
 });
+
+// ===== CAROUSEL FUNCTIONALITY =====
+function initializeCarousel() {
+    const carouselTrack = document.getElementById('carouselTrack');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const carouselDots = document.getElementById('carouselDots');
+
+    if (!carouselTrack || !prevBtn || !nextBtn || !carouselDots) return;
+
+    const slides = carouselTrack.querySelectorAll('.carousel-slide');
+    const slideCount = slides.length;
+    let currentIndex = 0;
+
+    // Create dots
+    for (let i = 0; i < slideCount; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('carousel-dot');
+        if (i === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => goToSlide(i));
+        carouselDots.appendChild(dot);
+    }
+
+    const dots = carouselDots.querySelectorAll('.carousel-dot');
+
+    function updateCarousel() {
+        const offset = -currentIndex * 100;
+        carouselTrack.style.transform = `translateX(${offset}%)`;
+
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentIndex);
+        });
+    }
+
+    function goToSlide(index) {
+        currentIndex = (index + slideCount) % slideCount;
+        updateCarousel();
+    }
+
+    function nextSlide() {
+        goToSlide(currentIndex + 1);
+    }
+
+    function prevSlide() {
+        goToSlide(currentIndex - 1);
+    }
+
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+
+    // Auto-rotate carousel every 3 seconds (increased speed)
+    let autoRotateInterval = setInterval(nextSlide, 3000);
+
+    // Pause auto-rotate on hover
+    carouselTrack.addEventListener('mouseenter', () => {
+        clearInterval(autoRotateInterval);
+    });
+
+    carouselTrack.addEventListener('mouseleave', () => {
+        autoRotateInterval = setInterval(nextSlide, 3000);
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') prevSlide();
+        if (e.key === 'ArrowRight') nextSlide();
+    });
+}

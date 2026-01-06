@@ -3,6 +3,7 @@
   const API_LOGIN = '/.netlify/functions/adminLogin';
   const API_FETCH = '/.netlify/functions/adminFetchVolunteers';
   const API_DELETE = '/.netlify/functions/adminDeleteVolunteer';
+const API_FORM_ANALYTICS = '/.netlify/functions/adminFetchFormAnalytics';
 
   const TOKEN_KEY = 'admin_token';
   const TOKEN_EXP_KEY = 'admin_token_exp';
@@ -40,6 +41,12 @@
   const exportPdfBtn = document.getElementById('exportPdfBtn');
   const refreshBtn = document.getElementById('refreshBtn');
 
+const totalPageViewsEl = document.getElementById('totalPageViews');
+const totalSubmissionsEl = document.getElementById('totalSubmissions');
+const visitConversionEl = document.getElementById('visitConversion');
+const formTimeFilter = document.getElementById('formTimeFilter');
+
+
   let allRows = [];
   let filteredRows = [];
   let activeCityFilter = null;
@@ -68,6 +75,26 @@
     });
     return Array.from(set);
   }
+
+async function loadFormVisitStats(range = 'all') {
+  const res = await fetch(`${API_FORM_ANALYTICS}?range=${range}`);
+  if (!res.ok) {
+    console.error('Analytics fetch failed');
+    return;
+  }
+
+  const json = await res.json();
+  console.log('Analytics response:', json); // 🔍 debug
+
+  const visits = Number(json.visits || 0);
+  const submissions = allRows.length;
+
+  totalPageViewsEl.textContent = visits;
+  totalSubmissionsEl.textContent = submissions;
+  visitConversionEl.textContent = visits
+    ? ((submissions / visits) * 100).toFixed(1) + '%'
+    : '0.0%';
+}
 
   // Normalize a city string using the dataset keys:
   // If the city string contains a shorter known key (like "vashi"), prefer that key.
@@ -448,6 +475,7 @@
       allRows = body.rows || [];
       filteredRows = allRows.slice();
       renderAnalyticsUI(allRows);
+      loadFormVisitStats();
       renderTable(filteredRows);
     } catch (err) {
       console.error('Network / fetch error', err);
