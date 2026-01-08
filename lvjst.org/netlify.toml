@@ -1,0 +1,11 @@
+[[redirects]]
+from = "/register/*"
+to = "https://lvjstregister.netlify.app/:splat"
+status = 200
+force = true
+
+[[redirects]]
+from = "/register"
+to = "https://lvjstregister.netlify.app/"
+status = 200
+force = true
