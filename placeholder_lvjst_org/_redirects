@@ -1,0 +1,3 @@
+/register/*  https://lvjstregister.netlify.app/:splat  200
+/register     https://lvjstregister.netlify.app/       200
+/register/.netlify/functions/*  https://lvjstregister.netlify.app/.netlify/functions/:splat  200
