@@ -2,7 +2,14 @@
 <urlset
   xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- LVJST Registration Landing -->
+  <!-- LVJST Home -->
+  <url>
+    <loc>https://lvjst.org/</loc>
+    <priority>0.90</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <!-- LVJST Registration -->
   <url>
     <loc>https://lvjst.org/register</loc>
     <priority>1.00</priority>
