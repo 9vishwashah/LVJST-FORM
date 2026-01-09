@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /register
+Disallow: /
+
+Sitemap: https://lvjst.org/sitemap.xml
