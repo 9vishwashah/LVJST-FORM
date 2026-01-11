@@ -2225,10 +2225,10 @@ footer .fa-whatsapp:hover {
   background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%);
 }
 
-/* Header remains untouched, but softer */
+/* Header remains untouched, but softer
 .form-header {
   background: linear-gradient(135deg, #7c2d12, #b91c1c);
-}
+} */
 
 /* ============================
    FAMILY PHOTO AS CARD (CSS ONLY)
@@ -3319,15 +3319,16 @@ footer .fa-whatsapp:hover {
 .success-popup h2 {
     font-size: 2rem;
     margin: 25px 0 12px 0;
-    background: linear-gradient(135deg, #1D3956 0%, #b91c1c 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+
+    /* Solid color — html2canvas & WhatsApp safe */
+    color: #1D3956;
+
     font-weight: 800;
     letter-spacing: 0.5px;
     position: relative;
     z-index: 1;
 }
+
 .success-popup p {
     color: #555;
     margin-bottom: 30px;
