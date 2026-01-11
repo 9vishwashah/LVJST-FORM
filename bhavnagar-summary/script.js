@@ -58,6 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.getElementById("submit-btn");
   const teamCountInput = document.getElementById("team_count");
   const teamMembersContainer = document.getElementById("team-members-container");
+  const totalSurveysInput = document.getElementById("total_surveys");
+  const surveySitesContainer = document.getElementById("survey-sites-container");
 
   if (!form) {
     console.error("Form not found: #volunteer-form");
@@ -135,7 +137,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Generate team member fields
     generateTeamMemberFields(team_count);
+    // Also ensure survey site fields are shown in step1 summary display (if any)
   });
+
+  // ✅ Generate survey site inputs dynamically as user types total_surveys
+  function generateSurveySiteFields(count) {
+    if (!surveySitesContainer) return;
+    surveySitesContainer.innerHTML = "";
+    const n = Math.max(0, Math.floor(count) || 0);
+    if (n === 0) return;
+    const heading = document.createElement('h4');
+    heading.className = 'section-title';
+    heading.innerHTML = '<i class="fas fa-map-marker-alt"></i> Survey Sites';
+    surveySitesContainer.appendChild(heading);
+
+    for (let i = 1; i <= n; i++) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'input-wrapper';
+      wrapper.style.marginBottom = '6px';
+      wrapper.innerHTML = `
+        <label>Survey Site ${i} <span class="required-asterisk">*</span></label>
+        <input type="text" id="survey_site_${i}" placeholder="Full site name with area" class="input-with-icon" />
+      `;
+      surveySitesContainer.appendChild(wrapper);
+      addAutoCapitalize(`survey_site_${i}`);
+    }
+  }
+
+  if (totalSurveysInput) {
+    totalSurveysInput.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value) || 0;
+      generateSurveySiteFields(val);
+    });
+  }
 
   // ✅ BACK BUTTON - Go back to Step 1
   backBtn.addEventListener("click", (e) => {
@@ -244,31 +278,33 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
 
-        const task = btn.getAttribute("data-task");
         const memberIndex = btn.getAttribute("data-member");
         const taskInput = document.getElementById(`task_${memberIndex}`);
         const otherInputDiv = document.getElementById(`other-input-${memberIndex}`);
 
-        // Remove active class from all buttons for this member
-        document
-          .querySelectorAll(`.task-btn[data-member="${memberIndex}"]`)
-          .forEach((b) => b.classList.remove("active"));
+        // Toggle active class for multi-select behavior
+        btn.classList.toggle("active");
 
-        // Add active class to clicked button
-        btn.classList.add("active");
+        // Collect selected tasks for this member
+        const selected = Array.from(document.querySelectorAll(`.task-btn[data-member="${memberIndex}"]`))
+          .filter(b => b.classList.contains('active'))
+          .map(b => b.getAttribute('data-task'));
 
-        // Set task value
-        taskInput.value = task;
-
-        // Show/hide other input
-        if (task === "Other") {
-          otherInputDiv.style.display = "block";
+        // If Other is selected, show the other input, otherwise hide it
+        if (selected.includes('Other')) {
+          otherInputDiv.style.display = 'block';
           document.getElementById(`other_task_${memberIndex}`).required = true;
         } else {
-          otherInputDiv.style.display = "none";
-          document.getElementById(`other_task_${memberIndex}`).required = false;
-          document.getElementById(`other_task_${memberIndex}`).value = "";
+          otherInputDiv.style.display = 'none';
+          const otherEl = document.getElementById(`other_task_${memberIndex}`);
+          if (otherEl) {
+            otherEl.required = false;
+            otherEl.value = '';
+          }
         }
+
+        // Store selected tasks as JSON in hidden input
+        if (taskInput) taskInput.value = JSON.stringify(selected);
       });
     });
   }
@@ -311,28 +347,34 @@ document.addEventListener("DOMContentLoaded", () => {
       const member_contact = document
         .getElementById(`member_contact_${i}`)
         .value.trim();
-      const task = document.getElementById(`task_${i}`).value;
+      const taskRaw = document.getElementById(`task_${i}`).value || '[]';
+      let selectedTasks = [];
+      try {
+        selectedTasks = JSON.parse(taskRaw);
+      } catch (err) {
+        selectedTasks = taskRaw ? [taskRaw] : [];
+      }
 
-      if (!member_name || !member_contact || !task) {
+      if (!member_name || !member_contact || selectedTasks.length === 0) {
         showStatus(`Please fill all details for Team Member ${i}`, true, 2);
         return;
       }
 
-      let taskDescription = task;
-      if (task === "Other") {
-        taskDescription = document
-          .getElementById(`other_task_${i}`)
-          .value.trim();
-        if (!taskDescription) {
+      // If Other selected, require its description
+      if (selectedTasks.includes('Other')) {
+        const otherVal = document.getElementById(`other_task_${i}`).value.trim();
+        if (!otherVal) {
           showStatus(`Please specify the task for Team Member ${i}`, true, 2);
           return;
         }
+        // Replace 'Other' with provided text
+        selectedTasks = selectedTasks.map(t => t === 'Other' ? otherVal : t);
       }
 
       teamMembers.push({
         member_name,
         member_contact,
-        task: taskDescription,
+        task: selectedTasks.join(' | '),
       });
     }
 
@@ -361,6 +403,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const summaryId = data[0].id;
+
+    // Insert survey sites if provided
+    try {
+      const surveySites = [];
+      const total = parseInt(document.getElementById('total_surveys').value) || 0;
+      for (let s = 1; s <= total; s++) {
+        const el = document.getElementById(`survey_site_${s}`);
+        if (el && el.value.trim()) {
+          surveySites.push({
+            summary_id: summaryId,
+            site_number: s,
+            site_name_area: el.value.trim(),
+          });
+        }
+      }
+
+      if (surveySites.length > 0) {
+        const { error: surveyError } = await supabaseClient.from('survey_sites').insert(surveySites);
+        if (surveyError) {
+          console.warn('Failed saving survey sites', surveyError);
+          // not fatal — continue saving members
+        }
+      }
+    } catch (err) {
+      console.warn('Survey sites save error', err);
+    }
 
     // Insert team members
     const membersData = teamMembers.map((member) => ({
