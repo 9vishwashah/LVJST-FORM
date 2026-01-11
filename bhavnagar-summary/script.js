@@ -487,4 +487,29 @@ function showSuccessModal(userName, teamMembers = []) {
   modal.setAttribute("aria-hidden", "false");
 
   // Keep modal visible (do not reload). Allow user to close by clicking overlay.
+  // Wire share buttons
+  const whatsappBtn = document.getElementById('whatsapp-share-btn');
+  const copyBtn = document.getElementById('copy-share-btn');
+  const shareText = `${userName} & ${teamText} have successfully completed LVJST Survey Trip of Bhavnagar. Thank You`;
+
+  if (whatsappBtn) {
+    whatsappBtn.onclick = () => {
+      const urlText = encodeURIComponent(shareText + '\n\nVisit: https://lvjst.org/bhavnagar-summary/');
+      const waUrl = `https://wa.me/?text=${urlText}`;
+      window.open(waUrl, '_blank');
+    };
+  }
+
+  if (copyBtn) {
+    copyBtn.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(shareText + '\n\nVisit: https://lvjst.org/bhavnagar-summary/');
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => copyBtn.textContent = 'Copy Share Text', 2000);
+      } catch (err) {
+        console.warn('Copy failed', err);
+        alert('Could not copy to clipboard.');
+      }
+    };
+  }
 }
