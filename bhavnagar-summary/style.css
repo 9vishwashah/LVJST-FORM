@@ -3552,3 +3552,9 @@ footer .fa-whatsapp:hover {
   animation: none !important;
   transition: none !important;
 }
+
+/* Used only while capturing image */
+.capture-mode .success-title {
+  background: #7b3a3a !important; /* pick exact mid gradient color */
+  color: #ffffff !important;
+}
