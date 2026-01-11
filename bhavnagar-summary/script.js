@@ -452,14 +452,15 @@ document.addEventListener("DOMContentLoaded", () => {
     showStatus("🙏 Team summary saved successfully!", false, 2);
     submitBtn.disabled = false;
 
-    showSuccessModal(captain_name);
+    // Pass team members to the success modal so we can display names
+    showSuccessModal(captain_name, teamMembers);
   });
 });
 
 /******************************
  * SUCCESS MODAL
  ******************************/
-function showSuccessModal(userName) {
+function showSuccessModal(userName, teamMembers = []) {
   const modal = document.getElementById("success-modal");
 
   if (!modal) {
@@ -467,11 +468,23 @@ function showSuccessModal(userName) {
     return;
   }
 
+  // Build friendly message: Captain Name & my team Names ...
+  const names = (teamMembers || []).map(m => m.member_name).filter(Boolean);
+  const teamText = names.length ? names.join(', ') : 'my team';
+  const message = `${userName} & ${teamText} have successfully completed LVJST Survey Trip of Bhavnagar.\nThank You`;
+
+  // Update modal content
+  const heading = modal.querySelector('h2');
+  if (heading) heading.textContent = 'Survey Trip Completed!';
+
+  const noteBox = modal.querySelector('.note-box');
+  if (noteBox) {
+    noteBox.innerHTML = `${message.replace(/\n/g, '<br>')}<br><br><strong>Share ideas for statuses:</strong><ul style="margin:6px 0 0 18px;"><li>Photos of your team at survey sites</li><li>Short note: what you observed or rescued</li><li>Link to LVJST registration or event page</li><li>A thank-you shoutout to volunteers</li></ul>`;
+  }
+
   modal.classList.add("active");
   modal.style.display = "flex";
   modal.setAttribute("aria-hidden", "false");
 
-  setTimeout(() => {
-    window.location.reload();
-  }, 2000);
+  // Keep modal visible (do not reload). Allow user to close by clicking overlay.
 }
