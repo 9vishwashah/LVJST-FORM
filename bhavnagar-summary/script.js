@@ -471,7 +471,7 @@ function showSuccessModal(userName, teamMembers = []) {
   // Build friendly message: Captain Name & my team Names ...
   const names = (teamMembers || []).map(m => m.member_name).filter(Boolean);
   const teamText = names.length ? names.join(', ') : 'my team';
-  const message = `${teamText} have successfully completed LVJST Survey Trip of Bhavnagar.\nThank You`;
+  const message = `${userName} Team - ${teamText} have successfully completed LVJST Survey Trip of Bhavnagar.\nThank You`;
 
   // Update modal content
   const heading = modal.querySelector('h2');
