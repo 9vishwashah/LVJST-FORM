@@ -3247,6 +3247,7 @@ footer .fa-whatsapp:hover {
 }
 
 /* --- Enhanced Success Modal Styling --- */
+/* --- Enhanced Success Modal Styling --- */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -3360,12 +3361,14 @@ footer .fa-whatsapp:hover {
     position: relative;
     overflow: hidden;
 }
-.secondary-btn {
+.secondary-btn,
+#whatsapp-share-btn {
     background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-    color: white;
+    color: white !important;
     box-shadow: 0 8px 25px rgba(37, 211, 102, 0.35);
 }
-.secondary-btn::before {
+.secondary-btn::before,
+#whatsapp-share-btn::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -3377,27 +3380,33 @@ footer .fa-whatsapp:hover {
     transform: translate(-50%, -50%);
     transition: width 0.5s, height 0.5s;
 }
-.secondary-btn:hover::before {
+.secondary-btn:hover::before,
+#whatsapp-share-btn:hover::before {
     width: 300px;
     height: 300px;
 }
-.secondary-btn:hover {
+.secondary-btn:hover,
+#whatsapp-share-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 12px 35px rgba(37, 211, 102, 0.45);
 }
-.secondary-btn:active {
+.secondary-btn:active,
+#whatsapp-share-btn:active {
     transform: translateY(-1px);
 }
-.secondary-btn .fa-whatsapp {
+.secondary-btn .fa-whatsapp,
+#whatsapp-share-btn .fa-whatsapp {
     font-size: 1.3rem;
     color: white;
 }
-#save-btn {
+#save-btn,
+#copy-share-btn {
     background: linear-gradient(135deg, #1D3956 0%, #0f1e2e 100%);
-    color: white;
+    color: white !important;
     box-shadow: 0 8px 25px rgba(29, 57, 86, 0.35);
 }
-#save-btn::before {
+#save-btn::before,
+#copy-share-btn::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -3409,15 +3418,18 @@ footer .fa-whatsapp:hover {
     transform: translate(-50%, -50%);
     transition: width 0.5s, height 0.5s;
 }
-#save-btn:hover::before {
+#save-btn:hover::before,
+#copy-share-btn:hover::before {
     width: 300px;
     height: 300px;
 }
-#save-btn:hover {
+#save-btn:hover,
+#copy-share-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 12px 35px rgba(29, 57, 86, 0.45);
 }
-#save-btn:active {
+#save-btn:active,
+#copy-share-btn:active {
     transform: translateY(-1px);
 }
 .success-icon {

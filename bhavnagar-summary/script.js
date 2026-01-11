@@ -544,16 +544,16 @@ function showSuccessModal(userName, teamMembers = []) {
     };
   }
 
-  if (copyBtn) {
-    copyBtn.onclick = async () => {
-      try {
-        await navigator.clipboard.writeText(shareText + '\n\nVisit: https://lvjst.org/bhavnagar-summary/');
-        copyBtn.textContent = 'Copied!';
-        setTimeout(() => copyBtn.textContent = 'Copy Share Text', 2000);
-      } catch (err) {
-        console.warn('Copy failed', err);
-        alert('Could not copy to clipboard.');
-      }
-    };
-  }
+  // if (copyBtn) {
+  //   copyBtn.onclick = async () => {
+  //     try {
+  //       await navigator.clipboard.writeText(shareText + '\n\nVisit: https://lvjst.org/bhavnagar-summary/');
+  //       copyBtn.textContent = 'Copied!';
+  //       setTimeout(() => copyBtn.textContent = 'Copy Share Text', 2000);
+  //     } catch (err) {
+  //       console.warn('Copy failed', err);
+  //       alert('Could not copy to clipboard.');
+  //     }
+  //   };
+  // }
 }
