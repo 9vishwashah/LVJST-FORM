@@ -510,6 +510,11 @@ if (whatsappBtn) {
       /* 3️⃣ Ensure fonts are fully loaded */
       await document.fonts.ready;
 
+      // await document.fonts.ready;
+await new Promise(resolve => setTimeout(resolve, 900));
+
+// const canvas = await html2canvas(...);
+
       /* 4️⃣ Capture with WhatsApp-optimized settings */
       const canvas = await html2canvas(modalEl, {
         scale: 3,                       // sharp image

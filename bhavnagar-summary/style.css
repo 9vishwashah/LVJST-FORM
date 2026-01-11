@@ -3559,3 +3559,19 @@ footer .fa-whatsapp:hover {
   background: #7b3a3a !important; /* pick exact mid gradient color */
   color: #ffffff !important;
 }
+
+/* Force checkmark to final state when capturing */
+.capture-mode .checkmark-circle {
+  stroke-dashoffset: 0 !important;
+  animation: none !important;
+}
+
+.capture-mode .checkmark-check {
+  stroke-dashoffset: 0 !important;
+  animation: none !important;
+}
+
+.capture-mode .success-icon svg {
+  transform: scale(1) !important;
+  animation: none !important;
+}
