@@ -475,11 +475,11 @@ function showSuccessModal(userName, teamMembers = []) {
 
   // Update modal content
   const heading = modal.querySelector('h2');
-  if (heading) heading.textContent = 'Survey Trip Completed!';
+  if (heading) heading.textContent = 'LVJST Survey Trip Completed!';
 
   const noteBox = modal.querySelector('.note-box');
   if (noteBox) {
-    noteBox.innerHTML = `${message.replace(/\n/g, '<br>')}<br><br><strong>Share ideas for statuses:</strong><ul style="margin:6px 0 0 18px;"><li>Photos of your team at survey sites</li><li>Short note: what you observed or rescued</li><li>Link to LVJST registration or event page</li><li>A thank-you shoutout to volunteers</li></ul>`;
+    noteBox.innerHTML = `${message.replace(/\n/g, '<br>')}<br>`;
   }
 
   modal.classList.add("active");
@@ -493,10 +493,54 @@ function showSuccessModal(userName, teamMembers = []) {
   const shareText = `${userName} & ${teamText} have successfully completed LVJST Survey Trip of Bhavnagar. Thank You`;
 
   if (whatsappBtn) {
-    whatsappBtn.onclick = () => {
-      const urlText = encodeURIComponent(shareText + '\n\nVisit: https://lvjst.org/bhavnagar-summary/');
-      const waUrl = `https://wa.me/?text=${urlText}`;
-      window.open(waUrl, '_blank');
+    whatsappBtn.onclick = async () => {
+      const modalEl = document.querySelector('#success-modal .modal-content');
+      if (!modalEl) {
+        alert('Could not find modal content to capture.');
+        return;
+      }
+
+      try {
+        // capture the modal as canvas
+        const canvas = await html2canvas(modalEl, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+        canvas.toBlob(async (blob) => {
+          if (!blob) {
+            alert('Capture failed.');
+            return;
+          }
+
+          const file = new File([blob], 'lvjst-bhavnagar.png', { type: 'image/png' });
+          const textWithLink = shareText + '\n\nVisit: https://lvjst.org/bhavnagar-summary/';
+
+          // If the Web Share API can share files (mobile browsers / Android), use it
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({ files: [file], text: textWithLink });
+              return;
+            } catch (err) {
+              console.warn('Web Share failed', err);
+            }
+          }
+
+          // Fallback: download the image and open WhatsApp web with text-only message
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'lvjst-bhavnagar.png';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 60000);
+
+          const urlText = encodeURIComponent(textWithLink);
+          const waUrl = `https://wa.me/?text=${urlText}`;
+          window.open(waUrl, '_blank');
+          alert('Image downloaded. You can now attach it in WhatsApp after the web window opens.');
+        }, 'image/png');
+      } catch (err) {
+        console.error('Capture/share error', err);
+        alert('Could not capture or share image.');
+      }
     };
   }
 
