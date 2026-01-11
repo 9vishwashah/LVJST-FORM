@@ -11,13 +11,4 @@ from = "/register"
 to = "https://lvjstregister.netlify.app/"
 status = 200
 force = true
-
-[[redirects]]
-from = "/bhavnagar-summary/*"
-to = "/BHAVNAGAR SUMMARY/:splat"
-status = 200
-
-[[redirects]]
-from = "/bhavnagar-summary"
-to = "/BHAVNAGAR SUMMARY/index.html"
-status = 200
+ 
