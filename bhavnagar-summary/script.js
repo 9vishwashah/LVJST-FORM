@@ -489,60 +489,89 @@ function showSuccessModal(userName, teamMembers = []) {
   // Keep modal visible (do not reload). Allow user to close by clicking overlay.
   // Wire share buttons
   const whatsappBtn = document.getElementById('whatsapp-share-btn');
-  const copyBtn = document.getElementById('copy-share-btn');
-  const shareText = `${userName} & ${teamText} have successfully completed LVJST Survey Trip of Bhavnagar. Thank You`;
+const shareText = `${userName} & ${teamText} have successfully completed LVJST Survey Trip of Bhavnagar. Thank You`;
 
-  if (whatsappBtn) {
-    whatsappBtn.onclick = async () => {
-      const modalEl = document.querySelector('#success-modal .modal-content');
-      if (!modalEl) {
-        alert('Could not find modal content to capture.');
-        return;
-      }
+if (whatsappBtn) {
+  whatsappBtn.onclick = async () => {
+    const modalEl = document.querySelector('#success-modal .modal-content');
+    if (!modalEl) {
+      alert('Could not find modal content to capture.');
+      return;
+    }
 
-      try {
-        // capture the modal as canvas
-        const canvas = await html2canvas(modalEl, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
-        canvas.toBlob(async (blob) => {
-          if (!blob) {
-            alert('Capture failed.');
+    try {
+      /* 1️⃣ Freeze animations & transitions */
+      modalEl.classList.add('capture-mode');
+
+      /* 2️⃣ Lock width for WhatsApp (1080px standard) */
+      const originalWidth = modalEl.style.width;
+      modalEl.style.width = '1080px';
+
+      /* 3️⃣ Ensure fonts are fully loaded */
+      await document.fonts.ready;
+
+      /* 4️⃣ Capture with WhatsApp-optimized settings */
+      const canvas = await html2canvas(modalEl, {
+        scale: 3,                       // sharp image
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#FAF7F2',     // SAME as card background
+        logging: false,
+      });
+
+      /* 5️⃣ Cleanup UI state */
+      modalEl.style.width = originalWidth;
+      modalEl.classList.remove('capture-mode');
+
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          alert('Capture failed.');
+          return;
+        }
+
+        const file = new File([blob], 'lvjst-bhavnagar.png', {
+          type: 'image/png',
+          lastModified: Date.now(),
+        });
+
+        const textWithLink =
+          shareText + '\n\nVisit: https://lvjst.org/bhavnagar-summary/';
+
+        /* 6️⃣ Native WhatsApp share (Mobile) */
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              text: textWithLink,
+            });
             return;
+          } catch (err) {
+            console.warn('Web Share failed', err);
           }
+        }
 
-          const file = new File([blob], 'lvjst-bhavnagar.png', { type: 'image/png' });
-          const textWithLink = shareText + '\n\nVisit: https://lvjst.org/bhavnagar-summary/';
+        /* 7️⃣ Fallback: download + WhatsApp Web */
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'lvjst-bhavnagar.png';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
 
-          // If the Web Share API can share files (mobile browsers / Android), use it
-          if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            try {
-              await navigator.share({ files: [file], text: textWithLink });
-              return;
-            } catch (err) {
-              console.warn('Web Share failed', err);
-            }
-          }
+        const waUrl = `https://wa.me/?text=${encodeURIComponent(textWithLink)}`;
+        window.open(waUrl, '_blank');
 
-          // Fallback: download the image and open WhatsApp web with text-only message
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'lvjst-bhavnagar.png';
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          setTimeout(() => URL.revokeObjectURL(url), 60000);
+        alert('Image downloaded. Attach it in WhatsApp to share.');
+      }, 'image/png');
 
-          const urlText = encodeURIComponent(textWithLink);
-          const waUrl = `https://wa.me/?text=${urlText}`;
-          window.open(waUrl, '_blank');
-          alert('Image downloaded. You can now attach it in WhatsApp after the web window opens.');
-        }, 'image/png');
-      } catch (err) {
-        console.error('Capture/share error', err);
-        alert('Could not capture or share image.');
-      }
-    };
-  }
+    } catch (err) {
+      console.error('Capture/share error', err);
+      alert('Could not capture or share image.');
+    }
+  };
+}
 
   // if (copyBtn) {
   //   copyBtn.onclick = async () => {
