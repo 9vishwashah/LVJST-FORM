@@ -148,9 +148,9 @@ async function loadFormVisitStats(range = 'all') {
     rows.forEach(r=>{
       const ck = normalizeCityKey(r.city, allKeys);
       analytics.byCity[ck] = (analytics.byCity[ck]||0) + 1;
-      const g = (r.gender||'Other').toString().trim();
-      if (/male/i.test(g)) analytics.byGender.Male++;
-      else if (/female/i.test(g)) analytics.byGender.Female++;
+      const g = (r.gender||'').toString().trim().toLowerCase();
+      if (/^(m|male|man)\b/.test(g)) analytics.byGender.Male++;
+      else if (/^(f|female|woman)\b/.test(g)) analytics.byGender.Female++;
       else analytics.byGender.Other++;
       const skills = normalizeSkills(r.skills);
       skills.forEach(s=>{
@@ -221,7 +221,7 @@ async function loadFormVisitStats(range = 'all') {
 
   /* table render */
   function renderTable(rows){
-    if (!rows || !rows.length){ dataBody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:24px">No records</td></tr>`; return; }
+    if (!rows || !rows.length){ dataBody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:24px">No records</td></tr>`; return; }
     dataBody.innerHTML = '';
     // compute city keys once for consistent display (use current allRows set so normalization matches analytics)
     const cityKeys = buildCityKeys(allRows);
@@ -231,12 +231,15 @@ async function loadFormVisitStats(range = 'all') {
       const name = escapeHtml(r.full_name || r.name || '');
       const phone = (r.mobile_number || r.contact || '');
       const phoneClean = phone.toString().replace(/\D/g,'');
-      const email = escapeHtml(r.email || '');
       const cityKey = normalizeCityKey(r.city, cityKeys);
       const cityLabel = cityLabelFromKey(cityKey);
       const age = escapeHtml(r.age ?? '');
+      const gender = escapeHtml(r.gender || '');
+      const occupationDetail = escapeHtml(r.occupation_detail || r.occupation_detail || '');
+      // normalize contribution: trim, treat '.' or short punctuation-only values as empty
+      const rawContribution = (r.contribution_text || '').toString().trim();
+      const contributionClean = rawContribution.replace(/^[\W_]+|[\W_]+$/g, '').trim();
       const reference = escapeHtml(r.reference || '');
-      const submitted = escapeHtml(dateOnly(r.Timestamp || r.created_at || r.submitted_at));
       const skillsArr = normalizeSkills(r.skills);
       const skillsHtml = skillsArr.length ? skillsArr.map(s=>`<span class="chip">${escapeHtml(s)}</span>`).join(' ') : '—';
 
@@ -246,20 +249,16 @@ async function loadFormVisitStats(range = 'all') {
         <td>${name}</td>
         <td>
           <div style="display:flex;gap:8px;align-items:center">
-            <button class="whatsapp icon-btn" title="WhatsApp" data-phone="${phoneClean}"><i class="fa-brands fa-whatsapp" style="color:#fff"></i></button>
-            <button class="email-icon icon-btn" title="Send email" data-email="${escapeHtml(r.email||'')}"><i class="fa-solid fa-envelope"></i></button>
-            <div style="margin-left:8px">${escapeHtml(phone)}</div>
+            <button class="whatsapp icon-btn" title="WhatsApp" data-phone="${phoneClean}" data-name="${name}"><i class="fa-brands fa-whatsapp" style="color:#fff"></i></button>
+            <button class="call icon-btn" title="Call" data-phone="${phoneClean}"><i class="fa-solid fa-phone" style="color:#fff"></i></button>
           </div>
         </td>
-        <td class="email-cell">${email}</td>
-        <td>${cityLabel}</td>
         <td>${age}</td>
+        <td>${gender}</td>
+        <td>${occupationDetail}</td>
+        <td>${cityLabel}</td>
         <td class="skills-cell">${skillsHtml}</td>
         <td>${reference}</td>
-        <td class="date-cell">${submitted}</td>
-        <td class="actions-col">
-          <button class="action-delete icon-btn" data-id="${escapeHtml(id)}" title="Delete" style="color:#ff5b5b"><i class="fa-solid fa-trash"></i></button>
-        </td>
       `;
       dataBody.appendChild(tr);
     });
@@ -269,37 +268,22 @@ async function loadFormVisitStats(range = 'all') {
       btn.addEventListener('click', ()=> {
         const p = btn.dataset.phone || '';
         if (!p) return alert('No phone number available');
+        const name = (btn.dataset.name || '').trim();
         const wa = p.startsWith('91') ? p : '91' + p;
-        window.open(`https://wa.me/${wa}`, '_blank');
+        const msg = name
+          ? `Dear ${name},\n\nThank you for registering as a volunteer with LVJST. We will reach out to you shortly.\n\n— LVJST Team`
+          : `Thank you for registering with LVJST. We will reach out to you shortly.`;
+        const url = `https://wa.me/${wa}?text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
       });
     });
 
-    document.querySelectorAll('.email-icon').forEach(btn=>{
+    document.querySelectorAll('.call').forEach(btn=>{
       btn.addEventListener('click', ()=> {
-        const e = btn.dataset.email || '';
-        if (!e) return alert('No email provided');
-        window.location.href = `mailto:${e}`;
-      });
-    });
-
-    // delete handlers
-    document.querySelectorAll('.action-delete').forEach(btn=>{
-      btn.addEventListener('click', async ()=>{
-        const id = btn.dataset.id;
-        if (!confirm('Delete this volunteer?')) return;
-        try {
-          const token = getToken();
-          if (!token) return alert('Not authorized');
-          const res = await fetch(API_DELETE, {
-            method:'POST',
-            headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + token },
-            body: JSON.stringify({ id })
-          });
-          const body = await res.json().catch(()=>null);
-          if (!res.ok) { console.error(body); return alert('Delete failed'); }
-          allRows = allRows.filter(r => String(r.iD ?? r.id ?? '') !== String(id));
-          applyAllFilters();
-        } catch (err) { console.error(err); alert('Server error'); }
+        const p = btn.dataset.phone || '';
+        if (!p) return alert('No phone number available');
+        const tel = p.startsWith('+') ? p : (p.startsWith('91') ? `+${p}` : `+91${p}`);
+        window.location.href = `tel:${tel}`;
       });
     });
   }
@@ -350,7 +334,7 @@ async function loadFormVisitStats(range = 'all') {
         if (!skills.includes(activeSkillFilter.toLowerCase())) return false;
       }
       if (q){
-        const joined = `${r.full_name||''} ${r.email||''} ${r.mobile_number||''} ${r.city||''} ${r.reference||''} ${JSON.stringify(r.skills||'')}`.toLowerCase();
+        const joined = `${r.full_name||''} ${r.mobile_number||''} ${r.city||''} ${r.reference||''} ${r.occupation_detail||''} ${r.contribution_text||''} ${JSON.stringify(r.skills||'')}`.toLowerCase();
         if (!joined.includes(q)) return false;
       }
       return true;
@@ -377,19 +361,24 @@ async function loadFormVisitStats(range = 'all') {
   /* CSV / PDF export (unchanged logic) */
   function exportCSV(){
     if (!allRows.length) return alert('No data to export');
-    const headers = ['Sr No','Name','Email','Contact','City','Age','Skills','Reference','Submitted At'];
-    const rows = allRows.map((r,i)=>[
-      i+1,
-      r.full_name||'',
-      r.email||'',
-      r.mobile_number||'',
-      cityLabelFromKey(normalizeCityKey(r.city, buildCityKeys(allRows))),
-      r.age||'',
-      normalizeSkills(r.skills).join('; '),
-      r.reference||'',
-      dateOnly(r.Timestamp||r.created_at||r.submitted_at)
-    ]);
-    const csv = [headers.join(',')].concat(rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(','))).join('\n');
+    // Build a union of all keys present in rows so CSV reflects Supabase columns
+    const keySet = new Set();
+    allRows.forEach(r=>{ Object.keys(r||{}).forEach(k=>keySet.add(k)); });
+    const keys = Array.from(keySet);
+    // Prefer a friendly ordering for common fields
+    const preferred = ['iD','id','Timestamp','full_name','name','email','mobile_number','age','gender','occupation_type','occupation_detail','address','city','skills','contribution_text','reference'];
+    const ordered = [];
+    preferred.forEach(k=>{ if (keySet.has(k) && !ordered.includes(k)) ordered.push(k); });
+    keys.forEach(k=>{ if (!ordered.includes(k)) ordered.push(k); });
+    const headers = ordered;
+    const rows = allRows.map((r,i)=> headers.map(h=>{
+      const v = r[h];
+      if (v === null || v === undefined) return '';
+      if (typeof v === 'object') return JSON.stringify(v);
+      return String(v);
+    }));
+    const csv = [headers.map(h=>`"${String(h).replace(/"/g,'""') }"`).join(',')]
+      .concat(rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""') }"`).join(','))).join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = `volunteers_${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
@@ -413,12 +402,12 @@ async function loadFormVisitStats(range = 'all') {
       <th style="border:1px solid #ddd;padding:6px">Sr No</th>
       <th style="border:1px solid #ddd;padding:6px">Name</th>
       <th style="border:1px solid #ddd;padding:6px">Contact</th>
-      <th style="border:1px solid #ddd;padding:6px">Email</th>
-      <th style="border:1px solid #ddd;padding:6px">City</th>
       <th style="border:1px solid #ddd;padding:6px">Age</th>
+      <th style="border:1px solid #ddd;padding:6px">Gender</th>
+      <th style="border:1px solid #ddd;padding:6px">Occupation Detail</th>
+      <th style="border:1px solid #ddd;padding:6px">City</th>
       <th style="border:1px solid #ddd;padding:6px">Skills</th>
       <th style="border:1px solid #ddd;padding:6px">Reference</th>
-      <th style="border:1px solid #ddd;padding:6px">Submitted At</th>
     </tr></thead><tbody></tbody>`;
     const tb = table.querySelector('tbody');
     allRows.forEach((r,i)=>{
@@ -428,12 +417,12 @@ async function loadFormVisitStats(range = 'all') {
         <td style="border:1px solid #eee;padding:6px">${i+1}</td>
         <td style="border:1px solid #eee;padding:6px">${escapeHtml(r.full_name||'')}</td>
         <td style="border:1px solid #eee;padding:6px">${escapeHtml(r.mobile_number||'')}</td>
-        <td style="border:1px solid #eee;padding:6px">${escapeHtml(r.email||'')}</td>
-        <td style="border:1px solid #eee;padding:6px">${escapeHtml(cityLabelFromKey(normalizeCityKey(r.city, buildCityKeys(allRows))))}</td>
         <td style="border:1px solid #eee;padding:6px">${escapeHtml(r.age||'')}</td>
+        <td style="border:1px solid #eee;padding:6px">${escapeHtml(r.gender||'')}</td>
+        <td style="border:1px solid #eee;padding:6px">${escapeHtml(r.occupation_detail||'')}</td>
+        <td style="border:1px solid #eee;padding:6px">${escapeHtml(cityLabelFromKey(normalizeCityKey(r.city, buildCityKeys(allRows))))}</td>
         <td style="border:1px solid #eee;padding:6px">${escapeHtml(skills)}</td>
         <td style="border:1px solid #eee;padding:6px">${escapeHtml(r.reference||'')}</td>
-        <td style="border:1px solid #eee;padding:6px">${escapeHtml(dateOnly(r.Timestamp||r.created_at||r.submitted_at))}</td>
       `;
       tb.appendChild(tr);
     });
@@ -442,14 +431,44 @@ async function loadFormVisitStats(range = 'all') {
 
     try {
       const canvas = await html2canvas(wrapper, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
-      const img = canvas.toDataURL('image/jpeg', 0.95);
+      const imgData = canvas.toDataURL('image/jpeg', 0.95);
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF({ unit: 'px', format: 'a4' });
       const pageWidth = pdf.internal.pageSize.getWidth();
-      const imgProps = pdf.getImageProperties(img);
-      const imgWidth = pageWidth - 40;
-      const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
-      pdf.addImage(img, 'JPEG', 20, 20, imgWidth, imgHeight);
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 20;
+      const pdfWidth = pageWidth - margin * 2;
+
+      // Calculate rendered image height when scaled to pdfWidth
+      const imgProps = pdf.getImageProperties(imgData);
+      const imgRenderedHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      const printableHeight = pageHeight - margin * 2;
+
+      if (imgRenderedHeight <= printableHeight) {
+        pdf.addImage(imgData, 'JPEG', margin, margin, pdfWidth, imgRenderedHeight);
+      } else {
+        // Need to split canvas into pages
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        // pixels on canvas that correspond to one PDF page height
+        const pixelsPerPage = Math.floor(canvasHeight * (printableHeight / imgRenderedHeight));
+        let y = 0;
+        let pageIndex = 0;
+        while (y < canvasHeight) {
+          const h = Math.min(pixelsPerPage, canvasHeight - y);
+          const pageCanvas = document.createElement('canvas');
+          pageCanvas.width = canvasWidth;
+          pageCanvas.height = h;
+          const ctx = pageCanvas.getContext('2d');
+          ctx.drawImage(canvas, 0, y, canvasWidth, h, 0, 0, canvasWidth, h);
+          const pageImg = pageCanvas.toDataURL('image/jpeg', 0.95);
+          const pageImgHeight = (h * pdfWidth) / canvasWidth;
+          if (pageIndex > 0) pdf.addPage();
+          pdf.addImage(pageImg, 'JPEG', margin, margin, pdfWidth, pageImgHeight);
+          y += h;
+          pageIndex++;
+        }
+      }
       pdf.save(`volunteers_${new Date().toISOString().slice(0,10)}.pdf`);
     } catch (err) {
       console.error(err); alert('PDF export failed');
@@ -461,17 +480,22 @@ async function loadFormVisitStats(range = 'all') {
   /* load data with robust network error handling */
   async function loadData(){
     const token = getToken();
-    if (!token) { dataBody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:22px;color:#c00">Not logged in — please login first</td></tr>`; return; }
+    if (!token) {
+      dataBody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:22px;color:#c00">Not logged in — please login first</td></tr>`;
+      return;
+    }
     try {
-      dataBody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:22px">Loading...</td></tr>`;
+      dataBody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:22px">Loading...</td></tr>`;
       const res = await fetch(API_FETCH, { headers: { Authorization: 'Bearer ' + token } });
       if (!res.ok) {
         const body = await res.json().catch(()=>null);
         console.error('fetch error', body);
-        dataBody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:22px;color:#c00">Fetch failed: ${res.status} ${res.statusText}</td></tr>`;
+        dataBody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:22px;color:#c00">Fetch failed: ${res.status} ${res.statusText}</td></tr>`;
         return;
       }
       const body = await res.json().catch(()=>null);
+      // debug: log sample contribution_text values from API
+      try { console.log('fetch rows sample contributions', (body.rows||[]).slice(0,5).map(r=>r.contribution_text)); } catch(e){}
       allRows = body.rows || [];
       filteredRows = allRows.slice();
       renderAnalyticsUI(allRows);
@@ -479,7 +503,7 @@ async function loadFormVisitStats(range = 'all') {
       renderTable(filteredRows);
     } catch (err) {
       console.error('Network / fetch error', err);
-      dataBody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:22px;color:#c00">Cannot reach server — check Netlify functions / dev server. (${err.message})</td></tr>`;
+      dataBody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:22px;color:#c00">Cannot reach server — check Netlify functions / dev server. (${err.message})</td></tr>`;
     }
   }
 

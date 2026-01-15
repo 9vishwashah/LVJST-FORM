@@ -458,6 +458,12 @@
       max-width: 300px;
     }
 
+    .contribution-cell {
+      max-width: 420px;
+      word-break: break-word;
+      white-space: normal;
+    }
+
     .skills-cell .chip {
       display: inline-block;
       background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
@@ -473,6 +479,25 @@
 
     .skills-cell .chip:hover {
       background: var(--primary-blue);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .contribution-cell .chip {
+      display: inline-block;
+      background: linear-gradient(135deg, #f0f9f4 0%, #ecfdf3 100%);
+      color: #0f5132;
+      padding: 4px 10px;
+      border-radius: 16px;
+      margin: 2px;
+      font-size: 12px;
+      border: 1px solid #bbf7d0;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+    }
+
+    .contribution-cell .chip:hover {
+      background: #10b981;
       color: #ffffff;
       transform: translateY(-1px);
     }
@@ -538,6 +563,18 @@
 
     .whatsapp:hover {
       box-shadow: 0 4px 12px rgba(37, 211, 102, 0.5);
+    }
+
+    .call {
+      background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+    }
+
+    .call:hover {
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.45);
     }
 
     .email-icon {
@@ -898,7 +935,7 @@
       <div class="controls">
         <div class="search">
           <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted);margin-right:10px"></i>
-          <input id="globalSearch" placeholder="Search by name, email, city, skills..." />
+          <input id="globalSearch" placeholder="Search by name, city, skills..." />
         </div>
       </div>
 
@@ -917,28 +954,25 @@
       </span>
     </th>
 
-    <th>
-      Email
-      <span class="col-action">
-        <button data-col="email" class="col-sort" title="Sort by email">
-          <i class="fa-solid fa-sort"></i>
-        </button>
-      </span>
-    </th>
-
-    <th>
-      City
-      <span class="col-action">
-        <button data-col="city" class="col-sort" title="Sort by city">
-          <i class="fa-solid fa-sort"></i>
-        </button>
-      </span>
-    </th>
+    <th>Contact</th>
 
     <th>
       Age
       <span class="col-action">
         <button data-col="age" class="col-sort" title="Sort by age">
+          <i class="fa-solid fa-sort"></i>
+        </button>
+      </span>
+    </th>
+
+    <th>Gender</th>
+
+    <th>Occupation Detail</th>
+
+    <th>
+      City
+      <span class="col-action">
+        <button data-col="city" class="col-sort" title="Sort by city">
           <i class="fa-solid fa-sort"></i>
         </button>
       </span>
@@ -954,17 +988,6 @@
         </button>
       </span>
     </th>
-
-    <th>
-      Submitted
-      <span class="col-action">
-        <button data-col="Timestamp" class="col-sort" title="Sort by date">
-          <i class="fa-solid fa-sort"></i>
-        </button>
-      </span>
-    </th>
-
-    <th class="actions-col">Actions</th>
   </tr>
 </thead>
 

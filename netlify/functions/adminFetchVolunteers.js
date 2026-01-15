@@ -42,14 +42,25 @@ exports.handler = async (event) => {
       return { statusCode: 500, body: JSON.stringify({ error: 'db_error', details: error }) };
     }
 
+    // ensure contribution_text is present on each row (fallbacks) and log a sample for debugging
+    const rows = data.map(r => ({
+      ...r,
+      contribution_text: (r.contribution_text || r.contribution || r.contributionText || '').toString()
+    }));
+
     // build some quick analytics
-    const total = data.length;
-    const byCity = data.reduce((acc, r) => { const c = r.city || 'Unknown'; acc[c] = (acc[c] || 0) + 1; return acc; }, {});
-    const byGender = data.reduce((acc, r) => { const g = r.gender || 'Unknown'; acc[g] = (acc[g] || 0) + 1; return acc; }, {});
+    const total = rows.length;
+    const byCity = rows.reduce((acc, r) => { const c = r.city || 'Unknown'; acc[c] = (acc[c] || 0) + 1; return acc; }, {});
+    const byGender = rows.reduce((acc, r) => { const g = r.gender || 'Unknown'; acc[g] = (acc[g] || 0) + 1; return acc; }, {});
+
+    // debug: output first 3 contribution values (will appear in function logs)
+    try {
+      console.log('sample contributions:', rows.slice(0,3).map(x => x.contribution_text));
+    } catch(e){}
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ ok: true, rows: data, analytics: { total, byCity, byGender } })
+      body: JSON.stringify({ ok: true, rows, analytics: { total, byCity, byGender } })
     };
 
   } catch (err) {
