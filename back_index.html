@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LVJST Members Registration</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="canonical" href="https://lvjst.org/register">
+    <!-- <base href="/register/"> -->
+    <link rel="icon" href="/asset/lvjst-logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <meta property="og:image" content="https://lvjstregister.netlify.app/asset/lvjst-logo.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js" defer></script>
+    <script src="https://kit.fontawesome.com/32255cd4c3.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LemHQ8sAAAAABuB7GU5VRpLw7dMFxxGE1zDkMMH"></script>
+
+</head>
+
+<body>
+    <main class="container">
+        <section class="survey-section" id="survey">
+            <div class="form-container">
+                <div class="form-header">
+                    <div class="header-left">
+                        <a href="#"><img src="/asset/lvjst-logo.png" class="form-logo" alt="LVJST Logo"></a>
+                    </div>
+                    <div class="header-title">
+                        <h2 class="form-title">LVJST Members</h2>
+                        <h3 class="form-subtitle">Registration</h3>
+                    </div>
+                </div>
+
+                <!-- <p style="margin:12px 0"><a class="btn-link" href="/bhavnagar-summary/">View Bhavnagar Summary</a></p> -->
+
+                                <div class="event-card">
+                    <div class="event-badge"><i class="fa-solid fa-fire"></i> UPCOMING EVENT</div>
+                    <h2 class="event-title-main">"ऐ शासन तेरे लिये"</h2>
+                    <!-- <p class="event-subtitle-text">🙏 Serving Religion Through Humanity & Seva 🙏</p> -->
+                    <p class="event-date">📅 <strong>18th January</strong> | 📍 <strong>Mumbai</strong></p>
+                    <div class="event-divider"></div>
+                    <p class="event-subheader">Grand LVJST Meet with Gurubhagwant</p>
+                    <p class="event-greeting">🙏 Pranam | Jay Jinendra </p>
+                    <p class="event-message">Rushabhayan 2.0 ke grand success ke liye aap sabhi ko hriday se dhanyawad 🌸✨</p>
+                    <p>Rushabhayan ke organising trust — <strong>Labdhi Vikram Jan Seva Trust</strong> — Jinshasan ke liye anek mahan aur visionary karya kar rahi hai 🙏</p>
+                    <div class="initiatives-list">
+                        <p class="list-title">🔹 Mukhya Karya:</p>
+                        <ul class="announcement-list">
+                            <li>1. Tirthodhar & Shrutodhar</li>
+                            <li>2. Shraman Seva</li>
+                            <li>3. Preservation & Conservation of Rich Jain Heritage</li>
+                            <li>4. National & International Universities aur sansthaon ke saath tie-ups</li>
+                            <li>5. Jeernoddhaar | Panjrapol | Bird Surveys 🐦</li>
+                            <li>6. Legal documentation of our Dharohar</li>
+                            <li>7. Awareness campaigns ✨</li>
+                        </ul>
+                    </div>
+                    <p class="event-cta"><em><strong> Join us on 18th LVJST Meet & get More precise details</strong></em></p>
+                </div>
+
+                
+
+                <div class="initiatives-card">
+                    <h3 class="initiatives-title"> <i class="fa-regular fa-handshake"></i> LVJST Initiatives</h3>
+                    <div class="counter-card">
+                        <div class="counter-content">
+                            <span id="templesCount" class="counter">0</span><span class="counter-suffix">+</span>
+                        </div>
+                        <p class="counter-label">TEMPLES SURVEYED</p>
+                        <p class="counter-target">Target: 15,000 temples in 5 years</p>
+                    </div>
+                    <p class="counter-subtitle">🙏 Guided by 🙏<br><em><strong>प. पु. गच्छाधिपति श्री यशोवर्मसूरीश्वरजी महाराज<br>प. पु. आचार्य श्री भाग्ययशसूरीश्वरजी महाराज</strong></em></p>
+                                        <div class="info-card fill-form-card">
+                    <h3 class="card-title">✨ Fill Form Now!</h3>
+                    <ul class="card-list">
+                        <li><strong>🏛️ TIRTH RAKSHA & JEERNODDHAAR</strong><br>Document, protect, and restore historical temples.</li>
+                        <li><strong>📚 SHRUTODDHAAR</strong><br>Save and protect ancient Jain manuscripts rich with wisdom.</li>
+                        <li><strong>🌟 RUSHABHAYAN</strong><br>Pioneer of Indic Civilization seminar honoring Lord Rishabhdev.</li>
+                    </ul>
+                </div>
+                    <!-- Image Gallery Section -->
+                    <div class="gallery-section">
+                        <!-- <h4 class="gallery-title">📸 Our Work Gallery</h4> -->
+                        <div class="gallery-container">
+                            <div class="carousel">
+                                <div class="carousel-track" id="carouselTrack">
+                                    <!-- Image placeholders - Replace src with actual image URLs -->
+                                    <div class="carousel-slide"><img src="/asset/gallery/1.jpg" alt="Temple Survey"></div>
+                                    <div class="carousel-slide"><img src="/asset/gallery/2.png" alt="Temple Survey"></div>
+                                    <div class="carousel-slide"><img src="/asset/gallery/3.png" alt="Temple Survey"></div>
+                                    <div class="carousel-slide"><img src="/asset/gallery/4.png" alt="Temple Survey"></div>
+                                    <div class="carousel-slide"><img src="/asset/gallery/5.png" alt="Temple Survey"></div>
+                                    <div class="carousel-slide"><img src="/asset/gallery/6.png" alt="Temple Survey"></div>
+                                    <div class="carousel-slide"><img src="/asset/gallery/7.png" alt="Temple Survey"></div>
+                                                                    </div>
+                            </div>
+                            <button class="carousel-btn carousel-prev" id="prevBtn">❮</button>
+                            <button class="carousel-btn carousel-next" id="nextBtn">❯</button>
+                        </div>
+                        <div class="carousel-dots" id="carouselDots"></div>
+                    </div>
+                </div>
+
+
+                
+
+                <form id="volunteer-form">
+                    <label for="full_name">1. Full Name<span class="required-asterisk">*</span></label>
+                    <input type="text" id="full_name" name="full_name" required>
+
+                    <label for="email">2. Email<span class="required-asterisk">*</span></label>
+                    <input type="email" id="email" name="email" required>
+
+                    <label for="mobile_no">3. Mobile Number<span class="required-asterisk">*</span></label>
+                    <input type="tel" id="mobile_no" name="mobile_no" required>
+
+                    <label>4. Gender<span class="required-asterisk">*</span></label>
+                    <div class="toggle-group">
+                        <input type="radio" id="gender_male" name="gender" value="Male" required>
+                        <label for="gender_male">Male</label>
+                        <input type="radio" id="gender_female" name="gender" value="Female">
+                        <label for="gender_female">Female</label>
+                    </div>
+
+                    <label for="age">5. Age<span class="required-asterisk">*</span></label>
+                    <input type="number" id="age" name="age" min="1" max="120" inputmode="numeric" required placeholder="">
+
+                    <label>6. Current Occupation<span class="required-asterisk">*</span></label>
+                    <div class="toggle-group" id="occupation-group">
+                        <input type="radio" id="occupation_student" name="occupation_type" value="Student" required>
+                        <label for="occupation_student">Student</label>
+                        <input type="radio" id="occupation_working" name="occupation_type" value="Working">
+                        <label for="occupation_working">Working Profession</label>
+                    </div>
+
+                    <div id="occupation-student-container" class="conditional-inputs"></div>
+                    <div id="occupation-working-container" class="conditional-inputs"></div>
+
+                    <label for="city">7. City<span class="required-asterisk">*</span></label>
+                    <input type="text" id="city" name="city" required>
+
+                    <label for="address">8. Full Address<span class="required-asterisk">*</span></label>
+                    <textarea id="address" name="address" rows="3" required></textarea>
+
+                    <label for="skills">9. Skills/Interest<span class="required-asterisk">*</span><br>
+                        <small>(Select all that apply)</small></label>
+                    <div class="checkbox-group" id="skills-checkbox-group" required>
+                        <label><input type="checkbox" name="skills" value="History"> History</label>
+                        <div id="history-experience-container"></div>
+                        <label><input type="checkbox" name="skills" value="Exploration"> Exploration (Offline / Onsite)
+                        </label>
+                        <div id="exploration-experience-container"></div>
+                        <label><input type="checkbox" name="skills" value="Paper_Work"> Paper Work</label>
+                        <div id="paper_work-experience-container"></div>
+                        <label><input type="checkbox" name="skills" value="Social_Media"> Social Media</label>
+                        <div id="social_media-experience-container"></div>
+                        <label><input type="checkbox" name="skills" value="Web_Interest"> Web Interest</label>
+                        <div id="web_interest-experience-container"></div>
+                        <label><input type="checkbox" name="skills" value="Content_Writing"> Content Writing</label>
+                        <div id="content_writing-experience-container"></div>
+                        <label><input type="checkbox" name="skills" value="PPT"> PPT</label>
+                        <div id="ppt-experience-container"></div>
+                        <label><input type="checkbox" name="skills" value="Public_Speaking"> Public Speaking</label>
+                        <div id="public_speaking-experience-container"></div>
+                        <label><input type="checkbox" name="skills" value="Literature"> Literature</label>
+                        <div id="literature-experience-container"></div>
+                        <label><input type="checkbox" name="skills" value="Illustration"> Illustration / Graphic Design
+                            /
+                            Editing</label>
+                        <div id="illustration-experience-container"></div>
+                        <label><input type="checkbox" name="skills" value="Photography"> Photography</label>
+                        <div id="photography-experience-container"></div>
+                        <label><input type="checkbox" name="skills" value="Excel"> Excel</label>
+                        <div id="excel-experience-container"></div>
+                        <label><input type="checkbox" name="skills" value="Other"> Other</label>
+                        <div id="other-experience-container"></div>
+                    </div>
+
+                    <div id="skill-excel-container" class="conditional-inputs"></div>
+                    <div id="skill-other-container" class="conditional-inputs"></div>
+                    <label for="reference">10. Your reference or connection with us<span
+                            class="required-asterisk">*</span><br>
+                        <small>(e.g., Social Media, Shankheswar Samrajya, Friend, Cousin, Sadhu Maharasaheb)</small></label>
+                    <input type="text" id="reference" name="reference" required>
+
+                    <label for="attend_orientation">11. I will be coming to 18th LVJST Orientation<span class="required-asterisk">*</span></label>
+                    <div class="toggle-group orientation-card" id="attend-orientation-group">
+                        <input type="radio" id="attend_yes" name="attend_orientation" value="Yes" required>
+                        <label for="attend_yes">Yes</label>
+                        <input type="radio" id="attend_maybe" name="attend_orientation" value="Maybe">
+                        <label for="attend_maybe">Maybe</label>
+                    </div>
+
+                    <button type="submit" id="submit-btn">Submit</button>
+                    <p id="form-status"></p>
+                </form>
+            </div>
+            <div id="success-modal" class="modal-overlay">
+                <div class="modal-content success-popup">
+                    <div class="success-icon">
+                        <svg viewBox="0 0 52 52">
+                            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                            <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                        </svg>
+                    </div>
+                    <h2>Thank You, <br><span id="user-name-placeholder"></span>!</h2>
+                    <div class="note-box">
+                        Join us at 18th LVJST Orientation to know more !
+                    </div>
+
+                    <div class="modal-actions">
+                        <button id="share-btn" class="secondary-btn"><i class="fa-brands fa-whatsapp"
+                                style="color: #ffff;"></i> Share</button>
+                        <button id="save-btn"><i class="fa-solid fa-download"></i>Save</button>
+                        <a href="whatsapp://chat?code=IRvseAYqwi4Kroani5YbvW"
+                            class="whatsapp-group-btn" target="_blank">
+                            <button type="button">
+                                <i class="fa-brands fa-whatsapp"></i> Join WhatsApp Group
+                            </button>
+                        </a>
+                        <button id="instagramFollowBtn" class="instagram-btn">
+                        <i class="fa-brands fa-instagram"></i> Follow on Instagram
+                        </button>
+                    </div>
+                    <p class="creator-credit">Your Response has been Recorded!</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p class="copyright">
+            &copy; 2026 
+            <a href="https://lvjst.org" target="_blank" class="footer-link">lvjst.org</a>
+        </p>
+        <p>Designed By Vishwa Alpesh Shah <span class="whatsapp-icon-inline"><a href="https://wa.me/9594503214"
+                    target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i></a></span></p>
+    </footer>
+</body>
+
+</html>

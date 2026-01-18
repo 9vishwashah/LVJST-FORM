@@ -221,7 +221,7 @@ async function loadFormVisitStats(range = 'all') {
 
   /* table render */
   function renderTable(rows){
-    if (!rows || !rows.length){ dataBody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:24px">No records</td></tr>`; return; }
+    if (!rows || !rows.length){ dataBody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:24px">No records</td></tr>`; return; }
     dataBody.innerHTML = '';
     // compute city keys once for consistent display (use current allRows set so normalization matches analytics)
     const cityKeys = buildCityKeys(allRows);
@@ -258,6 +258,7 @@ async function loadFormVisitStats(range = 'all') {
         <td>${occupationDetail}</td>
         <td>${cityLabel}</td>
         <td class="skills-cell">${skillsHtml}</td>
+        <td class="attend-orientation">${escapeHtml(r.attend_orientation ?? '') || '—'}</td>
         <td>${reference}</td>
       `;
       dataBody.appendChild(tr);
@@ -407,6 +408,7 @@ async function loadFormVisitStats(range = 'all') {
       <th style="border:1px solid #ddd;padding:6px">Occupation Detail</th>
       <th style="border:1px solid #ddd;padding:6px">City</th>
       <th style="border:1px solid #ddd;padding:6px">Skills</th>
+      <th style="border:1px solid #ddd;padding:6px">Attend Orientation</th>
       <th style="border:1px solid #ddd;padding:6px">Reference</th>
     </tr></thead><tbody></tbody>`;
     const tb = table.querySelector('tbody');
@@ -422,6 +424,7 @@ async function loadFormVisitStats(range = 'all') {
         <td style="border:1px solid #eee;padding:6px">${escapeHtml(r.occupation_detail||'')}</td>
         <td style="border:1px solid #eee;padding:6px">${escapeHtml(cityLabelFromKey(normalizeCityKey(r.city, buildCityKeys(allRows))))}</td>
         <td style="border:1px solid #eee;padding:6px">${escapeHtml(skills)}</td>
+        <td style="border:1px solid #eee;padding:6px">${escapeHtml(r.attend_orientation ?? '') || '—'}</td>
         <td style="border:1px solid #eee;padding:6px">${escapeHtml(r.reference||'')}</td>
       `;
       tb.appendChild(tr);
@@ -481,16 +484,16 @@ async function loadFormVisitStats(range = 'all') {
   async function loadData(){
     const token = getToken();
     if (!token) {
-      dataBody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:22px;color:#c00">Not logged in — please login first</td></tr>`;
+      dataBody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:22px;color:#c00">Not logged in — please login first</td></tr>`;
       return;
     }
     try {
-      dataBody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:22px">Loading...</td></tr>`;
+      dataBody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:22px">Loading...</td></tr>`;
       const res = await fetch(API_FETCH, { headers: { Authorization: 'Bearer ' + token } });
       if (!res.ok) {
         const body = await res.json().catch(()=>null);
         console.error('fetch error', body);
-        dataBody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:22px;color:#c00">Fetch failed: ${res.status} ${res.statusText}</td></tr>`;
+        dataBody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:22px;color:#c00">Fetch failed: ${res.status} ${res.statusText}</td></tr>`;
         return;
       }
       const body = await res.json().catch(()=>null);
@@ -503,7 +506,7 @@ async function loadFormVisitStats(range = 'all') {
       renderTable(filteredRows);
     } catch (err) {
       console.error('Network / fetch error', err);
-      dataBody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:22px;color:#c00">Cannot reach server — check Netlify functions / dev server. (${err.message})</td></tr>`;
+      dataBody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:22px;color:#c00">Cannot reach server — check Netlify functions / dev server. (${err.message})</td></tr>`;
     }
   }
 

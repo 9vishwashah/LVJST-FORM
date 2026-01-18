@@ -111,7 +111,9 @@ async function getRecaptchaToken(action = 'submit_volunteer') {
 // --- call server function ---
 async function callSubmitVolunteerFunction(volunteerData, recaptchaToken = null) {
     const payload = { ...volunteerData, recaptchaToken };
-    const url = '/.netlify/functions/submitVolunteer'; // change if using another host
+    const url = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+    ? 'http://localhost:8888/.netlify/functions/submitVolunteer'
+    : '/.netlify/functions/submitVolunteer'; // change if using another host
     const resp = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
