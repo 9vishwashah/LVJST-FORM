@@ -261,7 +261,8 @@ async function getRecaptchaToken(action = 'submit_volunteer') {
 // --- call server function ---
 async function callSubmitVolunteerFunction(volunteerData, recaptchaToken = null) {
     const payload = { ...volunteerData, recaptchaToken };
-    const url = './netlify/functions/submitVolunteer'; 
+    const url = '/.netlify/functions/submitVolunteer'; 
+    // C:\Users\Admin\Desktop\VISHWA\LVJST-FORM\register\netlify\functions\submitVolunteer.js
     const resp = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
