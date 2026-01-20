@@ -1,5 +1,6 @@
 [functions]
-directory = "netlify/functions"
+publish="register"
+directory = "register/netlify/functions"
 [[redirects]]
 from = "/register/*"
 to = "https://lvjstregister.netlify.app/:splat"
