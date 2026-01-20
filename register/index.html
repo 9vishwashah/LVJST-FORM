@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LVJST Members Registration</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="canonical" href="https://lvjst.org/register">
+    <link rel="icon" href="/asset/lvjst-logo.png" type="image/png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script2.js" defer></script>
+    <script src="https://kit.fontawesome.com/32255cd4c3.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LemHQ8sAAAAABuB7GU5VRpLw7dMFxxGE1zDkMMH"></script>
+</head>
+
+<body>
+    <!-- Sticky Header -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="register/asset/lvjst-logo.png" alt="LVJST Logo">
+                <div class="nav-text">
+                    <h1>Labdhi Vikram <span class="text-accent">Jan Seva Trust</span></h1>
+                    <p>Protection of Ancient Cultural Heritage of India</p>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-item">Home</a>
+                <a href="#" class="nav-item">Mission</a>
+                <a href="#" class="nav-item active">Registration</a>
+                <a href="#" class="nav-item">Gallery</a>
+            </div>
+            <div class="nav-contact-wrapper">
+                <span class="contact-label">Contact us:</span>
+                <div class="contact-grid">
+                    <div class="contact-item">TEJAS SHAH <a href="tel:+919824112292">+91 9824112292</a></div>
+                    <div class="contact-item">JAINISH SHAH <a href="tel:+919510432680">+91 9510432680</a></div>
+                    <div class="contact-item">ABHISHEK MADHANI <a href="tel:+919930030230">+91 9930030230</a></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="layout-grid">
+            
+            <!-- Left Sidebar -->
+            <aside class="sidebar">
+                
+                <!-- NEW Upcoming Event Card (Royal Theme) -->
+                <div class="special-invite-card upcoming-event royal-theme">
+                    <!-- Logo in Corner -->
+                    <img src="/asset/icon.png" class="corner-logo" alt="LVJST">
+                    
+                    <span class="pill-badge badge-royal">UPCOMING EVENT</span>
+                    
+                    <div class="royal-header">
+                        <!-- <img src="asset/pattabhishekam.png" alt="Grand Seat" class="pattabhishekam-icon"> -->
+                        <h2 class="invite-title royal-title">Gachhadhiraj <br> Padvi Mahotsav</h2>
+                    </div>
+
+                    <div class="guru-image-container royal-frame">
+                        <img src="asset/guru.png" alt="Acharya Bhagwant Yashovarma Surishwarji MS" class="guru-img">
+                    </div>
+
+                    <p class="event-subtitle">Coronation of Guru Bhagwant to Gachhadipati.</p>
+                    <h3 class="guru-name">Gachhadipati P. Pu. Acharya Bhagwant Yashovarma Surishwarji Maharaj</h3>
+                    
+                    <div class="invite-meta royal-meta">
+                        <div class="meta-row">
+                            <span class="icon-circle"><i class="fa-regular fa-calendar"></i></span>
+                            <span>20th, 21st & 22nd February</span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="icon-circle"><i class="fa-solid fa-location-dot"></i></span>
+                            <span>Surat, Gujarat</span>
+                        </div>
+                    </div>
+
+                    <p class="invite-desc">
+                        Join us for this grand auspicious occasion. Visit the LVJST stall at the venue.
+                    </p>
+                </div>
+
+                <!-- PAST Event Card (Moved Down) -->
+                <div class="special-invite-card past-event">
+                    <span class="pill-badge badge-neutral">PAST EVENT</span>
+                    <h2 class="invite-title" style="font-size: 1.5rem;">"ऐ शासन तेरे लिये"</h2>
+                    
+                    <div class="invite-meta">
+                        <div class="meta-row">
+                            <span class="icon-circle"><i class="fa-regular fa-calendar"></i></span>
+                            <span>18th January, 2026</span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="icon-circle"><i class="fa-solid fa-location-dot"></i></span>
+                            <span>Mumbai, Maharashtra</span>
+                        </div>
+                    </div>
+
+                    <button type="button" id="view-event-btn" class="btn-light-outline" style="font-size: 0.8rem; padding: 0.75rem;">View Event Recap</button>
+                </div>
+
+                <!-- Brochure Button -->
+                <a href="asset/lvjst_brochure.pdf" download class="brochure-btn">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <span>VIEW BROCHURE</span>
+                </a>
+
+                <!-- Initiative Cards -->
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">GLIMPSES OF SEVA</h3>
+                    
+                    <div class="mini-card-stack">
+                        <!-- 1. Jirnodhar -->
+                        <div class="mini-card image-card">
+                            <img src="/asset/gallery/1.jpg" alt="Jirnodhar" class="card-bg">
+                            <img src="/asset/lvjst-logo.png" class="card-corner-logo" alt="Logo">
+                            <div class="card-overlay">
+                                <span class="icon">🏛️</span>
+                                <strong>JEENODHAR</strong>
+                            </div>
+                        </div>
+                        <div class="caption-wrapper">
+                            <p class="mini-caption">Protection of Ancient Cultural Heritage. Reviving India's Sacred and Civilizational Legacy.</p>
+                        </div>
+
+                        <!-- 2. Shrutodhar -->
+                        <div class="mini-card image-card">
+                            <img src="asset/shrut.jpg" alt="Shrutodhar" class="card-bg">
+                            <img src="/asset/lvjst-logo.png" class="card-corner-logo" alt="Logo">
+                            <div class="card-overlay">
+                                <span class="icon">📜</span>
+                                <strong>SHRUTODHAR</strong>
+                            </div>
+                        </div>
+                        <div class="caption-wrapper">
+                            <p class="mini-caption">Preserving Ancient Manuscripts. Digitization of 10 Lakh+ manuscript pages.</p>
+                        </div>
+
+                        <!-- 3. Shraman Seva -->
+                        <div class="mini-card image-card">
+                            <img src="asset/vihar.jpg" alt="Shraman Seva" class="card-bg">
+                            <img src="/asset/lvjst-logo.png" class="card-corner-logo" alt="Logo">
+                            <div class="card-overlay">
+                                <span class="icon">👣</span>
+                                <strong>SHRAMAN SEVA</strong>
+                            </div>
+                        </div>
+                        <div class="caption-wrapper">
+                            <p class="mini-caption">Vaiyavacha: Selfless Service in Action. 600+ volunteers serving Saints on highways.</p>
+                        </div>
+
+                        <!-- 4. Shibirs -->
+                        <div class="mini-card image-card">
+                            <img src="asset/gallery/5.png" alt="Shibirs" class="card-bg">
+                            <img src="/asset/lvjst-logo.png" class="card-corner-logo" alt="Logo">
+                            <div class="card-overlay">
+                                <span class="icon">🎓</span>
+                                <strong>SHIBIRS</strong>
+                            </div>
+                        </div>
+                        <div class="caption-wrapper">
+                            <p class="mini-caption">Global Cultural Outreach. Connecting youth with India's historical legacy.</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content (Form) -->
+            <main class="main-content">
+                <div class="registration-card">
+                    <div class="form-header">
+                        <div class="header-branding">
+                            <img src="/asset/lvjst-logo.png" alt="LVJST Logo" class="reg-card-logo">
+                            <div class="header-titles">
+                                <h1 class="main-heading">Member Registration</h1>
+                                <p class="sub-heading">"ऐ शासन तेरे लिये"</p>
+                            </div>
+                        </div>
+                        <!-- Progress Bar -->
+                        <div class="step-indicator">
+                            <div class="step active" data-step="1">1</div>
+                            <div class="step" data-step="2">2</div>
+                            <div class="step" data-step="3">3</div>
+                            <div class="step" data-step="4">4</div>
+                        </div>
+                    </div>
+
+                    <form id="volunteer-form" class="heritage-form">
+                        
+                        <!-- STEP 1: Personal Info -->
+                        <div class="form-step active" id="step-1">
+                            <h3 class="step-title">Personal Details</h3>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="micro-label">FULL NAME *</label>
+                                        <input type="text" id="full_name" name="full_name" placeholder="Vishwa Alpesh Shah" required>
+                                    </div>
+                                    <div class="col">
+                                        <label class="micro-label">EMAIL ADDRESS *</label>
+                                        <input type="email" id="email" name="email" placeholder="vishwa@example.com" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="micro-label">MOBILE NUMBER *</label>
+                                        <input type="tel" id="mobile_no" name="mobile_no" placeholder="9999900000" required>
+                                    </div>
+                                    <div class="col">
+                                        <label class="micro-label">AGE *</label>
+                                        <input type="number" id="age" name="age" min="1" max="120" placeholder="24" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="field-block">
+                                    <label class="micro-label">GENDER *</label>
+                                    <div class="toggle-group" id="gender-group">
+                                        <label class="toggle-option">
+                                            <input type="radio" name="gender" value="Male" required>
+                                            <span class="toggle-content">Male</span>
+                                        </label>
+                                        <label class="toggle-option">
+                                            <input type="radio" name="gender" value="Female">
+                                            <span class="toggle-content">Female</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 2: Professional & Location -->
+                        <div class="form-step" id="step-2">
+                            <h3 class="step-title">Professional & Location</h3>
+                            <div class="form-group">
+                                <div class="field-block">
+                                    <label class="micro-label">OCCUPATION TYPE *</label>
+                                    <div class="toggle-group big-toggles" id="occupation-group">
+                                        <label class="toggle-option big">
+                                            <input type="radio" name="occupation_type" value="Student" required>
+                                            <span class="toggle-content">
+                                                <i class="fa-solid fa-graduation-cap"></i>
+                                                <span>Student</span>
+                                            </span>
+                                        </label>
+                                        <label class="toggle-option big">
+                                            <input type="radio" name="occupation_type" value="Working">
+                                            <span class="toggle-content">
+                                                <i class="fa-solid fa-briefcase"></i>
+                                                <span>Working Professional</span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div id="occupation-student-container" class="dynamic-container"></div>
+                                <div id="occupation-working-container" class="dynamic-container"></div>
+
+                                <hr class="divider">
+                                
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="micro-label">CITY *</label>
+                                        <input type="text" id="city" name="city" placeholder="Mumbai" required>
+                                    </div>
+                                </div>
+                                <div class="field-block">
+                                    <label class="micro-label">FULL ADDRESS *</label>
+                                    <textarea id="address" name="address" rows="3" placeholder="Detailed address with pincode" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 3: Skills -->
+                        <div class="form-step" id="step-3">
+                            <h3 class="step-title">Skills & Interests</h3>
+                            <div class="form-group">
+                                <label class="micro-label" style="margin-bottom: 1rem; display:block;">HOW CAN YOU CONTRIBUTE? (SELECT MULTIPLE) *</label>
+                                <div class="skills-grid" id="skills-checkbox-group">
+                                    <label class="skill-chip">
+                                        <input type="checkbox" name="skills" value="History">
+                                        <span>📜 History</span>
+                                    </label>
+                                    <label class="skill-chip">
+                                        <input type="checkbox" name="skills" value="Exploration">
+                                        <span>🧭 Exploration</span>
+                                    </label>
+                                    <label class="skill-chip">
+                                        <input type="checkbox" name="skills" value="Paper_Work">
+                                        <span>📝 Paper Work</span>
+                                    </label>
+                                    <label class="skill-chip">
+                                        <input type="checkbox" name="skills" value="Social_Media">
+                                        <span>📱 Social Media</span>
+                                    </label>
+                                    <label class="skill-chip">
+                                        <input type="checkbox" name="skills" value="Web_Interest">
+                                        <span>💻 Tech / Web</span>
+                                    </label>
+                                    <label class="skill-chip">
+                                        <input type="checkbox" name="skills" value="Content_Writing">
+                                        <span>✍️ Writing</span>
+                                    </label>
+                                    <label class="skill-chip">
+                                        <input type="checkbox" name="skills" value="PPT">
+                                        <span>📊 Presentation</span>
+                                    </label>
+                                    <label class="skill-chip">
+                                        <input type="checkbox" name="skills" value="Public_Speaking">
+                                        <span>🎤 Speaker</span>
+                                    </label>
+                                    <label class="skill-chip">
+                                        <input type="checkbox" name="skills" value="Photography">
+                                        <span>📸 Photo/Video</span>
+                                    </label>
+                                    <label class="skill-chip">
+                                        <input type="checkbox" name="skills" value="Excel">
+                                        <span>📑 Data/Excel</span>
+                                    </label>
+                                    <label class="skill-chip">
+                                        <input type="checkbox" name="skills" value="Other">
+                                        <span>✨ Other</span>
+                                    </label>
+                                </div>
+                                
+                                <!-- Dynamic input containers -->
+                                <div id="history-experience-container" class="skill-exp-container"></div>
+                                <div id="exploration-experience-container" class="skill-exp-container"></div>
+                                <div id="paper_work-experience-container" class="skill-exp-container"></div>
+                                <div id="social_media-experience-container" class="skill-exp-container"></div>
+                                <div id="web_interest-experience-container" class="skill-exp-container"></div>
+                                <div id="content_writing-experience-container" class="skill-exp-container"></div>
+                                <div id="ppt-experience-container" class="skill-exp-container"></div>
+                                <div id="public_speaking-experience-container" class="skill-exp-container"></div>
+                                <div id="literature-experience-container" class="skill-exp-container"></div>
+                                <div id="illustration-experience-container" class="skill-exp-container"></div>
+                                <div id="photography-experience-container" class="skill-exp-container"></div>
+                                <div id="excel-experience-container" class="skill-exp-container"></div>
+                                <div id="other-experience-container" class="skill-exp-container"></div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 4: Review & Finalize -->
+                        <div class="form-step" id="step-4">
+                            <h3 class="step-title">Review & Finalize</h3>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="micro-label">REFERENCE *</label>
+                                        <input type="text" id="reference" name="reference" placeholder="Who introduced you to LVJST?" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="field-block highlight-block">
+                                    <label class="micro-label">Attending Gurudev's Gachhadipati Mahotsav (20-22 FEB)? *</label>
+                                    <div class="toggle-group" id="attend-orientation-group">
+                                        <label class="toggle-option">
+                                            <input type="radio" name="attend_orientation" value="Yes" required>
+                                            <span class="toggle-content">
+                                                <span>Yes, I'm Coming</span>
+                                            </span>
+                                        </label>
+                                        <label class="toggle-option">
+                                            <input type="radio" name="attend_orientation" value="Maybe">
+                                            <span class="toggle-content">
+                                                <span>Maybe</span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Actions: Navigation Buttons -->
+                        <div class="form-actions-footer">
+                            <div class="wizard-buttons">
+                                <button type="button" id="back-btn" class="btn-outline-large" style="display: none;">
+                                    Back
+                                </button>
+                                <button type="button" id="next-btn" class="btn-primary-large">
+                                    Continue
+                                </button>
+                                <button type="submit" id="submit-btn" class="btn-primary-large" style="display: none;">
+                                    SUBMIT REGISTRATION
+                                </button>
+                            </div>
+                            <p id="form-status" class="status-text"></p>
+                            <p class="footer-quote">"Preserving our Dharohar is not just a duty, it's our spiritual legacy."</p>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Dark Footer -->
+    <footer class="dark-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <img src="/asset/lvjst-logo.png" alt="Logo">
+                    <span>LVJST</span>
+                </div>
+                <p>Preserving Ancient Legacy, Inspiring Modern Values.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Mission</a></li>
+                    <li><a href="#">Events</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <ul>
+                    <!--
+                    <div class="contact-item">JAINISH SHAH <a href="tel:+919510432680">+91 95104 32680</a></div>
+                    <div class="contact-item">ABHISHEK MADHANI <a href="tel:+919930030230">+91 99300 30230</a></div>
+                    <div class="contact-item">TEJAS SHAH <a href="tel:+919824112292">+91 98241 12292</a></div>
+                </div>
+                    -->
+
+                    <li><i class="fa-solid fa-phone"></i> +91 9824112292</li>
+                    <li><i class="fa-solid fa-phone"></i> +91 9510432680</li>
+                    <li><i class="fa-solid fa-phone"></i> +91 9930030230</li>
+                    <li><i class="fa-solid fa-envelope"></i> info@labdhivikram.org</li>
+                    <li><i class="fa-solid fa-location-dot"></i> Mumbai, India</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Social</h4>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/lvjst_org" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/@LVJST" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="https://www.linkedin.com/company/labdhi-vikram-jan-seva-trust/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 lvjst.org | Designed By Vishwa Alpesh Shah</p>
+        </div>
+    </footer>
+
+    <!-- Event Details Modal (Recap for Past Event) -->
+    <div id="event-modal" class="modal-overlay">
+        <div class="modal-content event-content">
+            <button id="close-event-btn" class="close-btn">&times;</button>
+            <span class="pill-badge badge-neutral">PAST EVENT RECAP</span>
+            <h2 class="event-title-modal">"ऐ शासन तेरे लिये"</h2>
+            <div class="event-info-grid">
+                <div class="info-item">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>18th January, 2026</span>
+                </div>
+                <div class="info-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Mumbai, Maharashtra</span>
+                </div>
+            </div>
+            <hr class="divider">
+            <div class="event-body-text">
+                <p><strong>Grand LVJST Meet with Gurubhagwant</strong></p>
+                <p>A visionary gathering where we pledged to protect our Jinshasan through:</p>
+                
+                <!-- New Image Gallery for Recap -->
+                <div class="modal-gallery">
+                    <div class="gallery-item"><img src="asset/past/WhatsApp Image 2026-01-19 at 6.44.21 PM (1).jpeg" alt="Event Photo"></div>
+                    <div class="gallery-item"><img src="asset/past/WhatsApp Image 2026-01-19 at 6.44.21 PM.jpeg" alt="Event Photo"></div>
+                    <div class="gallery-item"><img src="asset/past/WhatsApp Image 2026-01-19 at 6.44.23 PM.jpeg" alt="Event Photo"></div>
+                    <div class="gallery-item"><img src="asset/past/WhatsApp Image 2026-01-19 at 6.44.19 PM.jpeg" alt="Event Photo"></div>
+                </div>
+
+                <!-- <ul class="modal-list">
+                    <li>Tirthodhar & Shrutodhar</li>
+                    <li>Shraman Seva</li>
+                    <li>Preservation of Heritage</li>
+                    <li>University Tie-ups</li>
+                    <li>Jeernoddhaar | Panjrapol</li>
+                </ul> -->
+                <p class="event-greeting">Glimpses from the grand meet with Gurubhagwant, reflecting on the past, present, and future roadmap to preserve and conserve our rich ancient heritage at Geetanjali Jain Sangh, Borivali.
+
+<br> We invite you to join us for the upcoming field visit , <br> where you will be guided on how our heritage can be documented practically and systematically .
+
+ Further updates will be forwarded soon.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="success-icon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2>Registration Successful</h2>
+            <p>Welcome to the LVJST, <span id="user-name-placeholder" class="highlight-name"></span>!</p>
+            <div class="modal-actions">
+                <button id="share-btn" class="btn-accent">Share on WhatsApp</button>
+                <button id="save-btn" class="btn-outline">Save Card</button>
+            </div>
+            <div class="social-links-modal">
+                <a href="https://www.instagram.com/lvjst_org/" target="_blank">Follow on Instagram</a>
+            </div>
+        </div>
+    </div>
+    
+    <span id="templesCount" style="display:none;"></span>
+</body>
+</html>
