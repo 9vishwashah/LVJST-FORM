@@ -16,13 +16,19 @@
      <meta property="og:image" content="https://lvjst.org/register/asset/lvjst-logo.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet"> -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Playfair+Display:wght@400;600;700&display=swap" as="style">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Playfair+Display:wght@400;600;700&display=swap">
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script2.js" defer></script>
-    <script src="https://kit.fontawesome.com/32255cd4c3.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/32255cd4c3.js" defer crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://www.google.com/recaptcha/api.js?render=6LemHQ8sAAAAABuB7GU5VRpLw7dMFxxGE1zDkMMH"></script>
+
+    <link rel="preload" as="image" href="./asset/lvjst-logo.png">
+    <link rel="preload" as="image" href="./asset/guru.png">
+
 </head>
 
 <body>
@@ -62,7 +68,8 @@
                 <!-- NEW Upcoming Event Card (Royal Theme) -->
                 <div class="special-invite-card upcoming-event royal-theme">
                     <!-- Logo in Corner -->
-                    <img src="./asset/icon.png" class="corner-logo" alt="LVJST">
+                    <img src="./asset/icon.png" class="corner-logo"  loading="lazy"
+  decoding="async" alt="LVJST">
                     
                     <span class="pill-badge badge-royal">UPCOMING EVENT</span>
                     
@@ -72,7 +79,8 @@
                     </div>
 
                     <div class="guru-image-container royal-frame">
-                        <img src="./asset/guru.png" alt="Acharya Bhagwant Yashovarma Surishwarji MS" class="guru-img">
+                        <img src="./asset/guru.png"  loading="lazy"
+  decoding="async" alt="Acharya Bhagwant Yashovarma Surishwarji MS" class="guru-img">
                     </div>
 
                     <p class="event-subtitle">Coronation of Guru Bhagwant to Gachhadipati.</p>
@@ -126,8 +134,10 @@
                     <div class="mini-card-stack">
                         <!-- 1. Jirnodhar -->
                         <div class="mini-card image-card">
-                            <img src="./asset/gallery/1.jpg" alt="Jirnodhar" class="card-bg">
-                            <img src="./asset/lvjst-logo.png" class="card-corner-logo" alt="Logo">
+                            <img src="./asset/gallery/1.jpg"  loading="lazy"
+  decoding="async" alt="Jirnodhar" class="card-bg">
+                            <img src="./asset/lvjst-logo.png"  loading="lazy"
+  decoding="async" class="card-corner-logo" alt="Logo">
                             <div class="card-overlay">
                                 <span class="icon">🏛️</span>
                                 <strong>JEENODHAR</strong>
@@ -139,7 +149,8 @@
 
                         <!-- 2. Shrutodhar -->
                         <div class="mini-card image-card">
-                            <img src="./asset/shrut.jpg" alt="Shrutodhar" class="card-bg">
+                            <img src="./asset/shrut.jpg"  loading="lazy"
+  decoding="async" alt="Shrutodhar" class="card-bg">
                             <img src="./asset/lvjst-logo.png" class="card-corner-logo" alt="Logo">
                             <div class="card-overlay">
                                 <span class="icon">📜</span>
@@ -152,7 +163,8 @@
 
                         <!-- 3. Shraman Seva -->
                         <div class="mini-card image-card">
-                            <img src="./asset/vihar.jpg" alt="Shraman Seva" class="card-bg">
+                            <img src="./asset/vihar.jpg" alt="Shraman Seva" class="card-bg"  loading="lazy"
+  decoding="async">
                             <img src="./asset/lvjst-logo.png" class="card-corner-logo" alt="Logo">
                             <div class="card-overlay">
                                 <span class="icon">👣</span>
@@ -165,7 +177,8 @@
 
                         <!-- 4. Shibirs -->
                         <div class="mini-card image-card">
-                            <img src="./asset/gallery/5.png" alt="Shibirs" class="card-bg">
+                            <img src="./asset/gallery/5.png" alt="Shibirs" class="card-bg"  loading="lazy"
+  decoding="async">
                             <img src="./asset/lvjst-logo.png" class="card-corner-logo" alt="Logo">
                             <div class="card-overlay">
                                 <span class="icon">🎓</span>
@@ -184,7 +197,8 @@
                 <div class="registration-card">
                     <div class="form-header">
                         <div class="header-branding">
-                            <img src="./asset/lvjst-logo.png" alt="LVJST Logo" class="reg-card-logo">
+                            <img src="./asset/lvjst-logo.png" alt="LVJST Logo" class="reg-card-logo"  loading="lazy"
+  decoding="async">
                             <div class="header-titles">
                                 <h1 class="main-heading">Member Registration</h1>
                                 <p class="sub-heading">"ऐ शासन तेरे लिये"</p>
@@ -411,7 +425,8 @@
         <div class="footer-container">
             <div class="footer-col">
                 <div class="footer-logo">
-                    <img src="./asset/lvjst-logo.png" alt="Logo">
+                    <img src="./asset/lvjst-logo.png" alt="Logo"  loading="lazy"
+  decoding="async">
                     <span>LVJST</span>
                 </div>
                 <p>Preserving Ancient Legacy, Inspiring Modern Values.</p>
