@@ -1,0 +1,3 @@
+[build]
+  publish = "register"
+  functions = "register/netlify/functions"
