@@ -34,15 +34,13 @@
     const logoutBtn = document.getElementById('logoutBtn');
 
     const totalCountEl = document.getElementById('totalCount');
-    const citiesCountEl = document.getElementById('citiesCount');
-    const districtsCountEl = document.getElementById('districtsCount');
     const dataBody = document.getElementById('dataBody');
     const globalSearch = document.getElementById('globalSearch');
     const exportCsvBtn = document.getElementById('exportCsvBtn');
+    const exportPdfBtn = document.getElementById('exportPdfBtn');
     const refreshBtn = document.getElementById('refreshBtn');
 
     let allRows = [];
-    let citiesChart = null;
 
     // --- Helpers ---
     function safe(v) { return (v === null || v === undefined) ? '—' : String(v); }
@@ -120,7 +118,13 @@
             const json = await res.json();
             allRows = json.rows || [];
 
-            updateStats(json.analytics);
+            // Update only total count
+            if (json.analytics) {
+                totalCountEl.textContent = json.analytics.total || allRows.length;
+            } else {
+                totalCountEl.textContent = allRows.length;
+            }
+
             renderTable(allRows);
 
         } catch (err) {
@@ -130,47 +134,6 @@
     }
 
     // --- Rendering ---
-    function updateStats(analytics) {
-        if (!analytics) return;
-        totalCountEl.textContent = analytics.total;
-        citiesCountEl.textContent = Object.keys(analytics.byCity || {}).length;
-        districtsCountEl.textContent = Object.keys(analytics.byDistrict || {}).length;
-
-        renderChart(analytics.byCity);
-    }
-
-    function renderChart(byCity) {
-        const ctx = document.getElementById('cityBarChart');
-        if (!ctx) return;
-
-        // Sort top 10 cities
-        const sorted = Object.entries(byCity).sort((a, b) => b[1] - a[1]).slice(0, 10);
-        const labels = sorted.map(x => x[0]);
-        const data = sorted.map(x => x[1]);
-
-        if (citiesChart) citiesChart.destroy();
-
-        citiesChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Surveys Count',
-                    data: data,
-                    backgroundColor: 'rgba(59, 130, 246, 0.6)',
-                    borderColor: 'rgb(59, 130, 246)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
-            }
-        });
-    }
-
     function renderTable(rows) {
         if (rows.length === 0) {
             dataBody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:40px">No records found.</td></tr>`;
@@ -189,7 +152,6 @@
                 ).join('');
             }
 
-            // Photos formatting
             // Photos formatting - styled as buttons
             const mulnayakLink = r.mulnayak_photo_url
                 ? `<a href="${r.mulnayak_photo_url}" target="_blank" class="btn-xs-primary"><i class="fa-solid fa-image"></i> Open - Mulnayak</a>`
@@ -247,25 +209,29 @@
     exportCsvBtn.addEventListener('click', () => {
         if (!allRows.length) return alert('No data to export');
 
-        const headers = [
-            'Filler Name', 'Mobile', 'City', 'Taluka', 'Address',
-            'Derasar Name', 'Location', 'Derasar Type', 'Full Address',
-            'State', 'District', 'Taluka', 'Google Maps',
-            'Pedhi Manager', 'Manager Mobile', 'Poojari', 'Poojari Mobile',
-            'Mulnayak Name', 'Mulnayak Photo', 'Jinalay Photo', 'Trustees Data'
+        // ALL columns based on data + superset of known fields
+        const keys = [
+            'id', 'created_at',
+            'filler_name', 'filler_mobile', 'filler_address', 'filler_city', 'filler_taluka',
+            'derasar_name', 'location_name', 'derasar_type',
+            'full_address', 'state', 'district', 'taluka', 'gmaps_link',
+            'pedhi_manager_name', 'pedhi_manager_mobile',
+            'poojari_name', 'poojari_mobile',
+            'mulnayak_name', 'mulnayak_photo_url', 'jinalay_photo_url',
+            'trustees'
         ];
 
         const csvContent = [
-            headers.join(','),
+            keys.join(','),
             ...allRows.map(r => {
-                const trusteesStr = Array.isArray(r.trustees) ? r.trustees.map(t => `${t.name}(${t.mobile})`).join('; ') : '';
-                return [
-                    r.filler_name, r.filler_mobile, r.filler_city, r.filler_taluka, r.filler_address,
-                    r.derasar_name, r.location_name, r.derasar_type, r.full_address,
-                    r.state, r.district, r.taluka, r.gmaps_link,
-                    r.pedhi_manager_name, r.pedhi_manager_mobile, r.poojari_name, r.poojari_mobile,
-                    r.mulnayak_name, r.mulnayak_photo_url, r.jinalay_photo_url, trusteesStr
-                ].map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(',');
+                return keys.map(k => {
+                    let val = r[k];
+                    if (k === 'trustees' && Array.isArray(val)) {
+                        val = val.map(t => `${t.name}(${t.mobile})`).join('; ');
+                    }
+                    if (val === null || val === undefined) val = '';
+                    return `"${String(val).replace(/"/g, '""')}"`;
+                }).join(',');
             })
         ].join('\n');
 
@@ -273,8 +239,47 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `LVJST_PreSurvey_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.download = `LVJST_PreSurvey_Full_${new Date().toISOString().slice(0, 10)}.csv`;
         a.click();
+    });
+
+    // --- PDF Export ---
+    exportPdfBtn.addEventListener('click', async () => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('l', 'pt', [842, 595]); // A4 Landscape
+
+        exportPdfBtn.disabled = true;
+        exportPdfBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating...';
+
+        try {
+            const table = document.getElementById('surveyTable');
+
+            // Temporary style for PDF
+            const originalMaxHeight = document.querySelector('.table-wrap').style.maxHeight;
+            const originalOverflow = document.querySelector('.table-wrap').style.overflow;
+            document.querySelector('.table-wrap').style.overflow = 'visible';
+            document.querySelector('.table-wrap').style.maxHeight = 'none';
+
+            await html2canvas(table, { scale: 1.5, useCORS: true }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const imgProps = doc.getImageProperties(imgData);
+                const pdfWidth = doc.internal.pageSize.getWidth();
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+                doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                doc.save(`LVJST_PreSurvey_View_${new Date().toISOString().slice(0, 10)}.pdf`);
+            });
+
+            document.querySelector('.table-wrap').style.overflow = originalOverflow;
+            document.querySelector('.table-wrap').style.maxHeight = originalMaxHeight;
+
+        } catch (e) {
+            console.error(e);
+            alert('PDF generation failed');
+        } finally {
+            exportPdfBtn.disabled = false;
+            exportPdfBtn.innerHTML = '<i class="fa-solid fa-file-pdf"></i> PDF';
+        }
     });
 
     refreshBtn.addEventListener('click', loadData);
