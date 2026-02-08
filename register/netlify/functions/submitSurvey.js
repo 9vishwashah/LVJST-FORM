@@ -65,14 +65,18 @@ export async function handler(event, context) {
             console.log("Skipping reCAPTCHA verification (Disabled or Secret missing)");
         }
 
-        // 2. Insert into Supabase
-        if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-            return { statusCode: 500, body: JSON.stringify({ error: 'Server misconfiguration' }) };
+        // 2. Insert into Supabase (Pre-Survey Specific Project)
+        const SURVEY_SUPABASE_URL = process.env.SUPABASE_URL_PRE_SURVEY;
+        const SURVEY_SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY_PRE_SURVEY;
+
+        if (!SURVEY_SUPABASE_URL || !SURVEY_SUPABASE_KEY) {
+            console.error('Missing SUPABASE_URL_PRE_SURVEY or SUPABASE_SERVICE_ROLE_KEY_PRE_SURVEY');
+            return { statusCode: 500, body: JSON.stringify({ error: 'Server misconfiguration: Missing Pre-Survey Envs' }) };
         }
 
         const supabase = createClient(
-            process.env.SUPABASE_URL,
-            process.env.SUPABASE_SERVICE_ROLE_KEY
+            SURVEY_SUPABASE_URL,
+            SURVEY_SUPABASE_KEY
         );
 
         const insertData = {
