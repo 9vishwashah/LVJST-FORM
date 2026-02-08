@@ -274,6 +274,56 @@
             text-decoration: underline;
         }
 
+        /* Small action buttons */
+        .btn-xs-primary,
+        .btn-xs-secondary,
+        .btn-xs-accent {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+            margin-bottom: 4px;
+        }
+
+        .btn-xs-primary {
+            background: #e0f2fe;
+            color: #0284c7;
+            border: 1px solid #bae6fd;
+        }
+
+        .btn-xs-primary:hover {
+            background: #bae6fd;
+            color: #0369a1;
+        }
+
+        .btn-xs-secondary {
+            background: #f3e8ff;
+            color: #9333ea;
+            border: 1px solid #e9d5ff;
+        }
+
+        .btn-xs-secondary:hover {
+            background: #e9d5ff;
+            color: #7e22ce;
+        }
+
+        .btn-xs-accent {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+        }
+
+        .btn-xs-accent:hover {
+            background: #d1fae5;
+            color: #047857;
+        }
+
         /* LOGIN OVERLAY */
         .login-overlay {
             position: fixed;
@@ -336,7 +386,8 @@
         <div class="header-inner">
             <h1><span>🏛️</span> LVJST Pre-Survey Admin</h1>
             <div class="header-actions">
-                <button id="exportCsvBtn" class="btn ghost"><i class="fa-solid fa-download"></i> CSV</button>
+                <button id="exportCsvBtn" class="btn ghost"><i class="fa-solid fa-file-csv"></i> CSV</button>
+                <button id="exportPdfBtn" class="btn ghost"><i class="fa-solid fa-file-pdf"></i> PDF</button>
                 <button id="refreshBtn" class="btn ghost"><i class="fa-solid fa-rotate"></i> Refresh</button>
                 <button id="logoutBtn" class="btn red"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
             </div>
@@ -351,29 +402,6 @@
                     <h3>Total Surveyed</h3>
                     <div class="num" id="totalCount">0</div>
                 </div>
-            </div>
-            <div class="card">
-                <div class="icon">🏙️</div>
-                <div class="meta">
-                    <h3>Unique Cities</h3>
-                    <div class="num" id="citiesCount">0</div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="icon">📍</div>
-                <div class="meta">
-                    <h3>Unique Districts</h3>
-                    <div class="num" id="districtsCount">0</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Chart: Top Cities -->
-        <div
-            style="margin-bottom: 20px; background: white; padding: 20px; border-radius: 12px; box-shadow: var(--shadow-md); border: 1px solid var(--border-color);">
-            <h4 style="margin-bottom:15px">Top Cities</h4>
-            <div style="height: 300px;">
-                <canvas id="cityBarChart"></canvas>
             </div>
         </div>
 
@@ -395,7 +423,7 @@
                             <th>City / Taluka</th>
                             <th>Derasar Name</th>
                             <th>Location</th>
-                            <th>Derasar Type</th>
+                            <th>Google Maps</th>
                             <th>Mulnayak</th>
                             <th>Photos</th>
                             <th>Trustees / Contacts</th>

@@ -182,19 +182,28 @@
             let trusteesHtml = '—';
             if (Array.isArray(r.trustees) && r.trustees.length > 0) {
                 trusteesHtml = r.trustees.map(t =>
-                    `<div class="chip" title="${t.mobile}">${escapeHtml(t.name)}</div>`
+                    `<div class="chip" title="${t.mobile}">
+                        ${escapeHtml(t.name)} <br>
+                        <small style="color:var(--text-secondary);font-size:11px"><i class="fa-solid fa-phone" style="font-size:10px"></i> ${escapeHtml(t.mobile)}</small>
+                    </div>`
                 ).join('');
             }
 
             // Photos formatting
+            // Photos formatting - styled as buttons
             const mulnayakLink = r.mulnayak_photo_url
-                ? `<a href="${r.mulnayak_photo_url}" target="_blank" class="img-link"><i class="fa-solid fa-image"></i> Mulnayak</a>`
+                ? `<a href="${r.mulnayak_photo_url}" target="_blank" class="btn-xs-primary"><i class="fa-solid fa-image"></i> Open - Mulnayak</a>`
                 : '';
             const jinalayLink = r.jinalay_photo_url
-                ? `<a href="${r.jinalay_photo_url}" target="_blank" class="img-link"><i class="fa-solid fa-gopuram"></i> Jinalay</a>`
+                ? `<a href="${r.jinalay_photo_url}" target="_blank" class="btn-xs-secondary"><i class="fa-solid fa-gopuram"></i> Open - Jinalay</a>`
                 : '';
 
             const photos = [mulnayakLink, jinalayLink].filter(Boolean).join('<br>');
+
+            // GMaps Button
+            const gmapsBtn = r.gmaps_link
+                ? `<a href="${r.gmaps_link}" target="_blank" class="btn-xs-accent"><i class="fa-solid fa-map-location-dot"></i> Open in GMaps</a>`
+                : '—';
 
             return `
             <tr>
@@ -213,7 +222,7 @@
                     <b>${escapeHtml(r.derasar_name)}</b>
                 </td>
                 <td>${escapeHtml(r.location_name)}</td>
-                <td>${escapeHtml(r.derasar_type || '—')}</td>
+                <td>${gmapsBtn}</td>
                 <td>${escapeHtml(r.mulnayak_name || '—')}</td>
                 <td>${photos || '—'}</td>
                 <td>${trusteesHtml}</td>
