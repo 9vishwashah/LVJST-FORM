@@ -411,6 +411,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Close Modal on Outside Click
+    const successModal = document.getElementById("success-modal");
+    if (successModal) {
+        successModal.addEventListener('click', (e) => {
+            if (e.target === successModal) {
+                successModal.classList.remove("active");
+            }
+        });
+    }
+
     // Initial UI Update
     updateStepUI();
 
