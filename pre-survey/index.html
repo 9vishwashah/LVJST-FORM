@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LVJST Pre-Survey Form</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="canonical" href="https://lvjst.org/register">
+    <link rel="icon" href="../register/asset/lvjst-logo.png" sizes="16x16" type="image/png">
+    <link rel="apple-touch-icon" href="../register/asset/lvjst-logo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Playfair+Display:wght@400;600;700&display=swap"
+        as="style">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Playfair+Display:wght@400;600;700&display=swap">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LemHQ8sAAAAABuB7GU5VRpLw7dMFxxGE1zDkMMH"></script>
+    <script src="./survey.js" defer></script>
+    <script src="https://kit.fontawesome.com/32255cd4c3.js" defer crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+    <link rel="preload" as="image" href="../register/asset/lvjst-logo.png">
+    <link rel="preload" as="image" href="../register/asset/guru.png">
+    <title>Labdhi Vikram Jan Seva Trust | Preserving Ancient Cultural Heritage</title>
+
+    <meta name="description"
+        content="Labdhi Vikram Jan Seva Trust (LVJST) is dedicated to preserving India’s ancient cultural heritage through research, restoration, education, and community service.">
+
+    <link rel="canonical" href="https://lvjst.org/">
+
+    <meta property="og:title" content="Labdhi Vikram Jan Seva Trust (LVJST)">
+    <meta property="og:description"
+        content="Preserving India’s ancient cultural and spiritual heritage through research, education, conservation, and service.">
+    <meta property="og:image" content="https://lvjst.org/register/asset/lvjst-logo.png" />
+    <meta property="og:url" content="https://lvjst.org">
+    <meta property="og:type" content="website">
+
+</head>
+
+<body>
+    <!-- Sticky Header -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="../register/asset/lvjst-logo.png" alt="LVJST Logo">
+                <div class="nav-text">
+                    <h1>Labdhi Vikram <span class="text-accent">Jan Seva Trust</span></h1>
+                    <p>Protection of Ancient Cultural Heritage of India</p>
+                </div>
+            </div>
+            <!-- Mobile Menu Button -->
+            <button class="menu-toggle" aria-label="Toggle Navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="nav-links">
+                <a href="../register/index.html" class="nav-item">Registration</a>
+                <a href="#" class="nav-item active">Pre-Survey</a>
+            </div>
+            <div class="nav-contact-wrapper">
+                <span class="contact-label">Contact us:</span>
+                <div class="contact-grid">
+                    <div class="contact-item">TEJAS SHAH <a href="tel:+919824112292">+91 9824112292</a></div>
+                    <div class="contact-item">JAINISH SHAH <a href="tel:+919510432680">+91 9510432680</a></div>
+                    <div class="contact-item">ABHISHEK MADHANI <a href="tel:+919930030230">+91 9930030230</a></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="layout-grid" style="grid-template-columns: 1fr; max-width: 800px; margin: 0 auto;">
+
+
+
+            <!-- Main Content (Form) -->
+            <main class="main-content">
+                <div class="registration-card">
+                    <div class="form-header">
+                        <div class="header-branding">
+                            <img src="../register/asset/lvjst-logo.png" alt="LVJST Logo" class="reg-card-logo"
+                                loading="lazy" decoding="async">
+                            <div class="header-titles">
+                                <h1 class="main-heading">LVJST Pre-Survey Form</h1>
+                            </div>
+                        </div>
+                        <!-- Progress Bar -->
+                        <div class="step-indicator">
+                            <div class="step active" data-step="1">1</div>
+                            <div class="step" data-step="2">2</div>
+                            <div class="step" data-step="3">3</div>
+                            <div class="step" data-step="4">4</div>
+                        </div>
+                    </div>
+
+                    <form id="survey-form" class="heritage-form">
+
+                        <!-- STEP 1 -->
+                        <div class="form-step active" id="step-1">
+
+                            <h3 class="step-title">Your Details</h3>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">Name *</label>
+                                        <input type="text" name="filler_name" placeholder="Your Full Name" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">Mobile No *</label>
+                                        <input type="tel" name="filler_mobile" placeholder="Your Mobile Number"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">City *</label>
+                                        <input type="text" name="filler_city" placeholder="e.g. Ahmedabad" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">Taluka *</label>
+                                        <input type="text" name="filler_taluka" placeholder="e.g. Daskro" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="field-label">Full Address *</label>
+                                <textarea name="filler_address" placeholder="Your Complete Address" required></textarea>
+                            </div>
+
+                        </div>
+
+
+                        <!-- STEP 2 -->
+                        <div class="form-step" id="step-2">
+
+                            <h3 class="step-title">Derasar Details</h3>
+
+                            <div class="input-group">
+                                <label class="field-label">Derasar Name *</label>
+                                <input type="text" name="derasar_name"
+                                    placeholder="e.g. Shri Shwetambar Murtipujak Jain Derasar" required>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">Town / Location *</label>
+                                        <input type="text" name="location_name" placeholder="e.g. Borivali West"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">Derasar Type *</label>
+                                        <div class="select-wrapper">
+                                            <select name="derasar_type" required>
+                                                <option value="" disabled selected>Select Type</option>
+                                                <option value="Ghar Derasar">Ghar Derasar</option>
+                                                <option value="Shikharbandhi">Shikharbandhi</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="field-label">Full Address *</label>
+                                <textarea name="full_address" placeholder="Complete address of the Derasar"
+                                    required></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">State *</label>
+                                        <input type="text" name="state" placeholder="e.g. Maharashtra" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">District *</label>
+                                        <input type="text" name="district" placeholder="e.g. Mumbai Suburban" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">Taluka *</label>
+                                        <input type="text" name="taluka" placeholder="e.g. Borivali" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">Google Maps Link</label>
+                                        <div class="location-btn-wrapper">
+                                            <input type="text" name="gmaps_link" id="gmaps_link"
+                                                placeholder="Paste link or click button">
+                                            <button type="button" class="get-location-btn"
+                                                onclick="getCurrentLocation()">
+                                                <i class="fa-solid fa-location-crosshairs"></i> Get Location
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <!-- STEP 3 -->
+                        <div class="form-step" id="step-3">
+
+                            <h3 class="step-title">Trustee Details</h3>
+                            <p class="section-desc">Please add details of all trustees.</p>
+
+                            <div id="trustee-container">
+                                <!-- Initial Trustee Row -->
+                                <div class="trustee-item">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="input-group">
+                                                <label class="field-label">Trustee Name</label>
+                                                <input type="text" name="trustee_name[]" placeholder="Full Name">
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="input-group">
+                                                <label class="field-label">Trustee Mobile</label>
+                                                <input type="tel" name="trustee_mobile[]" placeholder="Mobile Number">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" onclick="addTrustee()" class="btn-outline-large add-more-btn">
+                                <i class="fa-solid fa-plus"></i> Add More Details
+                            </button>
+
+
+                            <hr class="divider">
+
+                            <h3 class="step-title">Staff Details</h3>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">Pedhi Manager Name</label>
+                                        <input type="text" name="pedhi_manager_name" placeholder="Full Name">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">Manager Mobile</label>
+                                        <input type="tel" name="pedhi_manager_mobile" placeholder="Mobile Number">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">Poojari Name</label>
+                                        <input type="text" name="poojari_name" placeholder="Full Name">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">Poojari Mobile</label>
+                                        <input type="tel" name="poojari_mobile" placeholder="Mobile Number">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <!-- STEP 4 -->
+                        <div class="form-step" id="step-4">
+
+                            <h3 class="step-title">Mulnayak & Photos</h3>
+
+                            <div class="input-group">
+                                <label class="field-label">Mulnayak Bhagwan Name</label>
+                                <input type="text" name="mulnayak_name" placeholder="e.g. Shri Aadishwar Bhagwan">
+                            </div>
+
+                            <div class="upload-section">
+                                <div class="file-upload-container">
+                                    <label class="field-label">Mulnayak Photo</label>
+                                    <div class="custom-file-upload" id="upload-mulnayak">
+                                        <input type="file" name="mulnayak_photo" id="file-mulnayak" accept="image/*">
+                                        <div class="upload-ui">
+                                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                                            <span class="upload-text">Click to Upload Photo</span>
+                                            <span class="file-name"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="file-upload-container">
+                                    <label class="field-label">Jinalay Photo</label>
+                                    <div class="custom-file-upload" id="upload-jinalay">
+                                        <input type="file" name="jinalay_photo" id="file-jinalay" accept="image/*">
+                                        <div class="upload-ui">
+                                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                                            <span class="upload-text">Click to Upload Photo</span>
+                                            <span class="file-name"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions-footer">
+
+                            <button type="button" id="back-btn" class="btn-outline-large">
+                                Back
+                            </button>
+
+                            <button type="button" id="next-btn" class="btn-primary-large">
+                                Continue
+                            </button>
+
+                            <button type="submit" id="submit-btn" class="btn-primary-large">
+                                Submit Form
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Dark Footer -->
+    <footer class="dark-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <img src="../register/asset/lvjst-logo.png" alt="Logo" loading="lazy" decoding="async">
+                    <span>LVJST</span>
+                </div>
+                <p>Preserving Ancient Legacy, Inspiring Modern Values.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Mission</a></li>
+                    <li><a href="#">Events</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <ul>
+                    <!--
+                    <div class="contact-item">JAINISH SHAH <a href="tel:+919510432680">+91 95104 32680</a></div>
+                    <div class="contact-item">ABHISHEK MADHANI <a href="tel:+919930030230">+91 99300 30230</a></div>
+                    <div class="contact-item">TEJAS SHAH <a href="tel:+919824112292">+91 98241 12292</a></div>
+                </div>
+                    -->
+
+                    <li><i class="fa-solid fa-phone"></i> +91 9824112292</li>
+                    <li><i class="fa-solid fa-phone"></i> +91 9510432680</li>
+                    <li><i class="fa-solid fa-phone"></i> +91 9930030230</li>
+                    <li><i class="fa-solid fa-envelope"></i> info@labdhivikram.org</li>
+                    <li><i class="fa-solid fa-location-dot"></i> Mumbai, India</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Social</h4>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/lvjst_org" target="_blank"><i
+                            class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/@LVJST" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="https://www.linkedin.com/company/labdhi-vikram-jan-seva-trust/" target="_blank"><i
+                            class="fa-brands fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 lvjst.org | Designed By Vishwa Alpesh Shah</p>
+        </div>
+    </footer>
+
+    <!-- Event Details Modal (Recap for Past Event) -->
+    <div id="event-modal" class="modal-overlay">
+        <div class="modal-content event-content">
+            <button id="close-event-btn" class="close-btn">&times;</button>
+            <span class="pill-badge badge-neutral">PAST EVENT RECAP</span>
+            <h2 class="event-title-modal">"ऐ शासन तेरे लिये"</h2>
+            <div class="event-info-grid">
+                <div class="info-item">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>18th January, 2026</span>
+                </div>
+                <div class="info-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Mumbai, Maharashtra</span>
+                </div>
+            </div>
+            <hr class="divider">
+            <div class="event-body-text">
+                <p><strong>Grand LVJST Meet with Gurubhagwant</strong></p>
+
+                <!-- New Image Gallery for Recap -->
+                <div class="modal-gallery">
+                    <div class="gallery-item"><img
+                            src="../register/asset/past/WhatsApp Image 2026-01-19 at 6.44.21 PM (1).jpeg"
+                            alt="Event Photo"></div>
+                    <div class="gallery-item"><img
+                            src="../register/asset/past/WhatsApp Image 2026-01-19 at 6.44.21 PM.jpeg" alt="Event Photo">
+                    </div>
+                    <div class="gallery-item"><img
+                            src="../register/asset/past/WhatsApp Image 2026-01-19 at 6.44.23 PM.jpeg" alt="Event Photo">
+                    </div>
+                    <div class="gallery-item"><img
+                            src="../register/asset/past/WhatsApp Image 2026-01-19 at 6.44.19 PM.jpeg" alt="Event Photo">
+                    </div>
+                </div>
+
+                <p class="event-greeting">Glimpses from the grand meet with Gurubhagwant, reflecting on the past,
+                    present, and future roadmap to preserve and conserve our rich ancient heritage at Geetanjali Jain
+                    Sangh, Borivali.
+
+                    <br> We invite you to join us for the upcoming field visit , <br> where you will be guided on how
+                    our heritage can be documented practically and systematically .
+
+                    Further updates will be forwarded soon.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal-overlay">
+        <div class="modal-content">
+            <img src="../register/asset/lvjst-logo.png" alt="LVJST Logo" class="modal-corner-logo">
+
+            <div class="success-icon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2>Pre-Survey Successful</h2>
+            <p>by <span id="user-name-placeholder" class="highlight-name"></span></p>
+
+            <div class="modal-actions">
+                <button id="share-btn" class="btn-accent">
+                    <i class="fa-brands fa-whatsapp"></i> Share on WhatsApp
+                </button>
+            </div>
+            <div class="social-links-modal">
+                <a href="https://www.instagram.com/lvjst_org/" target="_blank">Follow on Instagram</a>
+            </div>
+        </div>
+    </div>
+
+    <span id="templesCount" style="display:none;"></span>
+</body>
+
+</html>

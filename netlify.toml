@@ -1,8 +1,17 @@
 [build]
-  command = "npm run build"
-  publish = "dist"
+  publish = "."
+  functions = "register/netlify/functions"
+
+[dev]
+  framework = "#static"
+  publish = "."
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/register/*"
+  to = "/register/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/register"
+  to = "/register/index.html"
   status = 200
