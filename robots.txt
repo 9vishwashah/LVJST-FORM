@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /pre-survey/admin.html
+Disallow: /register/admin.html
 
 Sitemap: https://lvjst.org/sitemap.xml

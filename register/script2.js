@@ -362,7 +362,7 @@ successModal.addEventListener('click', (e) => {
 
 // Share button
 shareBtn.addEventListener('click', async () => {
-    const shareMessage = `🌿 LABDHI VIKRAM JANSEVA TRUST (LVJST)\nPreserving Heritage | Inspiring Values\n\nRegister here: https://lvjstregister.netlify.app/`;
+    const shareMessage = `🌿 LABDHI VIKRAM JANSEVA TRUST (LVJST)\nPreserving Heritage | Inspiring Values\n\nRegister here: https://lvjst.org/register`;
     if (navigator.share) {
         await navigator.share({ title: 'LVJST', text: shareMessage });
     } else {

@@ -186,6 +186,7 @@
                 <td>${escapeHtml(r.location_name)}</td>
                 <td>${gmapsBtn}</td>
                 <td>${escapeHtml(r.mulnayak_name || '—')}</td>
+                <td>${safe(r.total_pratima_count)}</td>
                 <td>${photos || '—'}</td>
                 <td>${trusteesHtml}</td>
             </tr>
@@ -217,7 +218,7 @@
             'full_address', 'state', 'district', 'taluka', 'gmaps_link',
             'pedhi_manager_name', 'pedhi_manager_mobile',
             'poojari_name', 'poojari_mobile',
-            'mulnayak_name', 'mulnayak_photo_url', 'jinalay_photo_url',
+            'mulnayak_name', 'total_pratima_count', 'mulnayak_photo_url', 'jinalay_photo_url',
             'trustees'
         ];
 

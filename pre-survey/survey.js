@@ -360,6 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 poojari_name: formData.get("poojari_name"),
                 poojari_mobile: formData.get("poojari_mobile"),
                 mulnayak_name: formData.get("mulnayak_name"),
+                total_pratima_count: formData.get("total_pratima_count"),
                 mulnayak_photo_url: mulnayakUrl,
                 jinalay_photo_url: jinalayUrl,
                 recaptchaToken: token

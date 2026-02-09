@@ -43,6 +43,7 @@ export async function handler(event, context) {
             poojari_name,
             poojari_mobile,
             mulnayak_name,
+            total_pratima_count,
             mulnayak_photo_url,
             jinalay_photo_url,
             recaptchaToken
@@ -98,6 +99,7 @@ export async function handler(event, context) {
             poojari_name,
             poojari_mobile,
             mulnayak_name,
+            total_pratima_count,
             mulnayak_photo_url,
             jinalay_photo_url
         };
