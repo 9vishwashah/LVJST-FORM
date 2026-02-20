@@ -582,6 +582,45 @@
     </div>
 
     <span id="templesCount" style="display:none;"></span>
+
+    <!-- Floating WhatsApp Join Group Button -->
+    <a href="https://chat.whatsapp.com/F7mNLT1y4wgAV2nyfIaBfX?mode=gi_t" target="_blank" id="fab-whatsapp-group" style="
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #25D366;
+            color: #fff;
+            padding: 14px 22px;
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.45);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            animation: fabPulse 2s infinite;
+        " onmouseover="this.style.transform='scale(1.07)'; this.style.boxShadow='0 6px 28px rgba(37,211,102,0.6)'"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 20px rgba(37,211,102,0.45)'">
+        <i class="fa-brands fa-whatsapp" style="font-size: 1.4rem;"></i>
+        <span>Join Group</span>
+    </a>
+    <style>
+        @keyframes fabPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 20px rgba(37, 211, 102, 0.45);
+            }
+
+            50% {
+                box-shadow: 0 4px 30px rgba(37, 211, 102, 0.7);
+            }
+        }
+    </style>
 </body>
 
 </html>
