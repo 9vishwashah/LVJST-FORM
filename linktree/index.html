@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gachhadhiraj Pattabhishekam Utsav 👑🙏</title>
+    <meta name="description" content="The grand coronation of the Guru – Gacchadhiraj Pattabhishekam.">
+    <link rel="icon" href="./assets/2.png" type="image/png">
+    <meta property="og:image" content="https://rushabhayan.netlify.app/assets/2.png" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Floating particles -->
+    <div class="particles" id="particles"></div>
+
+    <main class="linktree-container">
+
+        <!-- ── HERO SECTION ── -->
+        <section class="hero-section">
+
+            <!-- Banner (throne/seat icon) -->
+            <div class="banner-wrap">
+                <img src="assets/yashovarma.jpeg" alt="Gacchadhiraj Pattabhishekam" class="banner-img">
+                <div class="banner-overlay"></div>
+            </div>
+
+            <!-- Profile photo floating over banner -->
+            <div class="profile-wrapper">
+                <div class="profile-ring">
+                    <img src="assets/icon.png" alt="Guru Ji" class="profile-img" onerror="this.src='assets/2.png'">
+                </div>
+                <div class="profile-glow"></div>
+            </div>
+
+            <!-- Title -->
+            <div class="hero-title-block">
+                <h1 class="guru-title">Gachhadhiraj Pattabhishekam Utsav</h1>
+                <p class="guru-subtitle">P. Pu. Aacharya Bhagwant Shri Yashovarmasuriji Maharaja</p>
+            </div>
+
+        </section>
+
+        <!-- ── GOLDEN DIVIDER ── -->
+        <div class="golden-divider"><span class="divider-text">Connect With Us</span></div>
+
+        <!-- ── CONNECT SECTION ── -->
+        <section class="connect-section">
+            <div class="links-grid">
+
+                <a href="https://www.instagram.com/yashovikramkrupa" target="_blank" class="link-btn btn-instagram">
+                    <span class="btn-icon"><i class="fa-brands fa-instagram"></i></span>
+                    <span class="btn-label">Instagram</span>
+                    <span class="btn-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+                </a>
+
+                <a href="https://www.facebook.com/yashovikramkrupa" target="_blank" class="link-btn btn-facebook">
+                    <span class="btn-icon"><i class="fa-brands fa-facebook"></i></span>
+                    <span class="btn-label">Facebook</span>
+                    <span class="btn-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+                </a>
+
+                <a href="https://www.youtube.com/@VikramKrupa" target="_blank" class="link-btn btn-youtube">
+                    <span class="btn-icon"><i class="fa-brands fa-youtube"></i></span>
+                    <span class="btn-label">YouTube Channel</span>
+                    <span class="btn-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+                </a>
+
+                <a href="whatsapp://chat?code=DNoAL21fZ6Y5eiWZOxWJIs" target="_blank" class="link-btn btn-whatsapp">
+                    <span class="btn-icon"><i class="fa-brands fa-whatsapp"></i></span>
+                    <span class="btn-label">Join WhatsApp Group</span>
+                    <span class="btn-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+                </a>
+
+                <a href="https://wa.me/917977675830" class="link-btn btn-direct-wa">
+                    <span class="btn-icon"><i class="fa-brands fa-whatsapp"></i></span>
+                    <span class="btn-label">WhatsApp</span>
+                    <span class="btn-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+                </a>
+
+                <a href="https://drive.google.com/file/d/1IzsxI6t_r-Q5sJ_grebK0cPuTUuygzYr/view?usp=sharing"
+                    target="_blank" class="link-btn btn-brochure brochure-button">
+                    <span class="btn-icon"><i class="fa-solid fa-envelope-open-text"></i></span>
+                    <span class="btn-label">Invite</span>
+                    <span class="btn-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+                </a>
+
+
+            </div>
+        </section>
+
+
+
+        <!-- ── GOLDEN DIVIDER ── -->
+
+
+
+    </main>
+
+    <!-- ── FOOTER ── -->
+    <footer class="grand-footer">
+        <p class="footer-creator">Designed by <strong>Vishwa Alpesh Shah</strong></p>
+    </footer>
+
+    <!-- ── FAB WhatsApp (mobile) ── -->
+    <a href="whatsapp://chat?code=DNoAL21fZ6Y5eiWZOxWJIs" target="_blank" class="fab-whatsapp">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span>Join Now</span>
+    </a>
+
+    <script src="main.js"></script>
+    <script>
+        // Particle system
+        (function () {
+            const container = document.getElementById('particles');
+            const symbols = ['✦', '🪷', '✿', '❋', '🌸', '🌼'];
+            for (let i = 0; i < 22; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDelay = (Math.random() * 10) + 's';
+                p.style.animationDuration = (10 + Math.random() * 10) + 's';
+                p.style.fontSize = (10 + Math.random() * 16) + 'px';
+                p.style.opacity = (0.12 + Math.random() * 0.35);
+                container.appendChild(p);
+            }
+        })();
+    </script>
+</body>
+
+</html>
