@@ -1,5 +1,7 @@
 const SUPABASE_URL = "https://filyclgrctiyercthvmq.supabase.co";
-const SUPABASE_KEY = "sb_publishable_WkPoLV_QIgETY8jxPVKJeg_Ap1GMyQo";
+// const SUPABASE_KEY = "eyJhbGci..."; // <-- PASTE YOUR 'anon public' KEY HERE FROM SUPABASE DASHBOARD
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpbHljbGdyY3RpeWVyY3Rodm1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMTEwNjgsImV4cCI6MjA4NTg4NzA2OH0.dauBL86R0X2h-f2hHDx-F6ArObZsPP4LMT6G3feLXw8";
+
 let supabaseClient = null;
 
 // Wait for DOM to be ready
