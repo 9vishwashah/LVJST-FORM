@@ -46,6 +46,7 @@ export async function handler(event, context) {
             total_pratima_count,
             mulnayak_photo_url,
             jinalay_photo_url,
+            is_tirth,
             recaptchaToken
         } = payload;
 
@@ -101,7 +102,8 @@ export async function handler(event, context) {
             mulnayak_name,
             total_pratima_count,
             mulnayak_photo_url,
-            jinalay_photo_url
+            jinalay_photo_url,
+            is_tirth: is_tirth || false
         };
 
         const { data, error } = await supabase

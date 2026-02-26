@@ -170,6 +170,17 @@
                                     placeholder="e.g. Shri Shwetambar Murtipujak Jain Derasar" required>
                             </div>
 
+                            <div class="input-group">
+                                <label class="field-label">Is this Tirth?</label>
+                                <div class="toggle-wrapper">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" name="is_tirth" id="is_tirth">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                    <span class="toggle-label" id="is_tirth_label">No</span>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col">
                                     <div class="input-group">
@@ -181,12 +192,16 @@
                                 <div class="col">
                                     <div class="input-group">
                                         <label class="field-label">Derasar Type *</label>
-                                        <div class="select-wrapper">
-                                            <select name="derasar_type" required>
-                                                <option value="" disabled selected>Select Type</option>
-                                                <option value="Ghar Derasar">Ghar Derasar</option>
-                                                <option value="Shikharbandhi">Shikharbandhi</option>
-                                            </select>
+                                        <div class="dual-toggle-wrapper">
+                                            <span class="dual-toggle-label" id="derasar_type_left">Ghar Derasar</span>
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" id="derasar_type_toggle" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                            <span class="dual-toggle-label active"
+                                                id="derasar_type_right">Shikharbandhi</span>
+                                            <input type="hidden" name="derasar_type" id="derasar_type_value"
+                                                value="Shikharbandhi">
                                         </div>
                                     </div>
                                 </div>

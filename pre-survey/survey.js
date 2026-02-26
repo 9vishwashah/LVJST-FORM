@@ -119,6 +119,34 @@ document.addEventListener("DOMContentLoaded", () => {
     setupFileUploadUI('file-mulnayak', 'upload-mulnayak');
     setupFileUploadUI('file-jinalay', 'upload-jinalay');
 
+    // Toggle label update for "Is this Tirth?"
+    const tirthCheckbox = document.getElementById('is_tirth');
+    const tirthLabel = document.getElementById('is_tirth_label');
+    if (tirthCheckbox && tirthLabel) {
+        tirthCheckbox.addEventListener('change', () => {
+            tirthLabel.textContent = tirthCheckbox.checked ? 'Yes' : 'No';
+        });
+    }
+
+    // Derasar Type dual toggle
+    const derasarToggle = document.getElementById('derasar_type_toggle');
+    const derasarHidden = document.getElementById('derasar_type_value');
+    const derasarLeft = document.getElementById('derasar_type_left');
+    const derasarRight = document.getElementById('derasar_type_right');
+    if (derasarToggle && derasarHidden) {
+        derasarToggle.addEventListener('change', () => {
+            if (derasarToggle.checked) {
+                derasarHidden.value = 'Shikharbandhi';
+                derasarRight.classList.add('active');
+                derasarLeft.classList.remove('active');
+            } else {
+                derasarHidden.value = 'Ghar Derasar';
+                derasarLeft.classList.add('active');
+                derasarRight.classList.remove('active');
+            }
+        });
+    }
+
     // Upload Image Helper
     async function uploadFile(file, folder) {
         if (!supabaseClient) throw new Error("Supabase client not initialized");
@@ -363,6 +391,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 total_pratima_count: formData.get("total_pratima_count"),
                 mulnayak_photo_url: mulnayakUrl,
                 jinalay_photo_url: jinalayUrl,
+                is_tirth: document.getElementById('is_tirth')?.checked || false,
                 recaptchaToken: token
             };
 

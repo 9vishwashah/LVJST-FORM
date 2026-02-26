@@ -100,7 +100,7 @@
     async function loadData() {
         if (!getToken()) return;
 
-        dataBody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:40px"><i class="fa-solid fa-spinner fa-spin"></i> Loading data...</td></tr>`;
+        dataBody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:40px"><i class="fa-solid fa-spinner fa-spin"></i> Loading data...</td></tr>`;
 
         try {
             const res = await fetch(API_FETCH, {
@@ -129,14 +129,14 @@
 
         } catch (err) {
             console.error(err);
-            dataBody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:red;padding:40px">Error loading data. Please try refresh.</td></tr>`;
+            dataBody.innerHTML = `<tr><td colspan="12" style="text-align:center;color:red;padding:40px">Error loading data. Please try refresh.</td></tr>`;
         }
     }
 
     // --- Rendering ---
     function renderTable(rows) {
         if (rows.length === 0) {
-            dataBody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:40px">No records found.</td></tr>`;
+            dataBody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:40px">No records found.</td></tr>`;
             return;
         }
 
@@ -183,6 +183,7 @@
                 <td>
                     <b>${escapeHtml(r.derasar_name)}</b>
                 </td>
+                <td>${r.is_tirth ? '<span style="background:#ecfdf5;color:#059669;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #a7f3d0">Yes</span>' : '<span style="background:#fef2f2;color:#dc2626;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #fecaca">No</span>'}</td>
                 <td>${escapeHtml(r.location_name)}</td>
                 <td>${gmapsBtn}</td>
                 <td>${escapeHtml(r.mulnayak_name || '—')}</td>
@@ -219,7 +220,7 @@
             'pedhi_manager_name', 'pedhi_manager_mobile',
             'poojari_name', 'poojari_mobile',
             'mulnayak_name', 'total_pratima_count', 'mulnayak_photo_url', 'jinalay_photo_url',
-            'trustees'
+            'is_tirth', 'trustees'
         ];
 
         const csvContent = [
