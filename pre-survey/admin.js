@@ -44,6 +44,14 @@
     const exportPdfBtn = document.getElementById('exportPdfBtn');
     const refreshBtn = document.getElementById('refreshBtn');
 
+    // Modal elements
+    const modalOverlay = document.getElementById('detailsModalOverlay');
+    const modalContent = document.getElementById('detailsModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modalDerasarName = document.getElementById('modalDerasarName');
+    const modalLocation = document.getElementById('modalLocation');
+    const modalBody = document.getElementById('modalBody');
+
     let allRows = [];
 
     // --- Helpers ---
@@ -53,10 +61,10 @@
     // --- Login Logic ---
     function updateLoginUI() {
         if (!getToken()) {
-            loginOverlay.style.display = 'flex';
+            loginOverlay.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         } else {
-            loginOverlay.style.display = 'none';
+            loginOverlay.classList.add('hidden');
             document.body.style.overflow = '';
         }
     }
@@ -68,8 +76,8 @@
         const btn = adminLoginForm.querySelector('button');
 
         btn.disabled = true;
-        btn.textContent = 'Verifying...';
-        loginError.style.display = 'none';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
+        loginError.classList.add('hidden');
 
         try {
             const res = await fetch(API_LOGIN, {
@@ -88,7 +96,7 @@
         } catch (err) {
             console.error(err);
             loginError.textContent = 'Invalid credentials';
-            loginError.style.display = 'block';
+            loginError.classList.remove('hidden');
         } finally {
             btn.disabled = false;
             btn.textContent = 'Login';
@@ -104,7 +112,7 @@
     async function loadData() {
         if (!getToken()) return;
 
-        surveyGrid.innerHTML = `<div style="text-align:center;padding:40px;width:100%"><i class="fa-solid fa-spinner fa-spin"></i> Loading data...</div>`;
+        surveyGrid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i><p>Loading survey data...</p></div>`;
 
         try {
             const res = await fetch(API_FETCH, {
@@ -142,110 +150,185 @@
 
         } catch (err) {
             console.error(err);
-            surveyGrid.innerHTML = `<div style="text-align:center;color:red;padding:40px;width:100%">Error loading data. Please try refresh.</div>`;
+            surveyGrid.innerHTML = `<div class="col-span-full py-12 text-center text-red-500"><i class="fa-solid fa-circle-exclamation text-2xl mb-2"></i><p>Error loading data. Please try refresh.</p></div>`;
         }
     }
 
     // --- Rendering ---
     function renderCards(rows) {
         if (rows.length === 0) {
-            surveyGrid.innerHTML = `<div style="text-align:center;padding:40px;width:100%">No records found.</div>`;
+            surveyGrid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500"><i class="fa-solid fa-inbox text-2xl mb-2"></i><p>No records found.</p></div>`;
             return;
         }
 
         surveyGrid.innerHTML = rows.map((r, i) => {
-            // Trustees formatting
-            let trusteesHtml = '<span style="color:var(--text-muted)">—</span>';
-            if (Array.isArray(r.trustees) && r.trustees.length > 0) {
-                trusteesHtml = r.trustees.map(t =>
-                    `<div class="chip" title="${t.mobile}">
-                        ${escapeHtml(t.name)} 
-                        <small style="color:var(--text-secondary);font-size:11px"><i class="fa-solid fa-phone" style="font-size:10px"></i> ${escapeHtml(t.mobile)}</small>
-                    </div>`
-                ).join(' ');
-            }
-
-            // Photos formatting
-            const mulnayakLink = r.mulnayak_photo_url
-                ? `<a href="${r.mulnayak_photo_url}" target="_blank" class="btn-xs-primary"><i class="fa-solid fa-image"></i> Mulnayak Photo</a>`
-                : '';
-            const jinalayLink = r.jinalay_photo_url
-                ? `<a href="${r.jinalay_photo_url}" target="_blank" class="btn-xs-secondary"><i class="fa-solid fa-gopuram"></i> Jinalay Photo</a>`
-                : '';
-            const trusteeListLink = r.trustee_list_photo_url
-                ? `<a href="${r.trustee_list_photo_url}" target="_blank" class="btn-xs-accent"><i class="fa-solid fa-file-contract"></i> Trustee List</a>`
-                : '';
+            const tirthBadge = r.is_tirth ? `<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide">Tirth: Yes</span>` : `<span class="bg-red-50 text-red-700 border border-red-200 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide">Tirth: No</span>`;
             
-            const photosArea = [mulnayakLink, jinalayLink, trusteeListLink].filter(Boolean).join('');
-
-            const gmapsBtn = r.gmaps_link
-                ? `<a href="${r.gmaps_link}" target="_blank" class="btn-xs-accent" style="margin-top:4px"><i class="fa-solid fa-map-location-dot"></i> GMaps</a>`
-                : '';
-
-            const tirthBadge = r.is_tirth ? `<span class="badge yes">Tirth: Yes</span>` : `<span class="badge no">Tirth: No</span>`;
-            const bhojanBadge = r.bhojanshala_available ? `<span class="badge yes">Bhojanshala: Yes</span>` : `<span class="badge no">Bhojanshala: No</span>`;
-            const dharmBadge = r.dharmshala_available ? `<span class="badge yes">Dharmshala: Yes</span>` : `<span class="badge no">Dharmshala: No</span>`;
-
             return `
-            <div class="survey-card">
-                <div class="card-header">
-                    <div>
-                        <div class="derasar-name">${escapeHtml(r.derasar_name)}</div>
-                        <div class="card-location">
-                            <i class="fa-solid fa-location-dot"></i> ${escapeHtml(r.location_name)}, ${escapeHtml(r.filler_city)}
-                            ${gmapsBtn}
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col overflow-hidden">
+                <div class="p-5 border-b border-slate-100 flex-1">
+                    <div class="flex justify-between items-start gap-2 mb-3">
+                        <h3 class="text-lg font-bold text-slate-800 leading-tight">${escapeHtml(r.derasar_name)}</h3>
+                        <div class="flex flex-col items-end gap-1 shrink-0">
+                            ${tirthBadge}
                         </div>
                     </div>
-                    <div class="status-badges">
-                        ${tirthBadge}
-                        ${bhojanBadge}
-                        ${dharmBadge}
-                    </div>
-                </div>
+                    
+                    <p class="text-xs text-slate-500 flex items-start gap-1.5 mb-4">
+                        <i class="fa-solid fa-location-dot mt-0.5"></i> 
+                        <span>${escapeHtml(r.location_name)}, ${escapeHtml(r.filler_city)}</span>
+                    </p>
 
-                <div class="card-section">
-                    <h4>Mulnayak & Pratima</h4>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span>Mulnayak Name</span>
-                            <strong>${escapeHtml(r.mulnayak_name || '—')}</strong>
+                    <div class="grid grid-cols-2 gap-3 bg-slate-50 rounded-lg p-3 border border-slate-100 text-xs">
+                        <div>
+                            <span class="block text-slate-400 font-semibold mb-0.5 uppercase text-[10px] tracking-wider">Surveyor</span>
+                            <span class="font-medium text-slate-700 truncate block capitalize">${escapeHtml(r.filler_name)}</span>
                         </div>
-                        <div class="info-item">
-                            <span>Total Pratima</span>
-                            <strong>${safe(r.total_pratima_count)}</strong>
+                        <div>
+                            <span class="block text-slate-400 font-semibold mb-0.5 uppercase text-[10px] tracking-wider">Mulnayak</span>
+                            <span class="font-medium text-slate-700 truncate block capitalize">${escapeHtml(r.mulnayak_name || '—')}</span>
                         </div>
                     </div>
                 </div>
-
-                <div class="card-section">
-                    <h4>Photos</h4>
-                    <div class="action-buttons" style="margin-top:0;">
-                        ${photosArea || '<span style="color:var(--text-muted);font-size:12px;">No photos uploaded</span>'}
-                    </div>
-                </div>
-
-                <div class="card-section">
-                    <h4>Trustees</h4>
-                    <div>${trusteesHtml}</div>
-                </div>
-
-                <details class="surveyor-info">
-                    <summary><i class="fa-solid fa-chevron-right"></i> Surveyor Info</summary>
-                    <div class="surveyor-details">
-                        <div class="info-item">
-                            <span>Name</span>
-                            <strong>${escapeHtml(r.filler_name)}</strong>
-                        </div>
-                        <div class="info-item">
-                            <span>Mobile</span>
-                            <strong><a href="tel:${r.filler_mobile}" style="color:var(--primary-blue);text-decoration:none">${escapeHtml(r.filler_mobile)}</a></strong>
-                        </div>
-                    </div>
-                </details>
+                
+                <button onclick="window.openDetailsModal(${allRows.indexOf(r)})" class="w-full bg-slate-50 hover:bg-primary-50 text-primary-600 font-semibold py-3 flex justify-center items-center gap-2 text-sm transition-colors border-t border-slate-100">
+                    View All Details <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
             </div>
             `;
         }).join('');
     }
+
+    // --- Modal Logic ---
+    window.openDetailsModal = function(index) {
+        const r = allRows[index];
+        if (!r) return;
+
+        // Populate header
+        modalDerasarName.textContent = r.derasar_name;
+        modalLocation.innerHTML = `<i class="fa-solid fa-location-dot"></i> <span>${escapeHtml(r.location_name)}, ${escapeHtml(r.filler_city)} - ${escapeHtml(r.state || '')}</span>`;
+
+        // Format Photos
+        const photos = [
+            r.mulnayak_photo_url ? `<a href="${r.mulnayak_photo_url}" target="_blank" class="flex flex-col items-center gap-2 p-3 bg-white border border-slate-200 rounded-lg hover:border-primary-400 hover:shadow-sm transition-all"><i class="fa-solid fa-image text-2xl text-blue-500"></i><span class="text-xs font-semibold text-slate-600 text-center">Mulnayak</span></a>` : '',
+            r.jinalay_photo_url ? `<a href="${r.jinalay_photo_url}" target="_blank" class="flex flex-col items-center gap-2 p-3 bg-white border border-slate-200 rounded-lg hover:border-primary-400 hover:shadow-sm transition-all"><i class="fa-solid fa-gopuram text-2xl text-purple-500"></i><span class="text-xs font-semibold text-slate-600 text-center">Jinalay</span></a>` : '',
+            r.trustee_list_photo_url ? `<a href="${r.trustee_list_photo_url}" target="_blank" class="flex flex-col items-center gap-2 p-3 bg-white border border-slate-200 rounded-lg hover:border-primary-400 hover:shadow-sm transition-all"><i class="fa-solid fa-file-contract text-2xl text-amber-500"></i><span class="text-xs font-semibold text-slate-600 text-center">Trustee List</span></a>` : ''
+        ].filter(Boolean).join('');
+
+        // Format Trustees
+        let trusteesHtml = '<p class="text-slate-500 text-sm italic">No trustee details provided.</p>';
+        if (Array.isArray(r.trustees) && r.trustees.length > 0) {
+            trusteesHtml = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">` + r.trustees.map(t =>
+                `<div class="bg-white border border-slate-200 rounded-lg p-3 flex justify-between items-center">
+                    <div class="font-medium text-sm text-slate-700">${escapeHtml(t.name)}</div>
+                    <a href="tel:${t.mobile}" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-full font-semibold transition-colors flex items-center gap-1.5 whitespace-nowrap"><i class="fa-solid fa-phone text-[10px]"></i> ${escapeHtml(t.mobile)}</a>
+                </div>`
+            ).join('') + `</div>`;
+        }
+
+        // Build Body HTML
+        modalBody.innerHTML = `
+            <div class="space-y-6">
+                <!-- Status Badges Row -->
+                <div class="flex flex-wrap gap-2">
+                    <span class="${r.is_tirth ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-red-50 border-red-200 text-red-700'} border px-3 py-1 rounded-full text-xs font-bold uppercase flex items-center gap-1.5"><i class="fa-solid ${r.is_tirth ? 'fa-check' : 'fa-xmark'}"></i> Tirth</span>
+                    <span class="${r.bhojanshala_available ? 'bg-amber-50 border-amber-200 text-amber-700' : 'bg-slate-50 border-slate-200 text-slate-500'} border px-3 py-1 rounded-full text-xs font-bold uppercase flex items-center gap-1.5"><i class="fa-solid fa-bowl-food"></i> Bhojanshala</span>
+                    <span class="${r.dharmshala_available ? 'bg-purple-50 border-purple-200 text-purple-700' : 'bg-slate-50 border-slate-200 text-slate-500'} border px-3 py-1 rounded-full text-xs font-bold uppercase flex items-center gap-1.5"><i class="fa-solid fa-bed"></i> Dharmshala</span>
+                </div>
+
+                <!-- Surveyor & Location Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Surveyor Details</h4>
+                        <div class="space-y-2 text-sm">
+                            <p class="flex justify-between"><span class="text-slate-500">Name:</span> <strong class="text-slate-800 capitalize">${escapeHtml(r.filler_name)}</strong></p>
+                            <p class="flex justify-between"><span class="text-slate-500">Mobile:</span> <a href="tel:${r.filler_mobile}" class="font-bold text-primary-600 hover:underline">${escapeHtml(r.filler_mobile)}</a></p>
+                            <p class="flex justify-between"><span class="text-slate-500">City / Taluka:</span> <span class="font-medium text-slate-800">${escapeHtml(r.filler_city)} / ${escapeHtml(r.filler_taluka)}</span></p>
+                            ${r.filler_address ? `<p class="flex justify-between border-t border-slate-200 mt-2 pt-2"><span class="text-slate-500 block w-20 shrink-0">Address:</span> <span class="font-medium text-slate-800 text-right text-xs leading-relaxed">${escapeHtml(r.filler_address)}</span></p>` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Location Data</h4>
+                        <div class="space-y-2 text-sm">
+                            <p class="flex justify-between"><span class="text-slate-500">Full Address:</span> <span class="font-medium text-slate-800 text-right truncate max-w-[200px]" title="${escapeHtml(r.full_address)}">${escapeHtml(r.full_address || '—')}</span></p>
+                            <p class="flex justify-between"><span class="text-slate-500">District:</span> <span class="font-medium text-slate-800">${escapeHtml(r.district || '—')}</span></p>
+                            <p class="flex justify-between"><span class="text-slate-500">Taluka:</span> <span class="font-medium text-slate-800">${escapeHtml(r.taluka || '—')}</span></p>
+                            ${r.gmaps_link ? `<div class="mt-3 pt-3 border-t border-slate-200"><a href="${r.gmaps_link}" target="_blank" class="w-full block text-center bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-semibold py-2 rounded-lg text-xs transition-colors"><i class="fa-solid fa-map-location-dot"></i> Open deeply in GMaps</a></div>` : ''}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pedhi & Poojari & Mulnayak -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="border border-slate-200 rounded-xl p-4">
+                        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2"><i class="fa-solid fa-user-tie"></i> Pedhi Manager</h4>
+                        ${r.pedhi_manager_name ? `
+                            <p class="font-bold text-slate-800 text-sm">${escapeHtml(r.pedhi_manager_name)}</p>
+                            ${r.pedhi_manager_mobile ? `<a href="tel:${r.pedhi_manager_mobile}" class="text-xs text-primary-600 hover:text-primary-700 font-semibold mt-1 block"><i class="fa-solid fa-phone"></i> ${escapeHtml(r.pedhi_manager_mobile)}</a>` : ''}
+                        ` : '<p class="text-xs text-slate-400 italic">Not available</p>'}
+                    </div>
+                    <div class="border border-slate-200 rounded-xl p-4">
+                        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2"><i class="fa-solid fa-hands-praying"></i> Poojari</h4>
+                        ${r.poojari_name ? `
+                            <p class="font-bold text-slate-800 text-sm">${escapeHtml(r.poojari_name)}</p>
+                            ${r.poojari_mobile ? `<a href="tel:${r.poojari_mobile}" class="text-xs text-primary-600 hover:text-primary-700 font-semibold mt-1 block"><i class="fa-solid fa-phone"></i> ${escapeHtml(r.poojari_mobile)}</a>` : ''}
+                        ` : '<p class="text-xs text-slate-400 italic">Not available</p>'}
+                    </div>
+                    <div class="border border-slate-200 rounded-xl p-4 bg-primary-50 border-primary-100">
+                        <h4 class="text-[10px] font-bold text-primary-400 uppercase tracking-wider mb-2"><i class="fa-solid fa-om"></i> Mulnayak details</h4>
+                        <p class="font-bold text-primary-900 text-sm leading-tight">${escapeHtml(r.mulnayak_name || '—')}</p>
+                        <p class="text-xs text-primary-700 font-medium mt-1">Pratimas: ${safe(r.total_pratima_count)}</p>
+                    </div>
+                </div>
+
+                <!-- Trustees -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                    <h4 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><i class="fa-solid fa-users text-slate-400"></i> Trustees & Contacts</h4>
+                    ${trusteesHtml}
+                </div>
+
+                <!-- Photos -->
+                <div class="border-t border-slate-200 pt-5">
+                    <h4 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><i class="fa-solid fa-images text-slate-400"></i> Attached Photos</h4>
+                    <div class="grid grid-cols-3 gap-3">
+                        ${photos || '<p class="col-span-3 text-sm text-slate-500 italic">No photos uploaded for this survey.</p>'}
+                    </div>
+                </div>
+                
+                <div class="text-center pt-4 pb-2">
+                    <p class="text-[10px] text-slate-400 leading-tight">Survey submitted at:<br>${new Date(r.created_at).toLocaleString()}</p>
+                </div>
+            </div>
+        `;
+
+        // Show Modal
+        modalOverlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        
+        // Trigger animation
+        requestAnimationFrame(() => {
+            modalContent.classList.remove('translate-y-full');
+            modalContent.classList.remove('sm:translate-y-full');
+            if (window.innerWidth < 640) {
+                 // Mobile slide up
+                 modalContent.classList.remove('translate-y-full');
+            }
+        });
+    };
+
+    function closeModal() {
+        modalContent.classList.add('translate-y-full');
+        setTimeout(() => {
+            modalOverlay.classList.add('hidden');
+            document.body.style.overflow = '';
+        }, 150);
+    }
+
+    closeModalBtn.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
 
     // --- Search ---
     globalSearch.addEventListener('input', (e) => {
@@ -298,34 +381,28 @@
     });
 
     // --- PDF Export ---
+    // Modified to export the dashboard panel since we removed the table
     exportPdfBtn.addEventListener('click', async () => {
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('l', 'pt', [842, 595]); // A4 Landscape
+        const doc = new jsPDF('p', 'pt', 'a4'); // A4 Portrait
 
         exportPdfBtn.disabled = true;
         exportPdfBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating...';
 
         try {
-            const elementToPdf = document.getElementById('surveyGrid');
-
-            // Temporary style for PDF
-            const originalMaxHeight = elementToPdf.style.maxHeight;
-            const originalOverflow = elementToPdf.style.overflow;
-            elementToPdf.style.overflow = 'visible';
-            elementToPdf.style.maxHeight = 'none';
+            const elementToPdf = document.getElementById('dashboardPanel');
 
             await html2canvas(elementToPdf, { scale: 1.5, useCORS: true }).then(canvas => {
                 const imgData = canvas.toDataURL('image/png');
                 const imgProps = doc.getImageProperties(imgData);
                 const pdfWidth = doc.internal.pageSize.getWidth();
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                let pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
+                // Simple single page scaled fit if it's too long, or let it run off. 
+                // A complete PDF table generator is recommended for massive datasets via autoTable mapping.
                 doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
                 doc.save(`LVJST_PreSurvey_View_${new Date().toISOString().slice(0, 10)}.pdf`);
             });
-
-            elementToPdf.style.overflow = originalOverflow;
-            elementToPdf.style.maxHeight = originalMaxHeight;
 
         } catch (e) {
             console.error(e);
