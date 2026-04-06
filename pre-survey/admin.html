@@ -210,44 +210,161 @@
             font-size: 14px;
         }
 
-        /* TABLE */
-        .table-wrap {
-            overflow-x: auto;
-            border-radius: var(--radius-md);
+        /* CARDS GRID (Mobile First) */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            }
+        }
+
+        .survey-card {
             background: var(--card-bg);
-            box-shadow: var(--shadow-md);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
             border: 1px solid var(--border-color);
+            transition: all var(--transition-base);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            min-width: 1200px;
+        .survey-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
         }
 
-        thead th {
-            position: sticky;
-            top: 0;
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
-            color: #ffffff;
-            padding: 16px 14px;
-            text-align: left;
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 12px;
+            margin-bottom: 4px;
+        }
+
+        .derasar-name {
+            font-size: 18px;
             font-weight: 700;
+            color: var(--primary-blue-dark);
+            margin-bottom: 4px;
+        }
+
+        .card-location {
             font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-end;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
             text-transform: uppercase;
             white-space: nowrap;
         }
+        
+        .badge.yes { background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; }
+        .badge.no { background:#fef2f2; color:#dc2626; border:1px solid #fecaca; }
 
-        tbody td {
-            padding: 16px 14px;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 14px;
-            background: #fff;
+        .card-section {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid #e2e8f0;
         }
 
-        tbody tr:hover td {
-            background: #f8fafc;
+        .card-section h4 {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .info-item span {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 11px;
+            margin-bottom: 1px;
+        }
+
+        .info-item strong {
+            color: var(--text-primary);
+        }
+
+        .surveyor-info {
+            font-size: 13px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .surveyor-info summary {
+            padding: 10px 12px;
+            font-weight: 600;
+            color: var(--primary-blue);
+            cursor: pointer;
+            background: #f0f9ff;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            outline: none;
+        }
+
+        .surveyor-info summary::marker {
+            display: none;
+        }
+        .surveyor-info summary::-webkit-details-marker {
+            display: none;
+        }
+        
+        .surveyor-info summary i {
+            margin-right: 8px;
+            transition: transform 0.2s;
+        }
+
+        .surveyor-info[open] summary i {
+            transform: rotate(90deg);
+        }
+
+        .surveyor-details {
+            padding: 12px;
+            border-top: 1px solid #e2e8f0;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 6px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: auto;
         }
 
         .chip {
@@ -403,40 +520,41 @@
                     <div class="num" id="totalCount">0</div>
                 </div>
             </div>
+            <div class="card">
+                <div class="icon">🏛️</div>
+                <div class="meta">
+                    <h3>Total Tirths</h3>
+                    <div class="num" id="totalTirths">0</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="icon">🍲</div>
+                <div class="meta">
+                    <h3>With Bhojanshala</h3>
+                    <div class="num" id="totalBhojanshala">0</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="icon">🛏️</div>
+                <div class="meta">
+                    <h3>With Dharmshala</h3>
+                    <div class="num" id="totalDharmshala">0</div>
+                </div>
+            </div>
         </div>
 
         <div class="panel">
             <div class="controls">
-                <div class="search">
+                <div class="search" style="margin-bottom: 20px;">
                     <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted);margin-right:10px"></i>
                     <input id="globalSearch" placeholder="Search by name, derasar, or city..." />
                 </div>
             </div>
 
-            <div class="table-wrap">
-                <table id="surveyTable">
-                    <thead>
-                        <tr>
-                            <th>Sr No</th>
-                            <th>Filler Name</th>
-                            <th>Mobile</th>
-                            <th>City / Taluka</th>
-                            <th>Derasar Name</th>
-                            <th>Is Tirth</th>
-                            <th>Location</th>
-                            <th>Google Maps</th>
-                            <th>Mulnayak</th>
-                            <th>Total Pratima (Count)</th>
-                            <th>Photos</th>
-                            <th>Trustees / Contacts</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dataBody">
-                        <tr>
-                            <td colspan="12" style="text-align:center;padding:40px">Loading...</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div id="surveyGrid" class="cards-grid">
+                <div style="text-align:center;padding:40px;width:100%">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Loading...
+                </div>
             </div>
         </div>
     </main>

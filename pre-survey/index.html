@@ -184,6 +184,33 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="input-group">
+                                        <label class="field-label">Bhojanshala Available?</label>
+                                        <div class="toggle-wrapper">
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" name="bhojanshala_available" id="bhojanshala_available">
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                            <span class="toggle-label" id="bhojanshala_available_label">No</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="field-label">Dharmshala Available?</label>
+                                        <div class="toggle-wrapper">
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" name="dharmshala_available" id="dharmshala_available">
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                            <span class="toggle-label" id="dharmshala_available_label">No</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="input-group">
                                         <label class="field-label">Town / Location *</label>
                                         <input type="text" name="location_name" placeholder="e.g. Borivali West"
                                             required>
@@ -353,6 +380,18 @@
                                     <label class="field-label">Jinalay Photo</label>
                                     <div class="custom-file-upload" id="upload-jinalay">
                                         <input type="file" name="jinalay_photo" id="file-jinalay" accept="image/*">
+                                        <div class="upload-ui">
+                                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                                            <span class="upload-text">Click to Upload Photo</span>
+                                            <span class="file-name"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="file-upload-container">
+                                    <label class="field-label">Trustee List of Names Lekhan</label>
+                                    <div class="custom-file-upload" id="upload-trustee-list">
+                                        <input type="file" name="trustee_list_photo" id="file-trustee-list" accept="image/*">
                                         <div class="upload-ui">
                                             <i class="fa-solid fa-cloud-arrow-up"></i>
                                             <span class="upload-text">Click to Upload Photo</span>

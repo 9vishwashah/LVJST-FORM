@@ -120,6 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize File UIs
     setupFileUploadUI('file-mulnayak', 'upload-mulnayak');
     setupFileUploadUI('file-jinalay', 'upload-jinalay');
+    setupFileUploadUI('file-trustee-list', 'upload-trustee-list');
 
     // Toggle label update for "Is this Tirth?"
     const tirthCheckbox = document.getElementById('is_tirth');
@@ -127,6 +128,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (tirthCheckbox && tirthLabel) {
         tirthCheckbox.addEventListener('change', () => {
             tirthLabel.textContent = tirthCheckbox.checked ? 'Yes' : 'No';
+        });
+    }
+
+    // Toggle label update for "Bhojanshala Available?"
+    const bhojanshalaCheckbox = document.getElementById('bhojanshala_available');
+    const bhojanshalaLabel = document.getElementById('bhojanshala_available_label');
+    if (bhojanshalaCheckbox && bhojanshalaLabel) {
+        bhojanshalaCheckbox.addEventListener('change', () => {
+            bhojanshalaLabel.textContent = bhojanshalaCheckbox.checked ? 'Yes' : 'No';
+        });
+    }
+
+    // Toggle label update for "Dharmshala Available?"
+    const dharmshalaCheckbox = document.getElementById('dharmshala_available');
+    const dharmshalaLabel = document.getElementById('dharmshala_available_label');
+    if (dharmshalaCheckbox && dharmshalaLabel) {
+        dharmshalaCheckbox.addEventListener('change', () => {
+            dharmshalaLabel.textContent = dharmshalaCheckbox.checked ? 'Yes' : 'No';
         });
     }
 
@@ -352,6 +371,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Upload photos (Still client-side)
             let mulnayakUrl = null;
             let jinalayUrl = null;
+            let trusteeListUrl = null;
 
             if (supabaseClient) {
                 const mulnayakFile = formData.get("mulnayak_photo");
@@ -364,6 +384,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (jinalayFile && jinalayFile.size > 0) {
                     console.log("Uploading Jinalay...");
                     jinalayUrl = await uploadFile(jinalayFile, "jinalay");
+                }
+
+                const trusteeListFile = formData.get("trustee_list_photo");
+                if (trusteeListFile && trusteeListFile.size > 0) {
+                    console.log("Uploading Trustee List...");
+                    trusteeListUrl = await uploadFile(trusteeListFile, "trustee-list");
                 }
             }
 
@@ -393,7 +419,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 total_pratima_count: formData.get("total_pratima_count"),
                 mulnayak_photo_url: mulnayakUrl,
                 jinalay_photo_url: jinalayUrl,
+                trustee_list_photo_url: trusteeListUrl,
                 is_tirth: document.getElementById('is_tirth')?.checked || false,
+                bhojanshala_available: document.getElementById('bhojanshala_available')?.checked || false,
+                dharmshala_available: document.getElementById('dharmshala_available')?.checked || false,
                 recaptchaToken: token
             };
 

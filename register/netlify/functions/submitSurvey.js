@@ -46,7 +46,10 @@ export async function handler(event, context) {
             total_pratima_count,
             mulnayak_photo_url,
             jinalay_photo_url,
+            trustee_list_photo_url,
             is_tirth,
+            bhojanshala_available,
+            dharmshala_available,
             recaptchaToken
         } = payload;
 
@@ -103,7 +106,10 @@ export async function handler(event, context) {
             total_pratima_count,
             mulnayak_photo_url,
             jinalay_photo_url,
-            is_tirth: is_tirth || false
+            trustee_list_photo_url,
+            is_tirth: is_tirth || false,
+            bhojanshala_available: bhojanshala_available || false,
+            dharmshala_available: dharmshala_available || false
         };
 
         const { data, error } = await supabase

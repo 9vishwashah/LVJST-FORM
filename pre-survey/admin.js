@@ -34,7 +34,11 @@
     const logoutBtn = document.getElementById('logoutBtn');
 
     const totalCountEl = document.getElementById('totalCount');
-    const dataBody = document.getElementById('dataBody');
+    const totalTirthsEl = document.getElementById('totalTirths');
+    const totalBhojanshalaEl = document.getElementById('totalBhojanshala');
+    const totalDharmshalaEl = document.getElementById('totalDharmshala');
+    
+    const surveyGrid = document.getElementById('surveyGrid');
     const globalSearch = document.getElementById('globalSearch');
     const exportCsvBtn = document.getElementById('exportCsvBtn');
     const exportPdfBtn = document.getElementById('exportPdfBtn');
@@ -100,7 +104,7 @@
     async function loadData() {
         if (!getToken()) return;
 
-        dataBody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:40px"><i class="fa-solid fa-spinner fa-spin"></i> Loading data...</td></tr>`;
+        surveyGrid.innerHTML = `<div style="text-align:center;padding:40px;width:100%"><i class="fa-solid fa-spinner fa-spin"></i> Loading data...</div>`;
 
         try {
             const res = await fetch(API_FETCH, {
@@ -118,79 +122,127 @@
             const json = await res.json();
             allRows = json.rows || [];
 
-            // Update only total count
-            if (json.analytics) {
-                totalCountEl.textContent = json.analytics.total || allRows.length;
-            } else {
-                totalCountEl.textContent = allRows.length;
-            }
+            // Update stats
+            totalCountEl.textContent = json.analytics?.total || allRows.length;
+            
+            // Calculate new stats
+            let countTirth = 0;
+            let countBhojanshala = 0;
+            let countDharmshala = 0;
+            allRows.forEach(r => {
+                if (r.is_tirth) countTirth++;
+                if (r.bhojanshala_available) countBhojanshala++;
+                if (r.dharmshala_available) countDharmshala++;
+            });
+            totalTirthsEl.textContent = countTirth;
+            totalBhojanshalaEl.textContent = countBhojanshala;
+            totalDharmshalaEl.textContent = countDharmshala;
 
-            renderTable(allRows);
+            renderCards(allRows);
 
         } catch (err) {
             console.error(err);
-            dataBody.innerHTML = `<tr><td colspan="12" style="text-align:center;color:red;padding:40px">Error loading data. Please try refresh.</td></tr>`;
+            surveyGrid.innerHTML = `<div style="text-align:center;color:red;padding:40px;width:100%">Error loading data. Please try refresh.</div>`;
         }
     }
 
     // --- Rendering ---
-    function renderTable(rows) {
+    function renderCards(rows) {
         if (rows.length === 0) {
-            dataBody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:40px">No records found.</td></tr>`;
+            surveyGrid.innerHTML = `<div style="text-align:center;padding:40px;width:100%">No records found.</div>`;
             return;
         }
 
-        dataBody.innerHTML = rows.map((r, i) => {
+        surveyGrid.innerHTML = rows.map((r, i) => {
             // Trustees formatting
-            let trusteesHtml = '—';
+            let trusteesHtml = '<span style="color:var(--text-muted)">—</span>';
             if (Array.isArray(r.trustees) && r.trustees.length > 0) {
                 trusteesHtml = r.trustees.map(t =>
                     `<div class="chip" title="${t.mobile}">
-                        ${escapeHtml(t.name)} <br>
+                        ${escapeHtml(t.name)} 
                         <small style="color:var(--text-secondary);font-size:11px"><i class="fa-solid fa-phone" style="font-size:10px"></i> ${escapeHtml(t.mobile)}</small>
                     </div>`
-                ).join('');
+                ).join(' ');
             }
 
-            // Photos formatting - styled as buttons
+            // Photos formatting
             const mulnayakLink = r.mulnayak_photo_url
-                ? `<a href="${r.mulnayak_photo_url}" target="_blank" class="btn-xs-primary"><i class="fa-solid fa-image"></i> Open - Mulnayak</a>`
+                ? `<a href="${r.mulnayak_photo_url}" target="_blank" class="btn-xs-primary"><i class="fa-solid fa-image"></i> Mulnayak Photo</a>`
                 : '';
             const jinalayLink = r.jinalay_photo_url
-                ? `<a href="${r.jinalay_photo_url}" target="_blank" class="btn-xs-secondary"><i class="fa-solid fa-gopuram"></i> Open - Jinalay</a>`
+                ? `<a href="${r.jinalay_photo_url}" target="_blank" class="btn-xs-secondary"><i class="fa-solid fa-gopuram"></i> Jinalay Photo</a>`
+                : '';
+            const trusteeListLink = r.trustee_list_photo_url
+                ? `<a href="${r.trustee_list_photo_url}" target="_blank" class="btn-xs-accent"><i class="fa-solid fa-file-contract"></i> Trustee List</a>`
+                : '';
+            
+            const photosArea = [mulnayakLink, jinalayLink, trusteeListLink].filter(Boolean).join('');
+
+            const gmapsBtn = r.gmaps_link
+                ? `<a href="${r.gmaps_link}" target="_blank" class="btn-xs-accent" style="margin-top:4px"><i class="fa-solid fa-map-location-dot"></i> GMaps</a>`
                 : '';
 
-            const photos = [mulnayakLink, jinalayLink].filter(Boolean).join('<br>');
-
-            // GMaps Button
-            const gmapsBtn = r.gmaps_link
-                ? `<a href="${r.gmaps_link}" target="_blank" class="btn-xs-accent"><i class="fa-solid fa-map-location-dot"></i> Open in GMaps</a>`
-                : '—';
+            const tirthBadge = r.is_tirth ? `<span class="badge yes">Tirth: Yes</span>` : `<span class="badge no">Tirth: No</span>`;
+            const bhojanBadge = r.bhojanshala_available ? `<span class="badge yes">Bhojanshala: Yes</span>` : `<span class="badge no">Bhojanshala: No</span>`;
+            const dharmBadge = r.dharmshala_available ? `<span class="badge yes">Dharmshala: Yes</span>` : `<span class="badge no">Dharmshala: No</span>`;
 
             return `
-            <tr>
-                <td>${i + 1}</td>
-                <td>
-                    <b>${escapeHtml(r.filler_name)}</b>
-                </td>
-                <td>
-                   <a href="tel:${r.filler_mobile}" style="text-decoration:none;color:var(--primary-blue)">${escapeHtml(r.filler_mobile)}</a>
-                </td>
-                <td>
-                    ${escapeHtml(r.filler_city)}<br>
-                    <small style="color:var(--text-secondary)">${escapeHtml(r.filler_taluka)}</small>
-                </td>
-                <td>
-                    <b>${escapeHtml(r.derasar_name)}</b>
-                </td>
-                <td>${r.is_tirth ? '<span style="background:#ecfdf5;color:#059669;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #a7f3d0">Yes</span>' : '<span style="background:#fef2f2;color:#dc2626;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #fecaca">No</span>'}</td>
-                <td>${escapeHtml(r.location_name)}</td>
-                <td>${gmapsBtn}</td>
-                <td>${escapeHtml(r.mulnayak_name || '—')}</td>
-                <td>${safe(r.total_pratima_count)}</td>
-                <td>${photos || '—'}</td>
-                <td>${trusteesHtml}</td>
-            </tr>
+            <div class="survey-card">
+                <div class="card-header">
+                    <div>
+                        <div class="derasar-name">${escapeHtml(r.derasar_name)}</div>
+                        <div class="card-location">
+                            <i class="fa-solid fa-location-dot"></i> ${escapeHtml(r.location_name)}, ${escapeHtml(r.filler_city)}
+                            ${gmapsBtn}
+                        </div>
+                    </div>
+                    <div class="status-badges">
+                        ${tirthBadge}
+                        ${bhojanBadge}
+                        ${dharmBadge}
+                    </div>
+                </div>
+
+                <div class="card-section">
+                    <h4>Mulnayak & Pratima</h4>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span>Mulnayak Name</span>
+                            <strong>${escapeHtml(r.mulnayak_name || '—')}</strong>
+                        </div>
+                        <div class="info-item">
+                            <span>Total Pratima</span>
+                            <strong>${safe(r.total_pratima_count)}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-section">
+                    <h4>Photos</h4>
+                    <div class="action-buttons" style="margin-top:0;">
+                        ${photosArea || '<span style="color:var(--text-muted);font-size:12px;">No photos uploaded</span>'}
+                    </div>
+                </div>
+
+                <div class="card-section">
+                    <h4>Trustees</h4>
+                    <div>${trusteesHtml}</div>
+                </div>
+
+                <details class="surveyor-info">
+                    <summary><i class="fa-solid fa-chevron-right"></i> Surveyor Info</summary>
+                    <div class="surveyor-details">
+                        <div class="info-item">
+                            <span>Name</span>
+                            <strong>${escapeHtml(r.filler_name)}</strong>
+                        </div>
+                        <div class="info-item">
+                            <span>Mobile</span>
+                            <strong><a href="tel:${r.filler_mobile}" style="color:var(--primary-blue);text-decoration:none">${escapeHtml(r.filler_mobile)}</a></strong>
+                        </div>
+                    </div>
+                </details>
+            </div>
             `;
         }).join('');
     }
@@ -204,7 +256,7 @@
             ].join(' ').toLowerCase();
             return raw.includes(term);
         });
-        renderTable(filtered);
+        renderCards(filtered);
     });
 
     // --- CSV Export ---
@@ -219,8 +271,8 @@
             'full_address', 'state', 'district', 'taluka', 'gmaps_link',
             'pedhi_manager_name', 'pedhi_manager_mobile',
             'poojari_name', 'poojari_mobile',
-            'mulnayak_name', 'total_pratima_count', 'mulnayak_photo_url', 'jinalay_photo_url',
-            'is_tirth', 'trustees'
+            'mulnayak_name', 'total_pratima_count', 'mulnayak_photo_url', 'jinalay_photo_url', 'trustee_list_photo_url',
+            'is_tirth', 'bhojanshala_available', 'dharmshala_available', 'trustees'
         ];
 
         const csvContent = [
@@ -254,15 +306,15 @@
         exportPdfBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating...';
 
         try {
-            const table = document.getElementById('surveyTable');
+            const elementToPdf = document.getElementById('surveyGrid');
 
             // Temporary style for PDF
-            const originalMaxHeight = document.querySelector('.table-wrap').style.maxHeight;
-            const originalOverflow = document.querySelector('.table-wrap').style.overflow;
-            document.querySelector('.table-wrap').style.overflow = 'visible';
-            document.querySelector('.table-wrap').style.maxHeight = 'none';
+            const originalMaxHeight = elementToPdf.style.maxHeight;
+            const originalOverflow = elementToPdf.style.overflow;
+            elementToPdf.style.overflow = 'visible';
+            elementToPdf.style.maxHeight = 'none';
 
-            await html2canvas(table, { scale: 1.5, useCORS: true }).then(canvas => {
+            await html2canvas(elementToPdf, { scale: 1.5, useCORS: true }).then(canvas => {
                 const imgData = canvas.toDataURL('image/png');
                 const imgProps = doc.getImageProperties(imgData);
                 const pdfWidth = doc.internal.pageSize.getWidth();
@@ -272,8 +324,8 @@
                 doc.save(`LVJST_PreSurvey_View_${new Date().toISOString().slice(0, 10)}.pdf`);
             });
 
-            document.querySelector('.table-wrap').style.overflow = originalOverflow;
-            document.querySelector('.table-wrap').style.maxHeight = originalMaxHeight;
+            elementToPdf.style.overflow = originalOverflow;
+            elementToPdf.style.maxHeight = originalMaxHeight;
 
         } catch (e) {
             console.error(e);
