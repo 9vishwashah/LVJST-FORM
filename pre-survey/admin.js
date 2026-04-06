@@ -42,7 +42,6 @@
     const globalSearch = document.getElementById('globalSearch');
     const exportCsvBtn = document.getElementById('exportCsvBtn');
     const exportPdfBtn = document.getElementById('exportPdfBtn');
-    const refreshBtn = document.getElementById('refreshBtn');
 
     // Modal elements
     const modalOverlay = document.getElementById('detailsModalOverlay');
@@ -276,7 +275,7 @@
                         ` : '<p class="text-xs text-slate-400 italic">Not available</p>'}
                     </div>
                     <div class="border border-slate-200 rounded-xl p-4 bg-primary-50 border-primary-100">
-                        <h4 class="text-[10px] font-bold text-primary-400 uppercase tracking-wider mb-2"><i class="fa-solid fa-om"></i> Mulnayak details</h4>
+                        <h4 class="text-[10px] font-bold text-primary-400 uppercase tracking-wider mb-2">Mulnayak details</h4>
                         <p class="font-bold text-primary-900 text-sm leading-tight">${escapeHtml(r.mulnayak_name || '—')}</p>
                         <p class="text-xs text-primary-700 font-medium mt-1">Pratimas: ${safe(r.total_pratima_count)}</p>
                     </div>
@@ -342,31 +341,51 @@
         renderCards(filtered);
     });
 
+    const exportColumns = [
+        { key: 'id', label: 'ID' },
+        { key: 'created_at', label: 'Submitted On' },
+        { key: 'filler_name', label: 'Surveyor Name' },
+        { key: 'filler_mobile', label: 'Surveyor Mobile' },
+        { key: 'filler_city', label: 'City' },
+        { key: 'filler_taluka', label: 'Taluka' },
+        { key: 'filler_address', label: 'Surveyor Address' },
+        { key: 'derasar_name', label: 'Derasar Name' },
+        { key: 'location_name', label: 'Location' },
+        { key: 'derasar_type', label: 'Derasar Type' },
+        { key: 'full_address', label: 'Derasar Full Address' },
+        { key: 'district', label: 'District' },
+        { key: 'state', label: 'State' },
+        { key: 'is_tirth', label: 'Tirth?' },
+        { key: 'bhojanshala_available', label: 'Bhojanshala?' },
+        { key: 'dharmshala_available', label: 'Dharmshala?' },
+        { key: 'mulnayak_name', label: 'Mulnayak' },
+        { key: 'total_pratima_count', label: 'Pratima Count' },
+        { key: 'pedhi_manager_name', label: 'Pedhi Manager' },
+        { key: 'pedhi_manager_mobile', label: 'Pedhi Mobile' },
+        { key: 'poojari_name', label: 'Poojari Name' },
+        { key: 'poojari_mobile', label: 'Poojari Mobile' },
+        { key: 'trustees', label: 'Trustees & Contacts' },
+        { key: 'gmaps_link', label: 'Google Maps Link' },
+        { key: 'mulnayak_photo_url', label: 'Mulnayak Photo' },
+        { key: 'jinalay_photo_url', label: 'Jinalay Photo' },
+        { key: 'trustee_list_photo_url', label: 'Trustee Photo' }
+    ];
+
     // --- CSV Export ---
     exportCsvBtn.addEventListener('click', () => {
         if (!allRows.length) return alert('No data to export');
 
-        // ALL columns based on data + superset of known fields
-        const keys = [
-            'id', 'created_at',
-            'filler_name', 'filler_mobile', 'filler_address', 'filler_city', 'filler_taluka',
-            'derasar_name', 'location_name', 'derasar_type',
-            'full_address', 'state', 'district', 'taluka', 'gmaps_link',
-            'pedhi_manager_name', 'pedhi_manager_mobile',
-            'poojari_name', 'poojari_mobile',
-            'mulnayak_name', 'total_pratima_count', 'mulnayak_photo_url', 'jinalay_photo_url', 'trustee_list_photo_url',
-            'is_tirth', 'bhojanshala_available', 'dharmshala_available', 'trustees'
-        ];
-
         const csvContent = [
-            keys.join(','),
+            exportColumns.map(c => `"${c.label}"`).join(','),
             ...allRows.map(r => {
-                return keys.map(k => {
-                    let val = r[k];
-                    if (k === 'trustees' && Array.isArray(val)) {
+                return exportColumns.map(c => {
+                    let val = r[c.key];
+                    if (c.key === 'trustees' && Array.isArray(val)) {
                         val = val.map(t => `${t.name}(${t.mobile})`).join('; ');
                     }
+                    if (c.key === 'created_at') val = new Date(val).toLocaleString();
                     if (val === null || val === undefined) val = '';
+                    if (typeof val === 'boolean') val = val ? 'Yes' : 'No';
                     return `"${String(val).replace(/"/g, '""')}"`;
                 }).join(',');
             })
@@ -380,30 +399,52 @@
         a.click();
     });
 
-    // --- PDF Export ---
-    // Modified to export the dashboard panel since we removed the table
+    // --- PDF Export (Using AutoTable) ---
     exportPdfBtn.addEventListener('click', async () => {
+        if (!allRows.length) return alert('No data to export');
+        
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'pt', 'a4'); // A4 Portrait
+        // Landscape, points, very large custom format to fit ~27 columns nicely without breaking layout
+        const doc = new jsPDF('l', 'pt', [1200, 842]); 
 
         exportPdfBtn.disabled = true;
         exportPdfBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating...';
 
         try {
-            const elementToPdf = document.getElementById('dashboardPanel');
-
-            await html2canvas(elementToPdf, { scale: 1.5, useCORS: true }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const imgProps = doc.getImageProperties(imgData);
-                const pdfWidth = doc.internal.pageSize.getWidth();
-                let pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-                // Simple single page scaled fit if it's too long, or let it run off. 
-                // A complete PDF table generator is recommended for massive datasets via autoTable mapping.
-                doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                doc.save(`LVJST_PreSurvey_View_${new Date().toISOString().slice(0, 10)}.pdf`);
+            const head = [exportColumns.map(c => c.label)];
+            const body = allRows.map(r => {
+                return exportColumns.map(c => {
+                    let val = r[c.key];
+                    if (c.key === 'trustees' && Array.isArray(val)) {
+                        val = val.map(t => `${t.name}(${t.mobile})`).join(', ');
+                    }
+                    if (c.key === 'created_at') val = new Date(val).toLocaleDateString();
+                    if (val === null || val === undefined) val = '';
+                    if (typeof val === 'boolean') val = val ? 'Yes' : 'No';
+                    return String(val);
+                });
             });
 
+            doc.autoTable({
+                head: head,
+                body: body,
+                startY: 50,
+                styles: { fontSize: 7, cellPadding: 3, overflow: 'linebreak' },
+                headStyles: { fillColor: [37, 99, 235], textColor: 255 },
+                columnStyles: {
+                    // Make url columns wrap or break smoothly
+                    23: { cellWidth: 50 }, // gmaps
+                    24: { cellWidth: 40 }, // mul photo
+                    25: { cellWidth: 40 }, // jinalay photo
+                    26: { cellWidth: 40 }  // trustee photo
+                },
+                didDrawPage: function (data) {
+                    doc.setFontSize(14);
+                    doc.text("LVJST Pre-Survey Data Full Report", data.settings.margin.left, 30);
+                }
+            });
+
+            doc.save(`LVJST_PreSurvey_View_${new Date().toISOString().slice(0, 10)}.pdf`);
         } catch (e) {
             console.error(e);
             alert('PDF generation failed');
@@ -412,8 +453,6 @@
             exportPdfBtn.innerHTML = '<i class="fa-solid fa-file-pdf"></i> PDF';
         }
     });
-
-    refreshBtn.addEventListener('click', loadData);
 
     // Init
     updateLoginUI();
