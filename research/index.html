@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>LVJST Research Form</title>
+  <meta name="description" content="LVJST Research Data Entry Form — Heritage Site Survey">
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="icon" href="../register/asset/lvjst-logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="../register/asset/lvjst-logo.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <img src="../register/asset/lvjst-logo.png" alt="LVJST Logo" class="header-logo"
+        onerror="this.style.display='none'">
+      <div class="header-text">
+        <h1>Labdhi Vikram Jan Seva Trust</h1>
+        <p>Protection of Ancient Cultural Heritage of India</p>
+      </div>
+      <span class="header-badge">Research Form</span>
+    </div>
+  </header>
+
+  <!-- ── Page Wrapper ───────────────────────────────────── -->
+  <main class="page-wrapper" role="main">
+
+    <!-- Form Card -->
+    <div class="form-card" id="formSection">
+
+      <!-- Card Header -->
+      <div class="form-card-header">
+        <div class="form-card-icon" aria-hidden="true">📜</div>
+        <div class="form-card-title">
+          <h2>Research Data Entry</h2>
+          <p>Heritage Site Survey &amp; Facilities Register</p>
+        </div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="form-body">
+        <form id="researchForm" novalidate>
+
+          <!-- Sr No -->
+          <span class="section-label">Entry Reference</span>
+          <div class="field-group">
+            <label class="field-label" for="srNoDisplay">Sr. No</label>
+            <div class="sr-no-display" id="srNoDisplay" aria-live="polite">
+              <i class="fa-solid fa-hashtag" style="color:var(--vb-400);font-size:0.8rem;"></i>
+              <span id="srNoValue">Auto-assigned on submission</span>
+            </div>
+          </div>
+
+          <!-- Name + Contact -->
+          <span class="section-label">Personal Information</span>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label" for="name">Name <span class="req">*</span></label>
+              <input type="text" id="name" name="name" placeholder="Full Name" required
+                autocomplete="name" inputmode="text">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="contact_no">Contact No <span class="req">*</span></label>
+              <input type="tel" id="contact_no" name="contact_no" placeholder="10-digit mobile"
+                required autocomplete="tel" inputmode="tel" maxlength="15">
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="field-group">
+            <label class="field-label" for="address">Address <span class="req">*</span></label>
+            <textarea id="address" name="address" placeholder="Full address of the heritage site"
+              required rows="2"></textarea>
+          </div>
+
+          <!-- City + District -->
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label" for="city">City <span class="req">*</span></label>
+              <input type="text" id="city" name="city" placeholder="e.g. Ahmedabad" required
+                autocomplete="address-level2" inputmode="text">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="district">District <span class="req">*</span></label>
+              <input type="text" id="district" name="district" placeholder="e.g. Gandhinagar" required
+                inputmode="text">
+            </div>
+          </div>
+
+          <!-- Facilities -->
+          <span class="section-label">
+            <i class="fa-solid fa-circle-nodes" style="font-size:0.75rem;"></i>
+            Facilities Available
+          </span>
+
+          <div class="facilities-grid" role="group" aria-label="Available Facilities">
+
+            <!-- Dharamshala -->
+            <label class="facility-card" id="dharamshalaCard" for="dharamshala" role="checkbox"
+              aria-checked="false" tabindex="0">
+              <input type="checkbox" class="facility-checkbox" id="dharamshala" name="dharamshala">
+              <div class="facility-icon">🏠</div>
+              <div class="facility-name">Dharamshala</div>
+              <div class="facility-status" id="dharamshalaStatus">No</div>
+            </label>
+
+            <!-- Bhojanshala -->
+            <label class="facility-card" id="bhojanshalaCard" for="bhojanshala" role="checkbox"
+              aria-checked="false" tabindex="0">
+              <input type="checkbox" class="facility-checkbox" id="bhojanshala" name="bhojanshala">
+              <div class="facility-icon">🍽️</div>
+              <div class="facility-name">Bhojanshala</div>
+              <div class="facility-status" id="bhojanshalaStatus">No</div>
+            </label>
+
+            <!-- Aayambilshala -->
+            <label class="facility-card" id="aayambilshalaCard" for="aayambilshala" role="checkbox"
+              aria-checked="false" tabindex="0">
+              <input type="checkbox" class="facility-checkbox" id="aayambilshala" name="aayambilshala">
+              <div class="facility-icon">🧘</div>
+              <div class="facility-name">Aayambilshala</div>
+              <div class="facility-status" id="aayambilshalaStatus">No</div>
+            </label>
+
+          </div>
+
+          <!-- History -->
+          <span class="section-label">
+            <i class="fa-solid fa-scroll" style="font-size:0.75rem;"></i>
+            Historical Notes
+          </span>
+          <div class="field-group">
+            <label class="field-label" for="history">History</label>
+            <textarea id="history" name="history" placeholder="Describe the historical background, origin, events, or any relevant details about this heritage site..."
+              class="history-textarea" rows="5"></textarea>
+          </div>
+
+        <!-- Alert area -->
+          <div id="alertArea" role="alert" aria-live="assertive"></div>
+
+          <!-- Submit -->
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span class="btn-icon">📋</span>
+            <span id="submitBtnText">Submit Entry</span>
+          </button>
+
+        </form>
+      </div>
+    </div><!-- /.form-card -->
+
+  </main>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ── Footer ─────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <p>© 2026 LVJST · Labdhi Vikram Jan Seva Trust · Preserving Ancient Legacy</p>
+  </footer>
+
+  <script src="form.js"></script>
+
+</body>
+</html>

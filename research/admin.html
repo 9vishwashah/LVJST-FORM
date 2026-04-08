@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>LVJST Research — Admin Panel</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="icon" href="../register/asset/lvjst-logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+
+<body class="admin-body">
+
+  <!-- ── Login Overlay ──────────────────────────────────── -->
+  <div class="login-overlay" id="loginOverlay" role="dialog" aria-modal="true" aria-label="Admin Login">
+    <div class="login-card">
+      <div class="login-icon" aria-hidden="true">🛡️</div>
+      <h1 class="login-title">Admin Login</h1>
+      <p class="login-subtitle">LVJST Research Admin Panel</p>
+      <form id="loginForm" novalidate>
+        <input type="password" class="login-input" id="adminPassword"
+          placeholder="Enter admin password" required autocomplete="current-password"
+          aria-label="Admin Password">
+        <button type="submit" class="login-btn" id="loginBtn">
+          <i class="fa-solid fa-shield-halved"></i> Access Panel
+        </button>
+        <div class="login-error" id="loginError" role="alert">
+          <i class="fa-solid fa-circle-xmark"></i> Incorrect password. Please try again.
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Admin Header ───────────────────────────────────── -->
+  <header class="admin-header" role="banner">
+    <div class="admin-title">
+      <span aria-hidden="true">🏛️</span>
+      LVJST Research — Admin Panel
+    </div>
+    <div class="admin-controls">
+      <button class="admin-btn admin-btn-csv" id="exportCsvBtn" title="Download all records as CSV">
+        <i class="fa-solid fa-file-csv"></i> Export CSV
+      </button>
+      <button class="admin-btn admin-btn-danger" id="logoutBtn" title="Logout">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Main Content ───────────────────────────────────── -->
+  <main class="admin-main" role="main">
+
+    <!-- Stats Row -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-icon violet" aria-hidden="true">📋</div>
+        <div class="stat-info">
+          <h3>Total Entries</h3>
+          <div class="stat-value violet" id="statTotal">—</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green" aria-hidden="true">🏠</div>
+        <div class="stat-info">
+          <h3>Dharamshala</h3>
+          <div class="stat-value green" id="statDharamshala">—</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon amber" aria-hidden="true">🍽️</div>
+        <div class="stat-info">
+          <h3>Bhojanshala</h3>
+          <div class="stat-value amber" id="statBhojanshala">—</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon fuchsia" aria-hidden="true">🧘</div>
+        <div class="stat-info">
+          <h3>Aayambilshala</h3>
+          <div class="stat-value fuchsia" id="statAayambilshala">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar" role="search">
+      <!-- Global Search -->
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+        <input type="search" class="search-input" id="globalSearch"
+          placeholder="Search name, address, city, district..." aria-label="Search records">
+      </div>
+
+      <!-- City Filter -->
+      <select class="filter-select" id="filterCity" aria-label="Filter by city">
+        <option value="">All Cities</option>
+      </select>
+
+      <!-- District Filter -->
+      <select class="filter-select" id="filterDistrict" aria-label="Filter by district">
+        <option value="">All Districts</option>
+      </select>
+
+      <!-- Facility Filters -->
+      <button class="filter-btn" id="filterDharamshala" data-fac="dharamshala" aria-pressed="false">
+        🏠 Dharamshala
+      </button>
+      <button class="filter-btn" id="filterBhojanshala" data-fac="bhojanshala" aria-pressed="false">
+        🍽️ Bhojanshala
+      </button>
+      <button class="filter-btn" id="filterAayambilshala" data-fac="aayambilshala" aria-pressed="false">
+        🧘 Aayambilshala
+      </button>
+
+      <!-- Clear Filters -->
+      <button class="filter-btn" id="clearFiltersBtn" style="margin-left:auto;" aria-label="Clear all filters">
+        <i class="fa-solid fa-filter-circle-xmark"></i> Clear
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container" role="region" aria-label="Research Entries Table">
+      <div class="table-scroll">
+        <table id="dataTable" aria-live="polite">
+          <thead>
+            <tr>
+              <th data-col="id" class="sorted" tabindex="0" role="columnheader" aria-sort="ascending">
+                Sr No <span class="sort-icon" aria-hidden="true">↑</span>
+              </th>
+              <th data-col="name" tabindex="0" role="columnheader" aria-sort="none">
+                Name <span class="sort-icon" aria-hidden="true">↕</span>
+              </th>
+              <th data-col="address" tabindex="0" role="columnheader" aria-sort="none">
+                Address <span class="sort-icon" aria-hidden="true">↕</span>
+              </th>
+              <th data-col="city" tabindex="0" role="columnheader" aria-sort="none">
+                City <span class="sort-icon" aria-hidden="true">↕</span>
+              </th>
+              <th data-col="district" tabindex="0" role="columnheader" aria-sort="none">
+                District <span class="sort-icon" aria-hidden="true">↕</span>
+              </th>
+              <th data-col="contact_no" tabindex="0" role="columnheader" aria-sort="none">
+                Contact <span class="sort-icon" aria-hidden="true">↕</span>
+              </th>
+              <th>Facilities</th>
+              <th data-col="history" tabindex="0" role="columnheader" aria-sort="none">
+                History <span class="sort-icon" aria-hidden="true">↕</span>
+              </th>
+              <th data-col="created_at" tabindex="0" role="columnheader" aria-sort="none">
+                Date <span class="sort-icon" aria-hidden="true">↕</span>
+              </th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr>
+              <td colspan="10">
+                <div class="table-message">
+                  <div class="msg-icon" aria-hidden="true">⏳</div>
+                  <p>Loading records...</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Table Footer -->
+      <div class="table-footer">
+        <span id="recordCount">— records</span>
+        <span id="filterIndicator" style="color:var(--vb-500);font-weight:600;"></span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── Detail Modal ───────────────────────────────────── -->
+  <div class="detail-overlay" id="detailOverlay" role="dialog" aria-modal="true" aria-label="Entry Details">
+    <div class="detail-modal" id="detailModal">
+      <div class="detail-header">
+        <div>
+          <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);margin-bottom:2px;">Entry Details</div>
+          <div id="detailTitle" style="font-size:1.05rem;font-weight:800;color:var(--vb-800);">—</div>
+        </div>
+        <button class="detail-close" id="detailClose" aria-label="Close detail panel">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="detail-body" id="detailBody">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+
+</body>
+</html>

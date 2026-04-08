@@ -15,3 +15,18 @@
   from = "/register"
   to = "/register/index.html"
   status = 200
+
+[[redirects]]
+  from = "/research/admin"
+  to = "/research/admin.html"
+  status = 200
+
+[[redirects]]
+  from = "/research"
+  to = "/research/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/research/*"
+  to = "/research/:splat"
+  status = 200
